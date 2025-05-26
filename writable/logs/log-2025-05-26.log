@@ -1,0 +1,47 @@
+DEBUG - 2025-05-26 15:12:37 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-05-26 15:49:52 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+CRITICAL - 2025-05-26 15:49:52 --> Error: Object of class CodeIgniter\HTTP\RedirectResponse could not be converted to string
+[Method: GET, Route: images/logo3.png]
+in SYSTEMPATH/CodeIgniter.php on line 957.
+ 1 SYSTEMPATH/CodeIgniter.php(360): CodeIgniter\CodeIgniter->display404errors()
+ 2 SYSTEMPATH/Boot.php(334): CodeIgniter\CodeIgniter->run()
+ 3 SYSTEMPATH/Boot.php(67): CodeIgniter\Boot::runCodeIgniter()
+ 4 FCPATH/index.php(59): CodeIgniter\Boot::bootWeb()
+CRITICAL - 2025-05-26 15:49:57 --> Error: Object of class CodeIgniter\HTTP\RedirectResponse could not be converted to string
+[Method: GET, Route: images/logo3.png]
+in SYSTEMPATH/CodeIgniter.php on line 957.
+ 1 SYSTEMPATH/CodeIgniter.php(360): CodeIgniter\CodeIgniter->display404errors()
+ 2 SYSTEMPATH/Boot.php(334): CodeIgniter\CodeIgniter->run()
+ 3 SYSTEMPATH/Boot.php(67): CodeIgniter\Boot::runCodeIgniter()
+ 4 FCPATH/index.php(59): CodeIgniter\Boot::bootWeb()
+DEBUG - 2025-05-26 16:07:28 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-05-26 16:07:28 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+CRITICAL - 2025-05-26 16:07:28 --> Error: Object of class CodeIgniter\HTTP\RedirectResponse could not be converted to string
+[Method: GET, Route: images/logo3.png]
+in SYSTEMPATH/CodeIgniter.php on line 957.
+ 1 SYSTEMPATH/CodeIgniter.php(360): CodeIgniter\CodeIgniter->display404errors()
+ 2 SYSTEMPATH/Boot.php(334): CodeIgniter\CodeIgniter->run()
+ 3 SYSTEMPATH/Boot.php(67): CodeIgniter\Boot::runCodeIgniter()
+ 4 FCPATH/index.php(59): CodeIgniter\Boot::bootWeb()
+CRITICAL - 2025-05-26 16:07:28 --> Error: Object of class CodeIgniter\HTTP\RedirectResponse could not be converted to string
+[Method: GET, Route: images/logo3.png]
+in SYSTEMPATH/CodeIgniter.php on line 957.
+ 1 SYSTEMPATH/CodeIgniter.php(360): CodeIgniter\CodeIgniter->display404errors()
+ 2 SYSTEMPATH/Boot.php(334): CodeIgniter\CodeIgniter->run()
+ 3 SYSTEMPATH/Boot.php(67): CodeIgniter\Boot::runCodeIgniter()
+ 4 FCPATH/index.php(59): CodeIgniter\Boot::bootWeb()
+DEBUG - 2025-05-26 16:07:45 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+CRITICAL - 2025-05-26 16:07:45 --> Error: Object of class CodeIgniter\HTTP\RedirectResponse could not be converted to string
+[Method: GET, Route: images/logo3.png]
+in SYSTEMPATH/CodeIgniter.php on line 957.
+ 1 SYSTEMPATH/CodeIgniter.php(360): CodeIgniter\CodeIgniter->display404errors()
+ 2 SYSTEMPATH/Boot.php(334): CodeIgniter\CodeIgniter->run()
+ 3 SYSTEMPATH/Boot.php(67): CodeIgniter\Boot::runCodeIgniter()
+ 4 FCPATH/index.php(59): CodeIgniter\Boot::bootWeb()
+CRITICAL - 2025-05-26 16:07:45 --> Error: Object of class CodeIgniter\HTTP\RedirectResponse could not be converted to string
+[Method: GET, Route: images/logo3.png]
+in SYSTEMPATH/CodeIgniter.php on line 957.
+ 1 SYSTEMPATH/CodeIgniter.php(360): CodeIgniter\CodeIgniter->display404errors()
+ 2 SYSTEMPATH/Boot.php(334): CodeIgniter\CodeIgniter->run()
+ 3 SYSTEMPATH/Boot.php(67): CodeIgniter\Boot::runCodeIgniter()
+ 4 FCPATH/index.php(59): CodeIgniter\Boot::bootWeb()
