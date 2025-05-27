@@ -52,6 +52,7 @@
 <body class="bg-gray-50">
     <header class="bg-primary shadow-sm fixed top-0 left-0 right-0 z-50">
         <div class="flex items-center justify-between px-6 py-1">
+            
             <div class="flex items-center">
                 <img src="images/logow.png" alt="MIRentaLogo" class="h-10 max-h-10 mr-4">
                 <nav class="hidden md:flex items-center space-x-1">
@@ -62,9 +63,14 @@
                         <i class="ri-dashboard-line"></i>
                     </div>
                     Panel de Control
-                </a>
-                    
-                <div class="relative group">
+                </a>     
+                </nav>                
+            </div>
+
+
+            <div class="flex items-center space-x-4">
+
+            <div class="relative group">
                     <button>
                         <a href="/usuarios"   
                         class="flex items-center px-3 py-2 text-sm font-medium text-white hover:text-white hover:bg-secondary rounded whitespace-nowrap !rounded-button">
@@ -99,7 +105,7 @@
                         </a>
                     </button>
                 </div>
-                        
+
                 <!--<div class="relative group">
                     <button
                         
@@ -121,19 +127,14 @@
                             Reportes                            
                     </button>                    
                 </div>-->
-        
-
-                </nav>                
-            </div>
 
 
-            <div class="flex items-center space-x-4">
                 <button class="relative p-1 text-white hover:text-secondary focus:outline-none">
                     <div class="w-6 h-6 flex items-center justify-center">
                         <i class="ri-notification-3-line"></i>
                     </div>
-                    <span
-                        class="absolute top-0 right-0 h-4 w-4 bg-red-500 rounded-full text-xs text-white flex items-center justify-center">3</span>
+                   <!-- <span
+                    class="absolute top-0 right-0 h-4 w-4 bg-red-500 rounded-full text-xs text-white flex items-center justify-center">3</span>-->
                 </button>
                 <div class="relative group">
                     <button class="flex items-center space-x-2">
@@ -213,10 +214,10 @@
     </header>
 
     <main class="pt-24 pb-12 px-4 md:px-6 max-w-7xl mx-auto">
-        <div class="flex items-center justify-between mb-6">
+        <div class="flex items-center justify-between mb-8">
             <h1 class="text-2xl font-bold text-gray-900">Panel de Control</h1>
             <div class="flex items-center space-x-2">
-                <span class="text-sm text-gray-500">18 de Mayo, 2025</span>
+                <span class="text-sm text-gray-500">27 de Mayo, 2025</span>
                 <button
                     class="bg-primaryb text-white px-4 py-2 rounded-button hover:bg-secondary transition-all duration-200 flex items-center whitespace-nowrap !rounded-button">
                     <div class="w-4 h-4 flex items-center justify-center mr-1.5">
@@ -243,6 +244,8 @@
                 </div>
                 <p class="text-sm text-gray-500 mt-1">Desde el mes anterior</p>
             </div>
+
+
             <div class="bg-primaryb p-6 rounded-lg shadow-sm border border-gray-100">
                 <div class="flex items-center justify-between mb-4">
                     <h3 class="text-lg font-medium text-grayb">Motocicletas disponibles</h3>
@@ -259,6 +262,7 @@
                 </div>
                 <p class="text-sm text-gray-500 mt-1">Desde el mes anterior</p>
             </div>
+
             <div class="bg-primaryb p-6 rounded-lg shadow-sm border border-gray-100">
                 <div class="flex items-center justify-between mb-4">
                     <h3 class="text-lg font-medium text-grayb">Motocicletas en renta</h3>
@@ -275,6 +279,7 @@
                 </div>
                 <p class="text-sm text-gray-500 mt-1">Desde el mes anterior</p>
             </div>
+            
             <div class="bg-primaryb p-6 rounded-lg shadow-sm border border-gray-100">
                 <div class="flex items-center justify-between mb-4">
                     <h3 class="text-lg font-medium text-grayb">Alertas de bajo inventario</h3>
@@ -291,6 +296,7 @@
                 </div>
                 <p class="text-sm text-gray-500 mt-1">Necesitan nueva orden</p>
             </div>
+
             <div class="bg-primaryb p-6 rounded-lg shadow-sm border border-gray-100">
                 <div class="flex items-center justify-between mb-4">
                     <h3 class="text-lg font-medium text-grayb">Ordenes pendientes</h3>
@@ -307,6 +313,7 @@
                 </div>
                 <p class="text-sm text-gray-500 mt-1">Esperando entrega</p>
             </div>
+
             <div class="bg-primaryb p-6 rounded-lg shadow-sm border border-gray-100">
                 <div class="flex items-center justify-between mb-4">
                     <h3 class="text-lg font-medium text-grayb">Mantenimientos pendientes</h3>

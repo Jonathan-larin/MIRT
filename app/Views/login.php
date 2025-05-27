@@ -43,14 +43,14 @@
         ?>
 
         <!-- DEBUG INFORMATION -->
-        <div class="mb-4 p-2 bg-yellow-100 border border-yellow-400 text-yellow-700 rounded text-xs">
+        <!--<div class="mb-4 p-2 bg-yellow-100 border border-yellow-400 text-yellow-700 rounded text-xs">
             <strong>Debug Info:</strong><br>
             Flash Error: <?= $flashError ? 'YES - ' . $flashError : 'NO' ?><br>
             Validation: <?= $hasValidation ? 'YES' : 'NO' ?><br>
             Old Usuario: <?= $flashOldUsuario ? $flashOldUsuario : 'NONE' ?><br>
             Session ID: <?= session()->session_id ?><br>
             Request Method: <?= isset($debug_method) ? $debug_method : $_SERVER['REQUEST_METHOD'] ?>
-        </div>
+        </div>-->
 
         <?php if ($flashError): ?>
             <div class="mb-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded">
