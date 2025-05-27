@@ -35,19 +35,38 @@
             <p class="text-gray-600">Sistema de manejo de inventario</p>
         </div>
 
-        <?php if (session()->getFlashdata('error')): ?>
-            <div class="mb-4 text-red-600 text-sm text-center font-medium">
-                <?= session()->getFlashdata('error') ?>
+        <?php 
+        // Get flash data once and store in variables to prevent consumption
+        $flashError = session()->getFlashdata('error');
+        $flashOldUsuario = session()->getFlashdata('old_usuario');
+        $hasValidation = isset($validation);
+        ?>
+
+        <!-- DEBUG INFORMATION -->
+        <div class="mb-4 p-2 bg-yellow-100 border border-yellow-400 text-yellow-700 rounded text-xs">
+            <strong>Debug Info:</strong><br>
+            Flash Error: <?= $flashError ? 'YES - ' . $flashError : 'NO' ?><br>
+            Validation: <?= $hasValidation ? 'YES' : 'NO' ?><br>
+            Old Usuario: <?= $flashOldUsuario ? $flashOldUsuario : 'NONE' ?><br>
+            Session ID: <?= session()->session_id ?><br>
+            Request Method: <?= isset($debug_method) ? $debug_method : $_SERVER['REQUEST_METHOD'] ?>
+        </div>
+
+        <?php if ($flashError): ?>
+            <div class="mb-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded">
+                <i class="ri-error-warning-line mr-2"></i>
+                <strong>Error:</strong> <?= esc($flashError) ?>
             </div>
         <?php endif; ?>
 
-        <?php if (isset($validation)): ?>
-            <div class="mb-4 text-red-600 text-sm">
-                <?= $validation->listErrors() ?>
+        <?php if ($hasValidation): ?>
+            <div class="mb-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded">
+                <i class="ri-error-warning-line mr-2"></i>
+                <strong>Validation Errors:</strong> <?= $validation->listErrors() ?>
             </div>
         <?php endif; ?>
 
-        <?= form_open('auth/login') ?>
+        <?= form_open('/login') ?>
 
         <div class="mb-6">
             <label for="usuario" class="block text-sm font-medium text-gray-700 mb-2">Usuario</label>
@@ -57,7 +76,7 @@
                 </div>
                 <input type="text" id="usuario" name="usuario"
                     class="pl-10 w-full h-12 px-4 py-2 bg-gray-50 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
-                    placeholder="Usuario" required value="<?= old('usuario') ?>">
+                    placeholder="Usuario" required value="<?= old('usuario') ?: $flashOldUsuario ?>">
             </div>
         </div>
 
