@@ -52,11 +52,9 @@
 <body class="bg-white">
   <!-- Header -->
   <header class="bg-primary shadow-sm fixed top-0 left-0 right-0 z-50">
-
-    <!-- PROBANDO -->
-    <div class="flex items-center justify-between px-6 py-1">
-      
-        <div class="flex items-center">
+        <div class="flex items-center justify-between px-6 py-1">
+            
+            <div class="flex items-center">
                 <img src="images/logow.png" alt="MIRentaLogo" class="h-10 max-h-10 mr-4">
                 <nav class="hidden md:flex items-center space-x-1">
                     
@@ -66,9 +64,14 @@
                         <i class="ri-dashboard-line"></i>
                     </div>
                     Panel de Control
-                </a>
-                    
-                <div class="relative group">
+                </a>     
+                </nav>                
+            </div>
+
+
+            <div class="flex items-center space-x-4">
+
+            <div class="relative group">
                     <button>
                         <a href="/usuarios"   
                         class="flex items-center px-3 py-2 text-sm font-medium text-white hover:text-white hover:bg-secondary rounded whitespace-nowrap !rounded-button">
@@ -103,7 +106,7 @@
                         </a>
                     </button>
                 </div>
-                        
+
                 <!--<div class="relative group">
                     <button
                         
@@ -125,18 +128,14 @@
                             Reportes                            
                     </button>                    
                 </div>-->
-        
 
-                </nav>                
-            </div>
 
-        <div class="flex items-center space-x-4">
                 <button class="relative p-1 text-white hover:text-secondary focus:outline-none">
                     <div class="w-6 h-6 flex items-center justify-center">
                         <i class="ri-notification-3-line"></i>
                     </div>
-                    <span
-                        class="absolute top-0 right-0 h-4 w-4 bg-red-500 rounded-full text-xs text-white flex items-center justify-center">3</span>
+                   <!-- <span
+                    class="absolute top-0 right-0 h-4 w-4 bg-red-500 rounded-full text-xs text-white flex items-center justify-center">3</span>-->
                 </button>
                 <div class="relative group">
                     <button class="flex items-center space-x-2">
@@ -171,47 +170,49 @@
             </div>
         </div>
 
-    <!-- Mobile menu button -->
-    <div class="md:hidden px-4 pb-4">
-      <button id="mobileMenuButton"
-        class="flex items-center px-3 py-2 border border-gray-300 rounded text-gray-700 hover:text-primary hover:border-primary whitespace-nowrap !rounded-button">
-        <div class="w-5 h-5 flex items-center justify-center mr-1">
-          <i class="ri-menu-line"></i>
+        <div class="md:hidden px-4 pb-4">
+            <button id="mobileMenuButton"
+                class="flex items-center px-3 py-2 border border-gray-300 rounded text-grayb hover:text-primary hover:border-primary whitespace-nowrap !rounded-button">
+                <div class="w-5 h-5 flex items-center justify-center mr-1">
+                    <i class="ri-menu-line"></i>
+                </div>
+                Menu
+            </button>
         </div>
-        Menu
-      </button>
-    </div>
-    <!-- Mobile menu -->
-    <div id="mobileMenu" class="hidden md:hidden px-4 pb-4">
-      <nav class="flex flex-col space-y-2">
-        <a href="#" class="flex items-center px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 rounded">
-          <div class="w-5 h-5 flex items-center justify-center mr-1.5">
-            <i class="ri-dashboard-line"></i>
-          </div>
-          Dashboard
-        </a>
-        <div class="mobile-dropdown">
-          <button
-            class="flex items-center justify-between w-full px-3 py-2 text-sm font-medium text-primary bg-blue-50 rounded whitespace-nowrap !rounded-button">
-            <div class="flex items-center">
-              <div class="w-5 h-5 flex items-center justify-center mr-1.5">
-                <i class="ri-user-line"></i>
-              </div>
-              Usuarios
-            </div>
-            <div class="w-4 h-4 flex items-center justify-center">
-              <i class="ri-arrow-down-s-line"></i>
-            </div>
-          </button>
-          <div class="hidden pl-8 mt-1 space-y-1">
-            <a href="#" class="block px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded">Catálogo</a>
-            <a href="#" class="block px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded">Categorías</a>
-            <a href="#" class="block px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded">Nueva Lista</a>
-          </div>
+        <div id="mobileMenu" class="hidden md:hidden px-4 pb-4">
+            <nav class="flex flex-col space-y-2">
+                <a href="#" class="flex items-center px-3 py-2 text-sm font-medium text-primary bg-blue-50 rounded">
+                    <div class="w-5 h-5 flex items-center justify-center mr-1.5">
+                        <i class="ri-dashboard-line"></i>
+                    </div>
+                    Dashboard
+                </a>
+                <div class="mobile-dropdown">
+                    <button
+                        class="flex items-center justify-between w-full px-3 py-2 text-sm font-medium text-primary hover:text-white hover:bg-secondary rounded whitespace-nowrap !rounded-button">
+                        <div class="flex items-center">
+                            <div class="w-5 h-5 flex items-center justify-center mr-1.5">
+                                <i class="ri-motorbike-line"></i>
+                            </div>
+                            Products
+                        </div>
+                        <div class="w-4 h-4 flex items-center justify-center">
+                            <i class="ri-arrow-down-s-line"></i>
+                        </div>
+                    </button>
+                    <div class="hidden pl-8 mt-1 space-y-1">
+                        <a href="#"
+                            class="block px-3 py-2 text-sm text-primary hover:text-white hover:bg-secondary rounded">Catalog</a>
+                        <a href="#"
+                            class="block px-3 py-2 text-sm text-primary hover:text-white hover:bg-secondary rounded">Categories</a>
+                        <a href="#"
+                            class="block px-3 py-2 text-sm text-primary hover:text-white hover:bg-secondary rounded">New
+                            Listing</a>
+                    </div>
+                </div>
+            </nav>
         </div>
-      </nav>
-    </div>
-  </header>
+    </header>
 
   <!--Main-->
   <main class="pt-24 pb-12 px-4 md:px-6 max-w-7xl mx-auto">

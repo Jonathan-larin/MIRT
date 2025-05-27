@@ -57,7 +57,7 @@
                 <img src="images/logow.png" alt="MIRentaLogo" class="h-10 max-h-10 mr-4">
                 <nav class="hidden md:flex items-center space-x-1">
                     
-                <a href="dashboarda"
+                <a href="dashboard"
                 class="flex items-center px-3 py-2 text-sm font-medium text-white bg-secondary rounded">
                     <div class="w-5 h-5 flex items-center justify-center mr-1.5">
                         <i class="ri-dashboard-line"></i>
@@ -214,8 +214,8 @@
     </header>
 
     <main class="pt-24 pb-12 px-4 md:px-6 max-w-7xl mx-auto">
-        <div class="flex items-center justify-between mb-8">
-            <h1 class="text-2xl font-bold text-gray-900">Panel de Control</h1>
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8">
+            <h1 class="text-2xl md:text-3xl font-bold text-gray-900">Panel de Control</h1>
             <div class="flex items-center space-x-2">
                 <span class="text-sm text-gray-500">27 de Mayo, 2025</span>
                 <button
@@ -227,7 +227,11 @@
                 </button>
             </div>
         </div>
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+
+        <section id="space-section" class="mb-16 scroll-mt-20">
+        </section>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-16">
             <div class="bg-primaryb p-6 rounded-lg shadow-sm border border-gray-100">
                 <div class="flex items-center justify-between mb-4">
                     <h3 class="text-lg font-medium text-grayb">Valor Total del Inventario</h3>
@@ -331,6 +335,8 @@
                 <p class="text-sm text-gray-500 mt-1">Programados en los siguientes 7 dias</p>
             </div>
         </div>
+    
+
         <script>
             document.addEventListener('DOMContentLoaded', function () {
                 // Mobile menu toggle

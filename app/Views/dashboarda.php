@@ -217,7 +217,7 @@
     </div>
 
     <!-- Inventory Section -->
-    <section id="inventory-section" class="mb-8 scroll-mt-20">
+    <section id="inventory-section" class="gap-6 mb-8 scroll-mt-20">
         <h3 class="text-xl font-bold text-gray-900 mb-6 border-b-2 border-accent pb-2 inline-block">Inventario</h3>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             
