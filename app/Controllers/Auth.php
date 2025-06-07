@@ -5,40 +5,17 @@ use App\Models\UsuarioModel;
 class Auth extends BaseController
 {
     public function loginForm()
-    {
-        // Show login view
-        return view('login');
-    }
-
-   /* public function doLogin()
-    {
+    {    
         $session = session();
-        $usuarioModel = new UsuarioModel();
+        $logoutMessage = $this->request->getCookie('logout_message');
 
-        $userInput = $this->request->getVar('user');
-        $passInput = $this->request->getVar('password');
-
-        $user = $usuarioModel->where('user', $userInput)->first();
-
-        if ($user && password_verify($passInput, $user['Password'])) {
-            // Set session data
-            $session->set([
-                'idUsuario'   => $user['idUsuario'],
-                'nombre'      => $user['nombre'],
-                'rol'         => $user['rol'],
-                'isLoggedIn'  => true
-            ]);
-
-            // Role-based redirection
-            if ($user['rol'] === 'admin') {
-                return redirect()->to('/dashboarda');
-            }
-            return redirect()->to('/dashboard');
+        if ($logoutMessage) {
+            $session->setFlashdata('message', $logoutMessage);
         }
 
-        // Login failed
-        return redirect()->back()->with('error', 'Usuario o contraseña inválidos.');
-    }*/
+        return view('login');
+    
+    }
 
 public function doLogin()
 {
@@ -74,8 +51,13 @@ public function doLogin()
 
 
     public function logout()
-    {
-        session()->destroy();
-        return redirect()->to('/login')->with('message', 'Sesión cerrada correctamente.');
-    }
+{
+    $response = service('response');
+    session()->destroy();
+    // Set a cookie for the message (expires in 10 seconds)
+    $response->setCookie('logout_message', 'Sesión cerrada correctamente.', 10);
+
+    return $response->redirect('/login');
+}
+
 }

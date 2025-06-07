@@ -151,7 +151,7 @@
                         </a>                        
                         <div class="border-t border-gray-100 my-1"></div>
 
-                        <a href="login.html" class="flex items-center px-4 py-2 text-sm text-red-600 hover:text-white hover:bg-secondary">
+                        <a href="<?=base_url('logout')?>" class="flex items-center px-4 py-2 text-sm text-red-600 hover:text-white hover:bg-secondary">
                             <div class="w-4 h-4 flex items-center justify-center mr-2">
                                 <i class="ri-logout-box-r-line"></i>
                             </div>
