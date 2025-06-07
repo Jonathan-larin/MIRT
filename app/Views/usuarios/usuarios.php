@@ -49,6 +49,9 @@
   </style>
 </head>
 
+<script src="<?= base_url('js/user-modal.js') ?>"></script>
+
+
 <body class="bg-white">
   <!-- Header -->
   <header class="bg-primary shadow-sm fixed top-0 left-0 right-0 z-50">
@@ -220,6 +223,7 @@
       <h1 class="text-2xl font-bold text-primary">Gestión de Usuarios</h1>
       <div class="flex items-center space-x-2">
         <span class="text-sm text-gray-500">27 de Mayo, 2025</span>
+        
         <button id="addUserButton"
           class="bg-primary text-white px-4 py-2 rounded-button hover:bg-secondary transition-all duration-200 flex items-center whitespace-nowrap !rounded-button">
           <div class="w-4 h-4 flex items-center justify-center mr-1.5">

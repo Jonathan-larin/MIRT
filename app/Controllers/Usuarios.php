@@ -67,4 +67,36 @@ class Usuarios extends BaseController
         $this->usuarioModel->delete($id);
         return redirect()->to('/usuarios');
     }
+
+    //NEW
+
+    public function createViaAjax()
+    {
+        $this->validate([
+            'name'     => 'required',
+            'usuario'  => 'required|is_unique[usuario.user]',
+            'password' => 'required|min_length[6]',
+            'email'    => 'required|valid_email',
+            'dui'      => 'required',
+            'estado'   => 'required|in_list[activo,inactivo]',
+            'role'     => 'required',
+        ]);
+
+        $model = new \App\Models\UsuarioModel();
+
+        $data = [
+            'nombre'   => $this->request->getPost('name'),
+            'user'     => $this->request->getPost('usuario'),
+            'Password' => password_hash($this->request->getPost('password'), PASSWORD_DEFAULT),
+            'correo'   => $this->request->getPost('email'),
+            'dui'      => $this->request->getPost('dui'),
+            'estado'   => $this->request->getPost('estado') === 'activo' ? 1 : 0,
+            'rol'      => $this->request->getPost('role'),
+        ];
+
+        $model->insert($data);
+
+        return $this->response->setJSON(['status' => 'ok', 'message' => 'Usuario agregado correctamente.']);
+    }
+
 }

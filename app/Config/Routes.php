@@ -13,6 +13,8 @@ $routes->get('logout', 'Auth::logout');
 $routes->get('dashboard', 'Dashboard::dashboard');
 $routes->get('dashboarda', 'Dashboard::dashboard');
 
+$routes->post('usuarios/ajax-add', 'Usuarios::createViaAjax');
+
 $routes->resource('usuarios');
 $routes->resource('motos');
 

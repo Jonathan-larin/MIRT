@@ -42,6 +42,8 @@
         }
     </style>
 </head>
+<script src="<?= base_url('js/user-modal.js') ?>"></script>
+
 <body class="bg-gray-50">
     <header class="bg-primary shadow-sm fixed top-0 left-0 right-0 z-50">
         <div class="flex items-center justify-between px-6 py-1">
@@ -346,12 +348,93 @@
                 </div>
                 <span class="font-medium text-gray-800">Nueva renta</span>
             </a>
-            <a href="/clientes/nuevo" class="bg-white p-4 rounded-lg shadow-sm border border-gray-200 hover:border-purple-600 transition-all flex flex-col items-center text-center">
+
+            <button id="addUserButton"
+            
+            class="bg-white p-4 rounded-lg shadow-sm border border-gray-200 hover:border-purple-600 transition-all flex flex-col items-center text-center">
                 <div class="bg-purple-100 p-3 rounded-full mb-3">
                     <i class="ri-user-add-line text-purple-600 text-2xl"></i>
                 </div>
                 <span class="font-medium text-gray-800">Agregar cliente</span>
-            </a>
+            
+            </button>
+
+            
+
+            <!-- Agregar usuario -->
+    <div id="addUserModal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center z-50">
+      <div class="bg-white rounded-lg shadow-xl w-full max-w-md">
+        <div class="flex items-center justify-between p-4 border-b">
+          <h3 class="text-lg font-medium text-gray-900">Agregar Nuevo Usuario</h3>
+          <button id="closeModalButton" class="text-gray-500 hover:text-gray-700">
+            <i class="ri-close-line ri-lg"></i>
+          </button>
+        </div>
+        <div class="p-6">
+          <form id="userForm">
+            <div class="mb-4">
+              <label for="name" class="block text-sm font-medium text-gray-700 mb-1">Nombre</label>
+              <input type="text" id="name" name="name"
+                class="w-full px-3 py-2 border border-gray-300 rounded-button focus:outline-none focus:ring-1 focus:ring-primary">
+            </div>
+
+            <div class="mb-4">
+              <label for="usuario" class="block text-sm font-medium text-gray-700 mb-1">Usuario</label>
+              <input type="text" id="usuario" name="usuario"
+                class="w-full px-3 py-2 border border-gray-300 rounded-button focus:outline-none focus:ring-1 focus:ring-primary">
+            </div>
+
+            <div class="mb-4">
+              <label for="password" class="block text-sm font-medium text-gray-700 mb-1">Contraseña</label>
+              <input type="password" id="password" name="password"
+                class="w-full px-3 py-2 border border-gray-300 rounded-button focus:outline-none focus:ring-1 focus:ring-primary">
+            </div>
+
+            
+            <div class="mb-4">
+              <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Correo Electrónico</label>
+              <input type="email" id="email" name="email"
+                class="w-full px-3 py-2 border border-gray-300 rounded-button focus:outline-none focus:ring-1 focus:ring-primary">
+            </div>
+            <div class="mb-4">
+              <label for="dui" class="block text-sm font-medium text-gray-700 mb-1">DUI</label>
+              <input type="text" id="dui" name="dui"
+                class="w-full px-3 py-2 border border-gray-300 rounded-button focus:outline-none focus:ring-1 focus:ring-primary">
+            </div>
+
+            <div class="mb-4">
+              <label for="role" class="block text-sm font-medium text-gray-700 mb-1">Estado</label>
+              <select id="estado" name="estado"
+                class="w-full px-3 py-2 border border-gray-300 rounded-button focus:outline-none focus:ring-1 focus:ring-primary">
+                <option value="activo">Activo</option>
+                <option value="inactivo">Inactivo</option>                
+              </select>
+            </div>
+
+
+            <div class="mb-4">
+              <label for="role" class="block text-sm font-medium text-gray-700 mb-1">Rol</label>
+              <select id="role" name="role"
+                class="w-full px-3 py-2 border border-gray-300 rounded-button focus:outline-none focus:ring-1 focus:ring-primary">
+                <option value="Administrador">Administrador</option>
+                <option value="Jefatura">Jefatura</option>
+                <option value="Operativo">Operativo</option>
+                <option value="Visualizador">Visualizador</option>
+              </select>
+            </div>
+            
+            <div class="flex justify-end space-x-3 mt-6">
+              <button type="button" id="cancelAddUser"
+                class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-button hover:text-white hover:bg-secondary">Cancelar</button>
+              <button type="submit"
+                class="px-4 py-2 text-sm font-medium text-white bg-primary rounded-button hover:text-white hover:bg-secondary">Guardar
+                Usuario</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
             <a href="/inventario/nuevo" class="bg-white p-4 rounded-lg shadow-sm border border-gray-200 hover:border-green-600 transition-all flex flex-col items-center text-center">
                 <div class="bg-green-100 p-3 rounded-full mb-3">
                     <i class="ri-add-box-line text-green-600 text-2xl"></i>
@@ -366,7 +449,6 @@
             </a>
         </div>
     </div>
-
 
     <!-- Customers Section -->
     <!-- <section id="customers-section" class="mb-16 scroll-mt-20">
@@ -413,6 +495,94 @@
 
 <script>
     // Smooth scrolling for anchor links
+
+    
+    document.addEventListener('DOMContentLoaded', () => {
+    const userForm = document.getElementById('userForm');
+
+    if (userForm) {
+    userForm.addEventListener('submit', function (e) {
+      e.preventDefault();
+
+      const formData = new FormData(this);
+
+      fetch('/usuarios/ajax-add', {
+        method: 'POST',
+        body: formData
+      })
+      .then(res => res.json())
+      .then(data => {
+        if (data.status === 'ok') {
+          alert(data.message);
+          this.reset();
+          document.getElementById('addUserModal')?.classList.add('hidden');
+        } else {
+          alert('Error al agregar usuario.');
+        }
+      })
+      .catch(error => {
+        console.error(error);
+        alert('Error de servidor.');
+      });
+    });
+  }
+});
+
+
+    
+    const addUserButton = document.getElementById('addUserButton');
+    const addUserModal = document.getElementById('addUserModal');
+    const closeModalButton = document.getElementById('closeModalButton');
+    const cancelAddUser = document.getElementById('cancelAddUser');
+    const userForm = document.getElementById('userForm');
+
+      if (addUserButton && addUserModal) {
+        addUserButton.addEventListener('click', function () {
+          addUserModal.classList.remove('hidden');
+        });
+      }
+
+      if (closeModalButton && addUserModal) {
+        closeModalButton.addEventListener('click', function () {
+          addUserModal.classList.add('hidden');
+        });
+      }
+
+      if (cancelAddUser && addUserModal) {
+        cancelAddUser.addEventListener('click', function () {
+          addUserModal.classList.add('hidden');
+        });
+      }
+
+      if (userForm) {
+  userForm.addEventListener('submit', function (e) {
+    e.preventDefault();
+
+    const formData = new FormData(userForm);
+
+    fetch('/usuarios/ajax-add', {
+      method: 'POST',
+      body: formData
+    })
+    .then(res => res.json())
+    .then(data => {
+      if (data.status === 'ok') {
+        alert(data.message);
+        userForm.reset();
+        addUserModal.classList.add('hidden');
+        // Optionally: refresh user list here
+      } else {
+        alert('Error al agregar usuario. Revisa los datos.');
+      }
+    })
+    .catch(error => {
+      console.error('Error en la solicitud:', error);
+      alert('Error de conexión con el servidor.');
+    });
+  });
+}
+
+    
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function (e) {
             e.preventDefault();
