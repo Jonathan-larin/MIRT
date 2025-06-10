@@ -66,15 +66,14 @@
             <div class="flex items-center space-x-4">
 
             <div class="relative group">
-                    <button>
-                        <a href="/usuarios"   
-                        class="flex items-center px-3 py-2 text-sm font-medium text-white hover:text-white hover:bg-secondary rounded whitespace-nowrap !rounded-button">
-                            <div class="w-5 h-5 flex items-center justify-center mr-1.5">
-                                <i class="ri-user-line"></i>
-                            </div>
-                            Usuarios
-                        </a>
-                    </button>                  
+                <a href="/usuarios"  
+                    class="flex items-center px-3 py-2 text-sm font-medium text-white hover:text-white hover:bg-secondary rounded whitespace-nowrap !rounded-button">
+                    <div class="w-5 h-5 flex items-center justify-center mr-1.5">
+                        <i class="ri-user-line"></i>
+                    </div>
+                    Usuarios
+                </a>
+                  
                 </div>
                     
                 <div class="relative group">
@@ -498,35 +497,48 @@
 
     
     document.addEventListener('DOMContentLoaded', () => {
-    const userForm = document.getElementById('userForm');
+        const userForm = document.getElementById('userForm');
 
-    if (userForm) {
-    userForm.addEventListener('submit', function (e) {
-      e.preventDefault();
+        if (userForm) {
+            userForm.addEventListener('submit', function (e) {
+            e.preventDefault();
 
-      const formData = new FormData(this);
+            const data = {
+                name: document.getElementById('name').value.trim(),
+                usuario: document.getElementById('usuario').value.trim(),
+                password: document.getElementById('password').value,
+                email: document.getElementById('email').value.trim(),
+                dui: document.getElementById('dui').value.trim(),
+                estado: document.getElementById('estado').value,
+                role: document.getElementById('role').value
+            };
 
-      fetch('/usuarios/ajax-add', {
-        method: 'POST',
-        body: formData
-      })
-      .then(res => res.json())
-      .then(data => {
-        if (data.status === 'ok') {
-          alert(data.message);
-          this.reset();
-          document.getElementById('addUserModal')?.classList.add('hidden');
-        } else {
-          alert('Error al agregar usuario.');
+            fetch('/usuarios/ajax-add', {
+                method: 'POST',
+                headers: {
+                'Content-Type': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest'
+                },
+                body: JSON.stringify(data)
+            })
+            .then(res => res.json())
+            .then(response => {
+                if (response.status === 'ok') {
+                alert('Usuario agregado correctamente');
+                userForm.reset();
+                document.getElementById('addUserModal')?.classList.add('hidden');
+                } else {
+                alert(response.error || 'Error al agregar usuario.');
+                }
+            })
+            .catch(err => {
+                console.error('Error de red o servidor:', err);
+                alert('Error al enviar los datos.');
+            });
+            });
         }
-      })
-      .catch(error => {
-        console.error(error);
-        alert('Error de servidor.');
-      });
     });
-  }
-});
+
 
 
     
@@ -554,33 +566,7 @@
         });
       }
 
-      if (userForm) {
-  userForm.addEventListener('submit', function (e) {
-    e.preventDefault();
-
-    const formData = new FormData(userForm);
-
-    fetch('/usuarios/ajax-add', {
-      method: 'POST',
-      body: formData
-    })
-    .then(res => res.json())
-    .then(data => {
-      if (data.status === 'ok') {
-        alert(data.message);
-        userForm.reset();
-        addUserModal.classList.add('hidden');
-        // Optionally: refresh user list here
-      } else {
-        alert('Error al agregar usuario. Revisa los datos.');
-      }
-    })
-    .catch(error => {
-      console.error('Error en la solicitud:', error);
-      alert('Error de conexión con el servidor.');
-    });
-  });
-}
+      
 
     
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
