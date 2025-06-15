@@ -78,19 +78,19 @@
                     
                 <div class="relative group">
                     <button>
-                        <a href="/inventario"
+                        <a href="/motocicletas"
                         class="flex items-center px-3 py-2 text-sm font-medium text-white hover:text-white hover:bg-secondary rounded whitespace-nowrap !rounded-button">
                             <div class="w-5 h-5 flex items-center justify-center mr-1.5">
-                                <i class="ri-stack-line"></i>
+                                <i class="ri-motorbike-line"></i>
                             </div>
-                            Inventario
+                            Motocicletas
                         </a>                        
                     </button> 
                 </div>
                     
                 <div class="relative group">
                     <button>
-                        <a href="/clientes"
+                        <a href="#"
                         class="flex items-center px-3 py-2 text-sm font-medium text-white hover:text-white hover:bg-secondary rounded whitespace-nowrap !rounded-button">
                             <div class="w-5 h-5 flex items-center justify-center mr-1.5">
                                 <i class="ri-money-dollar-circle-line"></i>
@@ -135,9 +135,14 @@
                         <div class="w-8 h-8 bg-secondary rounded-full flex items-center justify-center text-white">
                             <i class="ri-user-line"></i>
                         </div>
-                        <span class="text-sm font-medium text-white hidden md:block">Admin</span>
+                        <span class="text-sm font-medium text-white hidden md:block">
+                            <?php
+                            $session = session();                           
+                            echo esc($session->get('nombre') ?: 'Invitado');
+                            ?>
+                        </span>
                         <div class="w-4 h-4 flex items-center justify-center">
-                            <i class="ri-arrow-down-s-line"></i>
+                            <i class="ri-arrow-down-s-line" style="color: white;"></i>
                         </div>
                     </button>
                     <div
@@ -341,7 +346,7 @@
     <div class="mb-16">
         <h3 class="text-xl font-bold text-gray-900 mb-8">Acciones rápidas</h3>
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <a href="/rentas/nueva" class="bg-white p-4 rounded-lg shadow-sm border border-gray-200 hover:border-accent transition-all flex flex-col items-center text-center">
+            <a href="#" class="bg-white p-4 rounded-lg shadow-sm border border-gray-200 hover:border-accent transition-all flex flex-col items-center text-center">
                 <div class="bg-blue-100 p-3 rounded-full mb-3">
                     <i class="ri-add-circle-line text-blue-600 text-2xl"></i>
                 </div>
@@ -354,7 +359,7 @@
                 <div class="bg-purple-100 p-3 rounded-full mb-3">
                     <i class="ri-user-add-line text-purple-600 text-2xl"></i>
                 </div>
-                <span class="font-medium text-gray-800">Agregar cliente</span>
+                <span class="font-medium text-gray-800">Agregar usuario</span>
             
             </button>
 
@@ -434,13 +439,85 @@
       </div>
     </div>
 
-            <a href="/inventario/nuevo" class="bg-white p-4 rounded-lg shadow-sm border border-gray-200 hover:border-green-600 transition-all flex flex-col items-center text-center">
+            <button id="AddMotorcycleButton" class="bg-white p-4 rounded-lg shadow-sm border border-gray-200 hover:border-green-600 transition-all flex flex-col items-center text-center cursor-pointer">
                 <div class="bg-green-100 p-3 rounded-full mb-3">
                     <i class="ri-add-box-line text-green-600 text-2xl"></i>
                 </div>
                 <span class="font-medium text-gray-800">Agregar moto</span>
-            </a>
-            <a href="/reportes" class="bg-white p-4 rounded-lg shadow-sm border border-gray-200 hover:border-yellow-600 transition-all flex flex-col items-center text-center">
+            </button>
+
+            <!-- Modal para agregar motocicleta -->
+
+            <div id="addMotorcycleModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+                <div class="bg-white p-6 rounded-lg shadow-xl w-full max-w-md">
+                    <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-lg font-bold text-primary">Agregar Nueva Motocicleta</h3>
+                    <button id="closeAddMotorcycleModal" class="text-gray-400 hover:text-gray-700">
+                        <i class="ri-close-line text-xl"></i>
+                    </button>
+                        </div>
+                            <form id="motorcycleForm" class="space-y-4">
+                            <div>
+                                <label for="placa" class="block text-sm font-medium text-gray-700 mb-1">Placa</label>
+                                <input type="text" id="placa" name="placa" class="w-full px-3 py-2 border border-gray-300 rounded-button focus:ring-primary focus:outline-none" required>
+                            </div>
+                            <div>
+                                <label for="marca" class="block text-sm font-medium text-gray-700 mb-1">Marca</label>
+                                <select id="marca" name="marca" class="w-full px-3 py-2 border border-gray-300 rounded-button" required>
+                                <option value="">Seleccione una marca</option>
+                                <?php if (!empty($marca)): ?>
+                                    <?php foreach ($marca as $m): ?>
+                                    <option value="<?= esc($m['idmarca']) ?>"><?= esc($m['marca']) ?></option>
+                                    <?php endforeach; ?>
+                                <?php endif; ?>
+                                </select>
+                            </div>
+                            <div>
+                                <label for="modelo" class="block text-sm font-medium text-gray-700 mb-1">Modelo</label>
+                                <input type="text" id="modelo" name="modelo" class="w-full px-3 py-2 border border-gray-300 rounded-button focus:ring-primary focus:outline-none" required>
+                            </div>
+                            <div>
+                                <label for="anio" class="block text-sm font-medium text-gray-700 mb-1">Año</label>
+                                <input type="number" id="anio" name="anio" class="w-full px-3 py-2 border border-gray-300 rounded-button focus:ring-primary focus:outline-none" min="1900" max="<?= date('Y') + 1 ?>" required>
+                            </div>
+                            <div>
+                                <label for="kilometraje" class="block text-sm font-medium text-gray-700 mb-1">Kilometraje / Motor</label>
+                                <input type="text" id="kilometraje" name="kilometraje" class="w-full px-3 py-2 border border-gray-300 rounded-button focus:ring-primary focus:outline-none" required>
+                            </div>
+
+                            <div>
+                                <label for="idagencia" class="block text-sm font-medium text-gray-700 mb-1">Agencia</label>
+                                <select id="idagencia" name="idagencia" class="w-full px-3 py-2 border border-gray-300 rounded-button"> <option value="">Seleccione una agencia</option>
+                                <?php if (!empty($agencia)): ?>
+                                    <?php foreach ($agencia as $a):?>
+                                    <option value="<?= esc($a['idagencia']) ?>"><?= esc($a['agencia']) ?></option>
+                                    <?php endforeach; ?>
+                                <?php endif; ?>
+                                </select>
+                            </div>
+
+                            <div>
+                                <label for="idestado" class="block text-sm font-medium text-gray-700 mb-1">Estado</label>
+                                <select id="idestado" name="idestado" class="w-full px-3 py-2 border border-gray-300 rounded-button" required>
+                                <option value="">Seleccione un estado</option>
+                                <?php if (!empty($estado)):?>
+                                    <?php foreach ($estado as $e): ?>
+                                    <option value="<?= esc($e['idestado']) ?>"><?= esc($e['estado']) ?></option>
+                                    <?php endforeach; ?>
+                                <?php endif; ?>
+                                </select>
+                            </div>
+                            <input type="hidden" id="creadopor" name="creadopor" value="<?= esc($logged_in_user_id ?? '') ?>">
+                            <div class="flex justify-end space-x-2 pt-2">
+                                <button type="button" id="cancelAddMotorcycle" class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-button hover:text-white hover:bg-secondary">Cancelar</button>
+                                <button type="submit" class="px-4 py-2 text-sm font-medium text-white bg-primary rounded-button hover:text-white hover:bg-secondary">Guardar</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+
+            <a href="#" class="bg-white p-4 rounded-lg shadow-sm border border-gray-200 hover:border-yellow-600 transition-all flex flex-col items-center text-center">
                 <div class="bg-yellow-100 p-3 rounded-full mb-3">
                     <i class="ri-file-chart-line text-yellow-600 text-2xl"></i>
                 </div>
@@ -493,97 +570,208 @@
 </main>
 
 <script>
-    // Smooth scrolling for anchor links
-
-    
     document.addEventListener('DOMContentLoaded', () => {
-        const userForm = document.getElementById('userForm');
 
-        if (userForm) {
-            userForm.addEventListener('submit', function (e) {
-            e.preventDefault();
+        // --- Funciones de Ayuda (Helpers) ---
+        // Definidas una sola vez para este script
+        const showModal = (modalElement) => {
+            if (modalElement) { // Verifica si el elemento existe antes de manipularlo
+                modalElement.classList.remove('hidden');
+            }
+        };
+        const hideModal = (modalElement) => {
+            if (modalElement) { // Verifica si el elemento existe antes de manipularlo
+                modalElement.classList.add('hidden');
+            }
+        };
+        const showAlert = (message, isError = false) => {
+            // Considera usar una librería de alertas más amigable (ej. SweetAlert2)
+            alert(message);
+        };
 
-            const data = {
-                name: document.getElementById('name').value.trim(),
-                usuario: document.getElementById('usuario').value.trim(),
-                password: document.getElementById('password').value,
-                email: document.getElementById('email').value.trim(),
-                dui: document.getElementById('dui').value.trim(),
-                estado: document.getElementById('estado').value,
-                role: document.getElementById('role').value
-            };
+        // --- Lógica para la Modal de AGREGAR USUARIO ---
+        const addUserButton = document.getElementById('addUserButton');
+        const addUserModal = document.getElementById('addUserModal');
+        const closeModalButton = document.getElementById('closeModalButton');
+        const cancelAddUser = document.getElementById('cancelAddUser');
+        const userForm = document.getElementById('userForm'); // Solo una definición
 
-            fetch('/usuarios/ajax-add', {
-                method: 'POST',
-                headers: {
-                'Content-Type': 'application/json',
-                'X-Requested-With': 'XMLHttpRequest'
-                },
-                body: JSON.stringify(data)
-            })
-            .then(res => res.json())
-            .then(response => {
-                if (response.status === 'ok') {
-                alert('Usuario agregado correctamente');
-                userForm.reset();
-                document.getElementById('addUserModal')?.classList.add('hidden');
-                } else {
-                alert(response.error || 'Error al agregar usuario.');
-                }
-            })
-            .catch(err => {
-                console.error('Error de red o servidor:', err);
-                alert('Error al enviar los datos.');
-            });
+        if (addUserButton && addUserModal) {
+            addUserButton.addEventListener('click', function () {
+                showModal(addUserModal);
+                userForm?.reset(); // Limpiar formulario al abrir
             });
         }
-    });
 
+        if (closeModalButton && addUserModal) {
+            closeModalButton.addEventListener('click', function () {
+                hideModal(addUserModal);
+                userForm?.reset(); // Limpiar formulario al cerrar
+            });
+        }
 
+        if (cancelAddUser && addUserModal) {
+            cancelAddUser.addEventListener('click', function () {
+                hideModal(addUserModal);
+                userForm?.reset(); // Limpiar formulario al cancelar
+            });
+        }
 
-    
-    const addUserButton = document.getElementById('addUserButton');
-    const addUserModal = document.getElementById('addUserModal');
-    const closeModalButton = document.getElementById('closeModalButton');
-    const cancelAddUser = document.getElementById('cancelAddUser');
-    const userForm = document.getElementById('userForm');
+        // Listener para el submit del formulario de usuario
+        if (userForm) { // Asegúrate de que el formulario exista
+            userForm.addEventListener('submit', function (e) {
+                e.preventDefault();
 
-      if (addUserButton && addUserModal) {
-        addUserButton.addEventListener('click', function () {
-          addUserModal.classList.remove('hidden');
-        });
-      }
+                // Validaciones básicas antes de enviar
+                if (!this.checkValidity()) {
+                    showAlert('Por favor, completa todos los campos requeridos para el usuario.', true);
+                    return;
+                }
 
-      if (closeModalButton && addUserModal) {
-        closeModalButton.addEventListener('click', function () {
-          addUserModal.classList.add('hidden');
-        });
-      }
+                const data = {
+                    name: document.getElementById('name').value.trim(),
+                    usuario: document.getElementById('usuario').value.trim(),
+                    password: document.getElementById('password').value,
+                    email: document.getElementById('email').value.trim(),
+                    dui: document.getElementById('dui').value.trim(),
+                    estado: document.getElementById('estado').value,
+                    role: document.getElementById('role').value
+                };
 
-      if (cancelAddUser && addUserModal) {
-        cancelAddUser.addEventListener('click', function () {
-          addUserModal.classList.add('hidden');
-        });
-      }
-
-      
-
-    
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-        anchor.addEventListener('click', function (e) {
-            e.preventDefault();
-            
-            const targetId = this.getAttribute('href');
-            const targetElement = document.querySelector(targetId);
-            
-            if (targetElement) {
-                window.scrollTo({
-                    top: targetElement.offsetTop - 80,
-                    behavior: 'smooth'
+                fetch('/usuarios/ajax-add', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest'
+                    },
+                    body: JSON.stringify(data)
+                })
+                .then(res => res.json())
+                .then(response => {
+                    if (response.status === 'ok') {
+                        showAlert('Usuario agregado correctamente'); // Cambiado a showAlert
+                        userForm.reset();
+                        hideModal(addUserModal); // Usar hideModal
+                        // location.reload(); // Si quieres recargar la página después de agregar un usuario
+                    } else {
+                        showAlert(response.error || 'Error al agregar usuario.', true); // Cambiado a showAlert
+                    }
+                })
+                .catch(err => {
+                    console.error('Error de red o servidor:', err);
+                    showAlert('Error al enviar los datos del usuario.', true); // Cambiado a showAlert
                 });
-            }
+            });
+        }
+
+        // --- Lógica para la Modal de AGREGAR MOTOCICLETA ---
+        const addMotorcycleModal = document.getElementById('addMotorcycleModal');
+        const dashboardAddMotorcycleButton = document.getElementById('AddMotorcycleButton'); // ID del botón de tu dashboard
+        const closeAddMotorcycleModal = document.getElementById('closeAddMotorcycleModal');
+        const cancelAddMotorcycle = document.getElementById('cancelAddMotorcycle');
+        const motorcycleForm = document.getElementById('motorcycleForm');
+
+        // Listener para abrir la modal con el botón del dashboard
+        if (dashboardAddMotorcycleButton && addMotorcycleModal) {
+            dashboardAddMotorcycleButton.addEventListener('click', () => {
+                showModal(addMotorcycleModal);
+                motorcycleForm?.reset(); // Limpiar formulario al abrir
+            });
+        }
+
+
+        // Listeners para cerrar/cancelar la modal
+        if (closeAddMotorcycleModal && addMotorcycleModal) {
+            closeAddMotorcycleModal.addEventListener('click', () => {
+                hideModal(addMotorcycleModal);
+                motorcycleForm?.reset();
+            });
+        }
+        if (cancelAddMotorcycle && addMotorcycleModal) {
+            cancelAddMotorcycle.addEventListener('click', () => {
+                hideModal(addMotorcycleModal);
+                motorcycleForm?.reset();
+            });
+        }
+
+        // Cerrar modal al hacer clic fuera de ella
+        if (addMotorcycleModal) { // Asegúrate de que la modal exista
+            addMotorcycleModal.addEventListener('click', (event) => {
+                if (event.target === addMotorcycleModal) {
+                    hideModal(addMotorcycleModal);
+                    motorcycleForm?.reset();
+                }
+            });
+        }
+
+
+        // Listener para el envío del formulario de motocicleta
+        if (motorcycleForm) { // Asegúrate de que el formulario exista
+            motorcycleForm.addEventListener('submit', async function (e) {
+                e.preventDefault();
+
+                if (!this.checkValidity()) {
+                    showAlert('Por favor, completa todos los campos requeridos para la motocicleta y asegúrate de que el formato sea correcto.', true);
+                    return;
+                }
+
+                const data = {
+                placa: this.placa.value,
+                marca: this.marca.value, // CAMBIO: De 'idmarca' a 'marca'
+                modelo: this.modelo.value,
+                anio: this.anio.value, // CAMBIO: De 'año' a 'anio'
+                kilometraje: this.kilometraje.value, // CAMBIO: De 'Motor' a 'kilometraje'
+                idestado: this.idestado.value,
+                creado_por: this.creadopor.value,
+                idagencia: this.idagencia.value || null,
+};
+
+                try {
+                    const response = await fetch('/motocicletas/createViaAjax', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-Requested-With': 'XMLHttpRequest'
+                        },
+                        body: JSON.stringify(data)
+                    });
+
+                    const res = await response.json();
+
+                    if (!response.ok) {
+                        const errorMessage = res.messages?.error || res.error || 'Error desconocido al agregar motocicleta.';
+                        throw new Error(errorMessage);
+                    }
+
+                    showAlert('Motocicleta agregada exitosamente.');
+                    hideModal(addMotorcycleModal);
+                    motorcycleForm.reset();
+                    location.reload(); // Recargar la página para ver el cambio reflejado
+
+                } catch (error) {
+                    showAlert(`Error al agregar motocicleta: ${error.message}`, true);
+                }
+            });
+        }
+
+        // --- Lógica para el Scroll Suave (si aún la necesitas) ---
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+
+                const targetId = this.getAttribute('href');
+                const targetElement = document.querySelector(targetId);
+
+                if (targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 80, // Ajusta si es necesario
+                        behavior: 'smooth'
+                    });
+                }
+            });
         });
-    });
+
+    }); // Cierre de DOMContentLoaded
 </script>
 
 </body>

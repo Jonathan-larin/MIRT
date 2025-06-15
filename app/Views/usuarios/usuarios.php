@@ -90,19 +90,19 @@
                     
                 <div class="relative group">
                     <button>
-                        <a href="/inventario"
+                        <a href="/motocicletas"
                         class="flex items-center px-3 py-2 text-sm font-medium text-white hover:text-white hover:bg-secondary rounded whitespace-nowrap !rounded-button">
                             <div class="w-5 h-5 flex items-center justify-center mr-1.5">
-                                <i class="ri-stack-line"></i>
+                                <i class="ri-motorbike-line"></i>
                             </div>
-                            Inventario
+                            Motocicletas
                         </a>                        
                     </button> 
                 </div>
                     
                 <div class="relative group">
                     <button>
-                        <a href="/clientes"
+                        <a href="#"
                         class="flex items-center px-3 py-2 text-sm font-medium text-white hover:text-white hover:bg-secondary rounded whitespace-nowrap !rounded-button">
                             <div class="w-5 h-5 flex items-center justify-center mr-1.5">
                                 <i class="ri-money-dollar-circle-line"></i>
@@ -147,9 +147,14 @@
                         <div class="w-8 h-8 bg-secondary rounded-full flex items-center justify-center text-white">
                             <i class="ri-user-line"></i>
                         </div>
-                        <span class="text-sm font-medium text-white hidden md:block">Admin</span>
+                        <span class="text-sm font-medium text-white hidden md:block">
+                            <?php
+                            $session = session();                            
+                            echo esc($session->get('nombre') ?: 'Invitado');
+                            ?>
+                        </span>
                         <div class="w-4 h-4 flex items-center justify-center">
-                            <i class="ri-arrow-down-s-line"></i>
+                            <i class="ri-arrow-down-s-line" style="color: white;"></i>
                         </div>
                     </button>
                     <div
@@ -164,7 +169,7 @@
                         </a>                        
                         <div class="border-t border-gray-100 my-1"></div>
 
-                        <a href="login.html" class="flex items-center px-4 py-2 text-sm text-red-600 hover:text-white hover:bg-secondary">
+                        <a href="/logout" class="flex items-center px-4 py-2 text-sm text-red-600 hover:text-white hover:bg-secondary">
                             <div class="w-4 h-4 flex items-center justify-center mr-2">
                                 <i class="ri-logout-box-r-line"></i>
                             </div>
@@ -284,8 +289,8 @@
               </select>
             </div>
             <div class="flex justify-end space-x-2 pt-2">
-              <button type="button" id="cancelAddUser" class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-button hover:bg-gray-200">Cancelar</button>
-              <button type="submit" class="px-4 py-2 text-sm font-medium text-white bg-primary rounded-button hover:bg-secondary">Guardar</button>
+              <button type="button" id="cancelAddUser" class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-button hover:text-white hover:bg-secondary">Cancelar</button>
+              <button type="submit" class="px-4 py-2 text-sm font-medium text-white bg-primary rounded-button hover:text-white hover:bg-secondary">Guardar</button>
             </div>
           </form>
         </div>
@@ -296,6 +301,7 @@
     
       <div class="bg-white p-6 rounded shadow">
         <h2 class="text-xl font-bold mb-4">Lista de Usuarios</h2>
+        <div class="overflow-x-auto">
         <table class="min-w-full divide-y divide-gray-200">
           <thead>
             <tr>
@@ -337,7 +343,9 @@
             <?php endforeach; ?>
           </tbody>
         </table>
-      </div>
+        </div>
+        
+          
 
       <!-- Detalles de usuario -->
       <div id="userDetailModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
@@ -378,10 +386,10 @@
 
           <!-- Modal Footer -->
           <div class="flex justify-end space-x-2 mt-6">
-            <button id="editUserButton" data-user-id="" class="px-4 py-2 text-sm font-medium text-white bg-primary rounded-button hover:bg-primary/90">
+            <button id="editUserButton" data-user-id="" class="px-4 py-2 text-sm font-medium text-white bg-primary rounded-button hover:text-white hover:bg-secondary">
               Editar
             </button>
-            <button id="closeDetailButton" class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-button hover:bg-gray-200">
+            <button id="closeDetailButton" class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-button hover:text-white hover:bg-secondary">
               Cerrar
             </button>
           </div>
@@ -440,8 +448,8 @@
             </div>
 
             <div class="flex justify-end space-x-2 pt-2">
-              <button type="button" id="cancelEditUser" class="px-4 py-2 text-sm bg-gray-100 rounded-button">Cancelar</button>
-              <button type="submit" class="px-4 py-2 text-sm bg-primary text-white rounded-button hover:bg-secondary">Guardar</button>
+              <button type="button" id="cancelEditUser" class="px-4 py-2 text-sm bg-gray-100 rounded-button hover:text-white hover:bg-secondary">Cancelar</button>
+              <button type="submit" class="px-4 py-2 text-sm bg-primary text-white rounded-button hover:text-white hover:bg-secondary">Guardar</button>
             </div>
           </form>
 
@@ -573,8 +581,6 @@
           .catch(err => alert(err.message));
       });
     });
-
-
   </script>
 </body>
 

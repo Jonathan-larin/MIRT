@@ -84,19 +84,19 @@
                     
                 <div class="relative group">
                     <button>
-                        <a href="/inventario"
+                        <a href="/motocicletas"
                         class="flex items-center px-3 py-2 text-sm font-medium text-white hover:text-white hover:bg-secondary rounded whitespace-nowrap !rounded-button">
                             <div class="w-5 h-5 flex items-center justify-center mr-1.5">
-                                <i class="ri-stack-line"></i>
+                                <i class="ri-motorbike-line"></i>
                             </div>
-                            Inventario
+                            Motocicletas
                         </a>                        
                     </button> 
                 </div>
                     
                 <div class="relative group">
                     <button>
-                        <a href="/clientes"
+                        <a href="#"
                         class="flex items-center px-3 py-2 text-sm font-medium text-white hover:text-white hover:bg-secondary rounded whitespace-nowrap !rounded-button">
                             <div class="w-5 h-5 flex items-center justify-center mr-1.5">
                                 <i class="ri-money-dollar-circle-line"></i>
@@ -141,9 +141,15 @@
                         <div class="w-8 h-8 bg-secondary rounded-full flex items-center justify-center text-white">
                             <i class="ri-user-line"></i>
                         </div>
-                        <span class="text-sm font-medium text-white hidden md:block">Admin</span>
+                        <span class="text-sm font-medium text-white hidden md:block">
+                            <?php
+                            $session = session();
+                            // This will now correctly retrieve the 'nombre' from the session
+                            echo esc($session->get('nombre') ?: 'Invitado');
+                            ?>
+                        </span>
                         <div class="w-4 h-4 flex items-center justify-center">
-                            <i class="ri-arrow-down-s-line"></i>
+                            <i class="ri-arrow-down-s-line" style="color: white;"></i>
                         </div>
                     </button>
                     <div
@@ -158,7 +164,7 @@
                         </a>                        
                         <div class="border-t border-gray-100 my-1"></div>
 
-                        <a href="login.html" class="flex items-center px-4 py-2 text-sm text-red-600 hover:text-white hover:bg-secondary">
+                        <a href="/logout" class="flex items-center px-4 py-2 text-sm text-red-600 hover:text-white hover:bg-secondary">
                             <div class="w-4 h-4 flex items-center justify-center mr-2">
                                 <i class="ri-logout-box-r-line"></i>
                             </div>
@@ -217,14 +223,16 @@
         <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8">
             <h1 class="text-2xl md:text-3xl font-bold text-gray-900">Panel de Control</h1>
             <div class="flex items-center space-x-2">
-                <span class="text-sm text-gray-500">27 de Mayo, 2025</span>
-                <button
+                <div class="mt-4 md:mt-0 bg-white px-4 py-2 rounded-lg shadow-sm border border-gray-200">
+                    <span class="text-sm text-gray-700 font-medium"><?= $current_date ?></span>
+                </div>
+                <!-- <button
                     class="bg-primaryb text-white px-4 py-2 rounded-button hover:bg-secondary transition-all duration-200 flex items-center whitespace-nowrap !rounded-button">
                     <div class="w-4 h-4 flex items-center justify-center mr-1.5">
                         <i class="ri-add-line"></i>
                     </div>
                     Nueva Entrada
-                </button>
+                </button> -->
             </div>
         </div>
 

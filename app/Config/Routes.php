@@ -22,11 +22,24 @@ $routes->put('usuarios/update/(:num)', 'Usuarios::updateUser/$1');
 
 
 $routes->resource('usuarios');
-$routes->resource('motos');
+//$routes->resource('motos');
 
+
+$routes->get('motocicletas', 'Motocicletas::index');
+$routes->post('motocicletas/createViaAjax', 'Motocicletas::createViaAjax');
+// Para las funcionalidades futuras
+$routes->get('motocicletas/details/(:num)', 'Motocicletas::details/$1');
+$routes->put('motocicletas/update/(:num)', 'Motocicletas::update/$1');
+$routes->delete('motocicletas/delete/(:num)', 'Motocicletas::delete/$1');
+
+$routes->get('motocicletas/details/(:segment)', 'Motocicletas::getMotocicletaDetails/$1');
+$routes->post('motocicletas/update/(:segment)', 'Motocicletas::update/$1');
+$routes->delete('motocicletas/delete/(:segment)', 'Motocicletas::delete/$1');
 
 
 // $routes->get('/dashboard', 'Dashboard::index', ['filter' => 'auth']);
-$routes->set404Override(function() {
-    return redirect()->to('/login');
+$routes->set404Override(function($message = null) {
+    $response = service('response');
+    $response->setStatusCode(404);
+    return view('errors/html/error_404', ['message' => $message]);
 });
