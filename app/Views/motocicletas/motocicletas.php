@@ -582,7 +582,7 @@
       const showModal = (modalElement) => modalElement.classList.remove('hidden');
       const hideModal = (modalElement) => modalElement.classList.add('hidden');
       const showAlert = (message, isError = false) => {
-          // Implementa tu lógica de alerta, por ahora un simple alert
+          // Implementa lógica de alerta
           alert(message);
       };
 
@@ -624,10 +624,10 @@
           
           idagencia: this.idagencia.value || null
 
-          // Agrega otros campos que sean NOT NULL en tu DB pero no estén en el formulario,
+          // Agregar otros campos que sean NOT NULL en DB pero no estén en el formulario,
           // dándoles un valor por defecto o nulo si lo permiten.
-          // Por ejemplo:
-          // chasis: null, // o this.chasis.value si tienes un campo para ello
+          // 
+          // chasis: null, // o this.chasis.value 
           // idcliente: null,
           // Sucursal: null,
           // color: null,
@@ -671,17 +671,15 @@
       });
 
       const populateEditForm = (data) => {
-        // Hidden field for primary key
+        // campo oculto para la placa
         document.getElementById('editMotorcyclePlacaHidden').value = data.placa;
-        // Visible fields
-        document.getElementById('editPlaca').value = data.placa || ''; // Placa is readonly
+        // campos del formulario de edición
+        document.getElementById('editPlaca').value = data.placa || ''; // Placa es solo lectura
         document.getElementById('editMarca').value = data.idmarca || '';
         document.getElementById('editModelo').value = data.modelo || '';
         document.getElementById('editAnio').value = data.año || '';
         document.getElementById('editMotor').value = data.Motor || '';
         document.getElementById('editEstado').value = data.idestado || '';
-        document.getElementById('editAgencia').value = data.idagencia || '';
-
         document.getElementById('editChasis').value = data.chasis || '';
         document.getElementById('editIdCliente').value = data.idcliente || '';
         document.getElementById('editColor').value = data.color || '';
@@ -694,12 +692,12 @@
         document.getElementById('editRentaSinIva').value = data.renta_sinIva || '';
         document.getElementById('editRentaConIva').value = data.renta_conIva || '';
         document.getElementById('editNAF').value = data.naf || '';
-        // ... populate all other fields
+        // ... otros campos
     };
 
       // VER DETALLES DE MOTOCICLETA
 
-      // Eventos para botones de ver motocicleta (descomentar y completar lógica)
+      // Eventos para botones de ver motocicleta
       document.querySelector('table tbody').addEventListener('click', async (event) => {
         const viewButton = event.target.closest('.view-motorcycle');
         if (viewButton) {
@@ -707,7 +705,7 @@
             currentMotorcyclePlaca = placa; 
 
             try {
-                // Make an AJAX request to the new controller method
+                // Hace una solicitud para obtener los detalles de la motocicleta
                   const response = await fetch(`/motocicletas/details/${placa}`, {
                   headers: {
                       'X-Requested-With': 'XMLHttpRequest'
@@ -716,7 +714,7 @@
                 const data = await response.json();
 
                 if (response.ok) {
-                    // Populate the detail modal with fetched data
+                    // Muestra los detalles en el modal
                     document.getElementById('detailMotorcyclePlaca').textContent = data.placa || 'N/A';
                     document.getElementById('detailMotorcycleMarca').textContent = data.nombre_marca || 'N/A';
                     document.getElementById('detailMotorcycleModelo').textContent = data.modelo || 'N/A';
@@ -725,8 +723,7 @@
                     document.getElementById('detailMotorcycleEstado').textContent = data.nombre_estado || 'N/A';
                     document.getElementById('detailMotorcycleAgencia').textContent = data.nombre_agencia || 'N/A';
                     
-                    // Populate other fields for the detail modal.
-                    // Make sure your motorcycleDetailModal HTML has corresponding <span> elements with these exact IDs!
+                    // Los demas campos
                     document.getElementById('detailMotorcycleChasis').textContent = data.chasis || 'N/A';
                     document.getElementById('detailMotorcycleIdCliente').textContent = data.idcliente || 'N/A';
                     document.getElementById('detailMotorcycleColor').textContent = data.color || 'N/A';
@@ -739,10 +736,10 @@
                     document.getElementById('detailMotorcycleRentaConIva').textContent = data.renta_conIva || 'N/A';
                     document.getElementById('detailMotorcycleNAF').textContent = data.naf || 'N/A';
 
-                    // Show the detail modal
+                    // Muestra el modal con los detalles
                     showModal(motorcycleDetailModal);
                 } else {
-                    // Handle server-side errors
+                    // Maneja errores en servidor
                     showAlert(`Error al cargar detalles: ${data.message || 'Error desconocido'}`, true);
                 }
             } catch (error) {
@@ -752,17 +749,17 @@
         }
     });
 
-    // Event for closing the Detail Modal
+    // Evento para cerrar el modal de detalles
     const closeDetailModalBtn = document.getElementById('closeDetailModalBtn'); // Ensure this ID exists in your modal HTML
     closeDetailModalBtn?.addEventListener('click', () => hideModal(motorcycleDetailModal));
 
-    // Close Detail Modal when clicking the SVG 'X' button in the header
+    // Evento para cerrar el modal de detalles con la X
     closeDetailModalXBtn?.addEventListener('click', () => {
         hideModal(motorcycleDetailModal);
-        currentMotorcyclePlaca = null; // Clear stored placa
+        currentMotorcyclePlaca = null; // limpiar la placa actual
     });
 
-    // Optional: Close Detail Modal when clicking outside of it
+    // Cerrar el modal de detalles al hacer clic fuera del contenido
     motorcycleDetailModal?.addEventListener('click', (event) => {
         if (event.target === motorcycleDetailModal) {
             hideModal(motorcycleDetailModal);
@@ -774,10 +771,10 @@
         const editButton = event.target.closest('.edit-motorcycle');
         if (editButton) {
             const placa = editButton.dataset.motorcycleId;
-            currentMotorcyclePlaca = placa; // Store the placa
+            currentMotorcyclePlaca = placa; //Almacena la placa actual para usarla en los modals
 
             try {
-                // Fetch motorcycle data specifically for editing
+                // Obtener los datos de la motocicleta para editar
                 const response = await fetch(`/motocicletas/details/${placa}`, {
                     headers: {
                         'X-Requested-With': 'XMLHttpRequest'
@@ -786,8 +783,8 @@
                 const data = await response.json();
 
                 if (response.ok) {
-                    populateEditForm(data); // Populate the edit form
-                    showModal(editMotorcycleModal); // Show the edit modal
+                    populateEditForm(data); // Llena el formulario de edición con los datos obtenidos
+                    showModal(editMotorcycleModal); // Mostrar el modal de edición
                 } else {
                     showAlert(`Error al cargar datos para edición: ${data.message || 'Error desconocido'}`, true);
                 }
@@ -801,10 +798,10 @@
 
       editFromDetailModalBtn?.addEventListener('click', async () => {
           if (currentMotorcyclePlaca) {
-              hideModal(motorcycleDetailModal); // Close the detail modal
+              hideModal(motorcycleDetailModal); // Cierra el modal de detalles antes de abrir el de edición
 
               try {
-                  // Fetch motorcycle data specifically for editing (reusing details method)
+                  // Obtiene los datos de la motocicleta para editar
                   const response = await fetch(`/motocicletas/details/${currentMotorcyclePlaca}`, {
                       headers: {
                           'X-Requested-With': 'XMLHttpRequest'
@@ -813,8 +810,8 @@
                   const data = await response.json();
 
                   if (response.ok) {
-                      populateEditForm(data); // Populate the edit form
-                      showModal(editMotorcycleModal); // Show the edit modal
+                      populateEditForm(data); // LLena el formulario de edición con los datos obtenidos
+                      showModal(editMotorcycleModal); // Muestra el modal de edición
                   } else {
                       showAlert(`Error al cargar datos para edición: ${data.message || 'Error desconocido'}`, true);
                   }
@@ -832,7 +829,7 @@
     editMotorcycleForm?.addEventListener('submit', async function (e) {
         e.preventDefault();
 
-        // Basic HTML5 validation
+        // Validación básica de HTML5
         if (!this.checkValidity()) {
             showAlert('Por favor, completa todos los campos requeridos y asegúrate de que el formato sea correcto.', true);
             return;
@@ -844,9 +841,9 @@
             return;
         }
 
-        // Collect all form data for the update
+        // Obtiene los valores de los campos del formulario de edición
         const data = {
-            // No need to send placa again as it's in the URL for update method
+            
             idmarca: this.editMarca.value,
             modelo: this.editModelo.value,
             año: this.editAnio.value,
@@ -865,14 +862,11 @@
             renta_sinIva: this.editRentaSinIva.value || null,
             renta_conIva: this.editRentaConIva.value || null,
             naf: this.editNAF.value || null,
-            // 'creado_por' and 'activo' usually not updated here, but include if needed
-            // creado_por: this.editCreadoPor.value,
-            // activo: this.editActivo.checked, // For a checkbox
         };
 
         try {
             const response = await fetch(`/motocicletas/update/${placaToUpdate}`, {
-                method: 'POST', // Or 'PUT' if your backend framework supports it and you prefer RESTful semantics
+                method: 'POST', 
                 headers: {
                     'Content-Type': 'application/json',
                     'X-Requested-With': 'XMLHttpRequest'
@@ -889,9 +883,7 @@
 
             showAlert('Motocicleta actualizada exitosamente.');
             hideModal(editMotorcycleModal);
-            // Optionally reset the form if it's reused, but closing it often suffices
-            // editMotorcycleForm.reset();
-            location.reload(); // Reload the page to show updated data
+            location.reload();
 
         } catch (error) {
             showAlert(`Error al actualizar motocicleta: ${error.message}`, true);
@@ -899,24 +891,24 @@
     });
     
 
-        // Close Edit Modal when clicking the SVG 'X' button
+        // Cerrar el modal de edición al hacer clic en la X
     closeEditMotorcycleModalXBtn?.addEventListener('click', () => {
           hideModal(editMotorcycleModal);
-          // Optionally reset form if needed
+          // Reset form
           editMotorcycleForm.reset();
       });
 
-    // Close Edit Modal when clicking outside of it
+    // Cerrar el modal de edición al hacer clic fuera del contenido
     editMotorcycleModal?.addEventListener('click', (event) => {
           if (event.target === editMotorcycleModal) {
               hideModal(editMotorcycleModal);
-              // Reset form on clicking outside
+              // Reset form
               editMotorcycleForm.reset();
           }
       });
 
 
-      // Eventos para eliminar motocicleta (descomentar y completar lógica)
+      // Eventos para eliminar motocicleta
       document.querySelectorAll('.delete-motorcycle').forEach(button => {
         button.addEventListener('click', async (e) => {
           const motorcycleId = e.currentTarget.dataset.motorcycleId;
@@ -953,7 +945,7 @@
         });
       });
 
-      // Eventos para cerrar los modales de detalle y edición (cuando se implementen completamente)
+      // Eventos para cerrar los modales de detalle y edición
       document.getElementById('closeDetailMotorcycleModalButton')?.addEventListener('click', () => hideModal(motorcycleDetailModal));
       document.getElementById('closeDetailMotorcycleButton')?.addEventListener('click', () => hideModal(motorcycleDetailModal));
       document.getElementById('closeEditMotorcycleModal')?.addEventListener('click', () => hideModal(editMotorcycleModal));

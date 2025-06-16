@@ -44,7 +44,7 @@ class Motocicletas extends BaseController
 
         // Variables adicionales que la vista pueda necesitar
         $data['current_date'] = date('d/m/Y');
-        // REMOVIDO: Cualquier lógica relacionada con $this->usuarioModel aquí
+        
         $data['logged_in_user_id'] = session()->get('idUsuario');
         $data['logged_in_username'] = session()->get('nombreUsuario');
 
@@ -131,13 +131,13 @@ class Motocicletas extends BaseController
 
     public function getMotocicletaDetails($placa)
     {
-        // Ensure the request is an AJAX request for security, or handle it as needed
+        // Aegurarse de que la solicitud es AJAX
         if (!$this->request->isAJAX()) {
-            // If it's not an AJAX request, you might want to redirect or show an error
+            // Si no es una solicitud AJAX, retornar un error 401 Unauthorized
             return $this->failUnauthorized('Acceso no autorizado.');
         }
 
-        // Fetch the motorcycle details, joining related tables
+        // Obtener los detalles de la motocicleta por placa
         $motocicleta = $this->motocicletaModel
                             ->select('motos.*, marca.marca AS nombre_marca, estado.estado AS nombre_estado, agencia.agencia AS nombre_agencia')
                             ->join('marca', 'marca.idmarca = motos.idmarca')
@@ -146,53 +146,60 @@ class Motocicletas extends BaseController
                             ->find($placa); // Use the primary key to find the specific motorcycle
 
         if ($motocicleta) {
-            // Return the motorcycle data as JSON
+            // Retornar los detalles de la motocicleta como respuesta JSON
             return $this->respond($motocicleta);
         } else {
-            // If motorcycle not found, return a 404 error
+            // Si la motocicleta no se encuentra, retornar un error 404 Not Found
             return $this->failNotFound('Motocicleta no encontrada.');
         }
     }
 
     public function update($placa)
     {
-        // Ensure it's an AJAX request and a POST (or PUT/PATCH for RESTful APIs)
+        // Asegurarse de que la solicitud es AJAX y es un método POST
         if (!$this->request->isAJAX() || !$this->request->is('post')) {
             return $this->failUnauthorized('Acceso no autorizado o método no permitido.');
         }
 
-        // Get JSON data from the request body
-        $data = $this->request->getJSON(true); // true to get associative array
+        // Obtener los datos del cuerpo de la solicitud
+        $data = $this->request->getJSON(true); // verdadero para obtener un array asociativo
 
-        // Validate the incoming data (adjust rules as per your MotocicletaModel)
+        // Validar los datos recibidos)
         if (!$this->motocicletaModel->validate($data)) {
             return $this->failValidationErrors($this->motocicletaModel->errors());
         }
 
-        // Attempt to update the motorcycle
-        // The primary key ($placa) is passed to the update method
+        // Intentar actualizar la motocicleta
         if ($this->motocicletaModel->update($placa, $data)) {
             return $this->respondUpdated(['message' => 'Motocicleta actualizada exitosamente.', 'placa' => $placa]);
         } else {
-            // This case might be hit if update fails for other reasons (e.g., DB constraint)
+            // Si la actualización falla, retornar un error 500 Internal Server Error
             return $this->failServerError('No se pudo actualizar la motocicleta. Intente de nuevo.');
         }
     }
 
     public function delete($placa = null)
     {
-        // Optional: Basic security check (e.g., ensure it's an AJAX request)
+        // Asegurarse de que la solicitud es AJAX
         if (!$this->request->isAJAX()) {
             return $this->failUnauthorized('Acceso no autorizado para eliminar.');
         }
+
+        // Validar que se ha proporcionado una placa
 
         if ($placa === null) {
             return $this->failNotFound('No se especificó la placa de la motocicleta a eliminar.');
         }
 
+        // Verificar si la motocicleta existe
+
         if ($this->motocicletaModel->delete($placa)) {
             return $this->respondDeleted(['message' => 'Motocicleta eliminada exitosamente.']);
-        } else {
+        } 
+        
+        // Si la motocicleta no se pudo eliminar, verificar si existe
+        
+        else {
             return $this->failServerError('No se pudo eliminar la motocicleta. Podría no existir o tener dependencias.');
         }
     }

@@ -11,19 +11,27 @@ class Usuarios extends BaseController
         $this->usuarioModel = new UsuarioModel();
     }
 
+    // Muestra la lista de usuarios
+
     public function index()
     {
         $data['usuarios'] = $this->usuarioModel->findAll();
         return view('usuarios/index', $data);
     }
 
+    // Muestra el formulario de creación de usuario
+
     public function create()
     {
         return view('usuarios/create');
     }
 
+    // Maneja la creación de un nuevo usuario
+
     public function store()
     {
+        // Validación de los campos del formulario
+        
         $rules = [
             'nombre'   => 'required|min_length[3]',
             'user'     => 'required|is_unique[usuario.user]',
@@ -55,14 +63,20 @@ class Usuarios extends BaseController
         }
     }
 
+    // Muestra el formulario de edición de usuario
+
     public function edit($id)
     {
         $data['usuario'] = $this->usuarioModel->find($id);
         return view('usuarios/edit', $data);
     }
 
+    // Maneja la actualización de un usuario existente
+
     public function update($id)
     {
+        // Validación de los campos del formulario
+        
         $rules = [
             'nombre' => 'required|min_length[3]',
             'correo' => 'required|valid_email',
@@ -87,11 +101,7 @@ class Usuarios extends BaseController
         return redirect()->to('/usuarios')->with('success', 'Usuario actualizado correctamente.');
     }
 
-    /*public function delete($id)
-    {
-        $this->usuarioModel->delete($id);
-        return redirect()->to('/usuarios')->with('success', 'Usuario eliminado.');
-    }*/
+    // Maneja la eliminación de un usuario
 
     public function delete($id)
     {
@@ -99,10 +109,10 @@ class Usuarios extends BaseController
         return $this->response->setJSON(['status' => 'ok']);
     }
 
+    // Maneja la creación de un usuario vía AJAX
 
     public function createViaAjax()
-    {
-        // Parse JSON
+    {        
         $input = $this->request->getJSON(true) ?? [];
 
         // Validar campos
@@ -145,6 +155,8 @@ class Usuarios extends BaseController
 
         return $this->response->setJSON($user);
     }
+
+    // Muestra la lista de usuarios con formato de fecha
     
     public function usuarios()
     {
@@ -157,9 +169,10 @@ class Usuarios extends BaseController
         return view('usuarios/usuarios', $data);
     }
 
+    // Maneja la creación de un usuario vía AJAX (segunda aplicacion)
+
     public function createViaAjax2()
-    {
-        // Parse JSON
+    {        
         $input = $this->request->getJSON(true) ?? [];
 
         // Validar campos
@@ -191,6 +204,8 @@ class Usuarios extends BaseController
 
         return $this->response->setJSON(['status' => 'ok']);
     }
+
+    // Actualiza un usuario existente vía AJAX
 
     public function updateUser($id)
     {

@@ -4,23 +4,23 @@ use CodeIgniter\Model;
 
 class AgenciaModel extends Model
 {
-    protected $table      = 'agencia';          // Matches your table name
-    protected $primaryKey = 'idagencia';        // Matches your primary key field
+    protected $table      = 'agencia';    
+    protected $primaryKey = 'idagencia';
 
-    protected $useAutoIncrement = true;       // idagencia is auto_increment
-    protected $returnType     = 'array';      // Return results as arrays
-    protected $useSoftDeletes = false;        // No 'deleted_at' column in your schema
+    protected $useAutoIncrement = true;
+    protected $returnType     = 'array';
+    protected $useSoftDeletes = false;
 
-    // These are the fields that can be mass-assigned or updated
+    // Estos son los campos que se pueden insertar o actualizar
     protected $allowedFields = [
         'agencia',
         'dirrecion',
         'celular'
     ];
 
-    protected $useTimestamps = false;         // No timestamp columns like created_at/updated_at
-    // protected $createdField  = '';          // Not needed if useTimestamps is false
-    // protected $updatedField  = '';          // Not needed if useTimestamps is false
+    protected $useTimestamps = false;
+    
+    //Reglas de validación para los campos del formulario
 
     protected $validationRules    = [
         'agencia'   => 'required|min_length[3]|max_length[100]|is_unique[agencia.agencia,idagencia,{idagencia}]',

@@ -506,7 +506,7 @@
             location.reload();
           })
           .catch(error => {
-            alert(error.message); // ✅ shows backend error message here
+            alert(error.message);
           });
         });
     });
@@ -516,27 +516,26 @@
       const detailModal = document.getElementById('userDetailModal');
 
       document.getElementById('editUserButton')?.addEventListener('click', () => {
-        // Fetch values from detail modal
+        // Obtener valores de  los detalles del usuario
         const userId = document.getElementById('editUserId')?.value || document.querySelector('.view-user[data-user-id]')?.getAttribute('data-user-id');
 
         const name = document.getElementById('detailName').textContent;
         const email = document.getElementById('detailEmail').textContent;
         const role = document.getElementById('detailRole').textContent;
-        const dui = document.getElementById('detailPhone').textContent; // using as DUI here
+        const dui = document.getElementById('detailPhone').textContent; 
 
         document.getElementById('editUserId').value = userId;
         document.getElementById('editNombre').value = name;
         document.getElementById('editCorreo').value = email;
         document.getElementById('editDui').value = dui;
 
-        // Optional: use stored username if displayed somewhere else
         const username = document.querySelector(`.view-user[data-user-id="${userId}"]`)?.closest('tr')?.querySelector('td:nth-child(2)')?.textContent.trim();
         if (username) {
           document.getElementById('editUsuario').value = username;
         }
 
         document.getElementById('editRol').value = role;
-        document.getElementById('editEstado').value = dui === 'Activo' ? '1' : '0'; // adjust if not using phone
+        document.getElementById('editEstado').value = dui === 'Activo' ? '1' : '0'; 
 
         detailModal.classList.add('hidden');
         editModal.classList.remove('hidden');

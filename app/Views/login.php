@@ -101,7 +101,7 @@
     </div>
 
     <script>
-        // Toggle password visibility
+        // Visibilidad de contraseña
         document.getElementById('togglePassword').addEventListener('click', function () {
             const passwordInput = document.getElementById('password');
             const icon = this.querySelector('i');

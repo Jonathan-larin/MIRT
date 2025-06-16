@@ -29,11 +29,10 @@ class MarcaModel extends Model
     ];
 
     // Configuración de Timestamps:
-    // Habilita el uso de campos de tiempo si quieres que CodeIgniter los gestione automáticamente
+    // Habilita el uso de campos de tiempos para creación y modificación
     protected $useTimestamps = true;
     protected $createdField  = 'fecha_creacion';
     protected $updatedField  = 'fecha_modificacion';
-    // No usamos deletedField si useSoftDeletes es false
 
     // Reglas de validación para el campo 'marca' (nombre de la marca)
     protected $validationRules    = [

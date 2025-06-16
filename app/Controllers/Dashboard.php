@@ -19,7 +19,7 @@ class Dashboard extends BaseController
 
         $rol = $session->get('rol');
 
-        // --- NEW: Instantiate Models and Fetch Data ---
+        // Inicializar los modelos necesarios
         $marcaModel = new MarcaModel();
         $estadoModel = new EstadoModel();
         $agenciaModel = new AgenciaModel();
@@ -27,9 +27,9 @@ class Dashboard extends BaseController
         $marcas = $marcaModel->findAll();
         $estados = $estadoModel->findAll();
         $agencias = $agenciaModel->findAll();
-        // --- END NEW DATA FETCH ---
+        
 
-        // Prepare base data for the view
+        // Preparar los datos para la vista
         $data = [
             'title' => 'Panel de Administrador',
             'nombre' => $session->get('nombre'),
@@ -37,9 +37,9 @@ class Dashboard extends BaseController
             'logged_in_user_id' => $session->get('user_id') // Pass user ID if needed for 'creadopor'
         ];
 
-        // Choose dashboard view based on role
+        // Escoger la vista según el rol del usuario
         if ($rol === 'admin') {
-            // Merge the existing data with the new dropdown data
+            //Unir datos existentes con los nuevos datos de marcas, estados y agencias
             $data = array_merge($data, [
                 'marca' => $marcas,
                 'estado' => $estados,
@@ -48,8 +48,7 @@ class Dashboard extends BaseController
             return view('dashboard/dashboarda', $data);
         }
 
-        // For other roles, if 'dashboard/dashboard' also needs the modals,
-        // you'd need to fetch and pass the data there too.
+        // Informacion para usuarios no administradores
         return view('dashboard/dashboard', [
             'title' => 'Panel de Usuario',
             'nombre' => $session->get('nombre'),

@@ -133,8 +133,6 @@
                     <div class="w-6 h-6 flex items-center justify-center">
                         <i class="ri-notification-3-line"></i>
                     </div>
-                   <!-- <span
-                    class="absolute top-0 right-0 h-4 w-4 bg-red-500 rounded-full text-xs text-white flex items-center justify-center">3</span>-->
                 </button>
                 <div class="relative group">
                     <button class="flex items-center space-x-2">
@@ -144,7 +142,7 @@
                         <span class="text-sm font-medium text-white hidden md:block">
                             <?php
                             $session = session();
-                            // This will now correctly retrieve the 'nombre' from the session
+                            // Obtiene el nombre del usuario de la sesión
                             echo esc($session->get('nombre') ?: 'Invitado');
                             ?>
                         </span>
