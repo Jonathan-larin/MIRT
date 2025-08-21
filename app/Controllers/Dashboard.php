@@ -38,7 +38,10 @@ class Dashboard extends BaseController
         ];
 
         // Escoger la vista según el rol del usuario
-        if ($rol === 'admin') {
+
+        $allowedRoles = ['admin', 'Administrador', 'Jefatura'];
+
+        if (in_array($rol, $allowedRoles)) {
             //Unir datos existentes con los nuevos datos de marcas, estados y agencias
             $data = array_merge($data, [
                 'marca' => $marcas,

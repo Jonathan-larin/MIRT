@@ -275,17 +275,93 @@
     </div>
 
     <div class="bg-white p-6 rounded shadow">
+
+      <!-- Filtros de búsqueda -->
+      <div class="mb-4 grid grid-cols-1 md:grid-cols-4 gap-4">
+          <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Buscar</label>
+              <input type="text" id="searchInput" placeholder="Placa o modelo..." 
+                    class="w-full px-3 py-2 border border-gray-300 rounded-button focus:outline-none focus:ring-primary">
+          </div>
+          <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Marca</label>
+              <select id="filterMarca" class="w-full px-3 py-2 border border-gray-300 rounded-button focus:outline-none focus:ring-primary">
+                  <option value="">Todas</option>
+                  <?php foreach ($marca as $m): ?>
+                      <option value="<?= esc($m['marca']) ?>"><?= esc($m['marca']) ?></option>
+                  <?php endforeach; ?>
+              </select>
+          </div>
+          <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Estado</label>
+              <select id="filterEstado" class="w-full px-3 py-2 border border-gray-300 rounded-button focus:outline-none focus:ring-primary">
+                  <option value="">Todos</option>
+                  <?php foreach ($estado as $e): ?>
+                      <option value="<?= esc($e['estado']) ?>"><?= esc($e['estado']) ?></option>
+                  <?php endforeach; ?>
+              </select>
+          </div>
+          <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Agencia</label>
+              <select id="filterAgencia" class="w-full px-3 py-2 border border-gray-300 rounded-button focus:outline-none focus:ring-primary">
+                  <option value="">Todas</option>
+                  <?php foreach ($agencia as $a): ?>
+                      <option value="<?= esc($a['agencia']) ?>"><?= esc($a['agencia']) ?></option>
+                  <?php endforeach; ?>
+              </select>
+          </div>
+      </div>
+
+      <!-- Botón limpiar filtros -->
+      <div class="mb-4">
+          <button id="clearFilters" class="text-sm text-primary hover:text-secondary">
+              <i class="ri-refresh-line mr-1"></i>Limpiar filtros
+          </button>
+      </div>    
+
       <h2 class="text-xl font-bold mb-4">Lista de Motocicletas</h2>
       <div class="overflow-x-auto">
         <table class="min-w-full divide-y divide-gray-200">
           <thead>
             <tr>
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Marca</th>
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Modelo</th>
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Año</th>
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Estado</th>
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Agencia</th>
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Acciones</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase cursor-pointer hover:bg-gray-50"
+                  onclick="sortTable(0)">
+                <div class="flex items-center justify-between">
+                  Marca
+                  <i class="ri-arrow-up-down-line text-xs ml-1"></i>
+                </div>
+              </th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase cursor-pointer hover:bg-gray-50"
+                  onclick="sortTable(1)">
+                <div class="flex items-center justify-between">
+                  Modelo
+                  <i class="ri-arrow-up-down-line text-xs ml-1"></i>
+                </div>
+              </th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase cursor-pointer hover:bg-gray-50"
+                  onclick="sortTable(2)">
+                <div class="flex items-center justify-between">
+                  Año
+                  <i class="ri-arrow-up-down-line text-xs ml-1"></i>
+                </div>
+              </th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase cursor-pointer hover:bg-gray-50"
+                  onclick="sortTable(3)">
+                <div class="flex items-center justify-between">
+                  Estado
+                  <i class="ri-arrow-up-down-line text-xs ml-1"></i>
+                </div>
+              </th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase cursor-pointer hover:bg-gray-50"
+                  onclick="sortTable(4)">
+                <div class="flex items-center justify-between">
+                  Agencia
+                  <i class="ri-arrow-up-down-line text-xs ml-1"></i>
+                </div>
+              </th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                Acciones
+              </th>
             </tr>
           </thead>
           <tbody class="bg-white divide-y divide-gray-200">
@@ -348,7 +424,7 @@
               </tr>
             <?php endif; ?>
           </tbody>
-        </table>
+        </table>        
       </div>
     </div>
 
@@ -693,6 +769,9 @@
         document.getElementById('editRentaConIva').value = data.renta_conIva || '';
         document.getElementById('editNAF').value = data.naf || '';
         // ... otros campos
+
+        sortTable(0);
+
     };
 
       // VER DETALLES DE MOTOCICLETA
@@ -952,7 +1031,123 @@
       document.getElementById('cancelEditMotorcycle')?.addEventListener('click', () => hideModal(editMotorcycleModal));
 
     });
+
+  // Función para filtrar la tabla
+    function filterTable() {
+        const searchValue = document.getElementById('searchInput').value.toLowerCase();
+        const marcaValue = document.getElementById('filterMarca').value;
+        const estadoValue = document.getElementById('filterEstado').value;
+        const agenciaValue = document.getElementById('filterAgencia').value;
+        
+        const rows = document.querySelectorAll('table tbody tr');
+        
+        rows.forEach(row => {
+            let showRow = true;
+            
+            // Buscar en PLACA Y MODELO
+            // Columnas: 0-Marca, 1-Modelo, 2-Año, 3-Estado, 4-Agencia, 5-Acciones
+            const marcaCell = row.cells[0]?.textContent.trim() || '';
+            const modeloCell = row.cells[1]?.textContent.trim() || '';
+            const placa = row.querySelector('[data-motorcycle-id]')?.dataset.motorcycleId.toLowerCase() || '';
+            
+            if (searchValue && 
+                !modeloCell.toLowerCase().includes(searchValue) && 
+                !placa.includes(searchValue)) {
+                showRow = false;
+            }
+            
+            // Filtrar por MARCA (usando la columna 0)
+            if (marcaValue && marcaCell !== marcaValue) {
+                showRow = false;
+            }
+            
+            // Filtrar por ESTADO (usando la columna 3 - el span dentro)
+            const estadoSpan = row.cells[3]?.querySelector('span') || row.cells[3];
+            const estadoText = estadoSpan?.textContent.trim() || '';
+            if (estadoValue && estadoText !== estadoValue) {
+                showRow = false;
+            }
+            
+            // Filtrar por AGENCIA (usando la columna 4)
+            const agenciaCell = row.cells[4]?.textContent.trim() || '';
+            if (agenciaValue && agenciaCell !== agenciaValue) {
+                showRow = false;
+            }
+            
+            row.style.display = showRow ? '' : 'none';
+        });
+    }
+
+    // Evento de limpiar filtros
+    document.getElementById('clearFilters')?.addEventListener('click', function() {
+        if(document.getElementById('searchInput')) document.getElementById('searchInput').value = '';
+        if(document.getElementById('filterMarca')) document.getElementById('filterMarca').value = '';
+        if(document.getElementById('filterEstado')) document.getElementById('filterEstado').value = '';
+        if(document.getElementById('filterAgencia')) document.getElementById('filterAgencia').value = '';        
+        filterTable();
+    });
+
+    // Asegúrarse de que los elementos existan antes de agregar listeners
+    document.addEventListener('DOMContentLoaded', function() {
+        const elements = ['searchInput', 'filterMarca', 'filterEstado', 'filterAgencia'];
+        elements.forEach(id => {
+            const element = document.getElementById(id);
+            if (element) {
+                element.addEventListener('input', filterTable);
+                if (element.tagName === 'SELECT') {
+                    element.addEventListener('change', filterTable);
+                }
+            }
+        });
+
+        //Ordenar tabla por marca ascendente de manera predeterminada
+
+        sortTable(0);
+    });
+
+    // Ordenar tabla en orden ascendente o descendente segun una columna de manera dinamica
+    function sortTable(n) {
+        let table, rows, switching, i, x, y, shouldSwitch, dir, switchCount = 0;
+        table = document.querySelector('table');
+        switching = true;
+        dir = "asc";
+        
+        while (switching) {
+            switching = false;
+            rows = table.rows;
+            
+            for (i = 1; i < (rows.length - 1); i++) {
+                shouldSwitch = false;
+                x = rows[i].getElementsByTagName("TD")[n];
+                y = rows[i + 1].getElementsByTagName("TD")[n];
+                
+                if (dir == "asc") {
+                    if (x.textContent.trim().toLowerCase() > y.textContent.trim().toLowerCase()) {
+                        shouldSwitch = true;
+                        break;
+                    }
+                } else if (dir == "desc") {
+                    if (x.textContent.trim().toLowerCase() < y.textContent.trim().toLowerCase()) {
+                        shouldSwitch = true;
+                        break;
+                    }
+                }
+            }
+            
+            if (shouldSwitch) {
+                rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+                switching = true;
+                switchCount++;
+            } else {
+                if (switchCount == 0 && dir == "asc") {
+                    dir = "desc";
+                    switching = true;
+                }
+            }
+        }
+    }
   </script>
+  
 </body>
 
 </html>

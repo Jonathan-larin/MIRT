@@ -55,6 +55,12 @@
 
 
 <body class="bg-white">
+
+  <?php
+  $session = session();
+  $rol = $session->get('rol');
+  $allowedRoles = ['Administrador', 'Jefatura', 'admin'];
+  ?>
   <!-- Header -->
   <header class="bg-primary shadow-sm fixed top-0 left-0 right-0 z-50">
         <div class="flex items-center justify-between px-6 py-1">
@@ -230,7 +236,8 @@
       <h1 class="text-2xl font-bold text-primary">Gestión de Usuarios</h1>
       <div class="flex items-center space-x-2">
         <span class="text-sm text-gray-700 font-medium"><?= $current_date ?></span>
-        
+
+        <?php if (in_array($rol, $allowedRoles)): ?>        
         <button id="addUserButton"
           class="bg-primary text-white px-4 py-2 rounded-button hover:bg-secondary transition-all duration-200 flex items-center whitespace-nowrap !rounded-button">
           <div class="w-4 h-4 flex items-center justify-center mr-1.5">
@@ -238,6 +245,7 @@
           </div>
           Nuevo Usuario
         </button>
+        <?php endif; ?>
       </div>      
     </div>
 
@@ -302,14 +310,52 @@
       <div class="bg-white p-6 rounded shadow">
         <h2 class="text-xl font-bold mb-4">Lista de Usuarios</h2>
         <div class="overflow-x-auto">
+
+        <!-- Filtros de búsqueda -->
+        <div class="mb-4 grid grid-cols-1 md:grid-cols-5 gap-4">
+          <input type="text" id="searchInput" placeholder="Nombre / Usuario / Correo…"
+                class="w-full px-3 py-2 border rounded-button">
+          <select id="filterRol" class="w-full px-3 py-2 border rounded-button">
+            <option value="">Todos los roles</option>
+            <option value="Administrador">Administrador</option>
+            <option value="Jefatura">Jefatura</option>
+            <option value="Operativo">Operativo</option>
+            <option value="Visualizador">Visualizador</option>
+          </select>
+          <select id="filterEstado" class="w-full px-3 py-2 border rounded-button">
+            <option value="">Todos los estados</option>
+            <option value="Activo">Activo</option>
+            <option value="Inactivo">Inactivo</option>
+          </select>
+          <button id="clearFilters"
+                  class="px-4 py-2 bg-gray-100 text-sm font-medium rounded-button hover:text-white hover:bg-secondary">
+            <i class="ri-refresh-line mr-1"></i>Limpiar
+          </button>
+        </div>
+
         <table class="min-w-full divide-y divide-gray-200">
           <thead>
             <tr>
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Nombre</th>
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Usuario</th>
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Correo</th>
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Rol</th>
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Estado</th>
+              <th class="cursor-pointer px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase
+                        hover:bg-gray-50" onclick="sortTable(0)">
+                <div class="flex items-center">Nombre <i class="ri-arrow-up-down-line ml-1 text-xs"></i></div>
+              </th>
+              <th class="cursor-pointer px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase
+                        hover:bg-gray-50" onclick="sortTable(1)">
+                <div class="flex items-center">Usuario <i class="ri-arrow-up-down-line ml-1 text-xs"></i></div>
+              </th>
+              <th class="cursor-pointer px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase
+                        hover:bg-gray-50" onclick="sortTable(2)">
+                <div class="flex items-center">Correo <i class="ri-arrow-up-down-line ml-1 text-xs"></i></div>
+              </th>
+              <th class="cursor-pointer px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase
+                        hover:bg-gray-50" onclick="sortTable(3)">
+                <div class="flex items-center">Rol <i class="ri-arrow-up-down-line ml-1 text-xs"></i></div>
+              </th>
+              <th class="cursor-pointer px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase
+                        hover:bg-gray-50" onclick="sortTable(4)">
+                <div class="flex items-center">Estado <i class="ri-arrow-up-down-line ml-1 text-xs"></i></div>
+              </th>
               <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Acciones</th>
             </tr>
           </thead>
@@ -319,10 +365,20 @@
                 <td class="px-6 py-4 text-sm text-gray-900"><?= esc($usuario['nombre']) ?></td>
                 <td class="px-6 py-4 text-sm text-gray-500"><?= esc($usuario['user']) ?></td>
                 <td class="px-6 py-4 text-sm text-gray-500"><?= esc($usuario['correo']) ?></td>
+                <?php
+                $rolColors = [
+                    'Administrador' => ['bg-red-100',   'text-red-800'],
+                    'Jefatura'      => ['bg-orange-100','text-orange-800'],
+                    'Operativo'     => ['bg-indigo-100','text-indigo-800'],
+                    'Visualizador'  => ['bg-green-100', 'text-green-800'],
+                ];
+                $rolName   = $usuario['rol'] ?? '';
+                [$bg, $text] = $rolColors[$rolName] ?? ['bg-gray-100','text-gray-800'];
+                ?>
                 <td class="px-6 py-4 text-sm">
-                  <span class="px-2 py-1 text-xs font-medium rounded-full bg-blue-100 text-blue-800">
-                    <?= $usuario['rol'] ? esc(ucfirst($usuario['rol'])) : '—' ?>
-                  </span>
+                    <span class="px-2 py-1 text-xs font-medium rounded-full <?= $bg ?> <?= $text ?>">
+                        <?= esc(ucfirst($rolName)) ?: '—' ?>
+                    </span>
                 </td>
                 <td class="px-6 py-4 text-sm">
                   <?php if ($usuario['estado']): ?>
@@ -332,12 +388,16 @@
                   <?php endif; ?>
                 </td>
                 <td class="px-6 py-4 text-sm font-medium">
+                  <?php if (in_array($rol, $allowedRoles)): ?>
                   <button class="view-user text-primary hover:text-primary/80 mr-3" data-user-id="<?= $usuario['idUsuario'] ?>">
                     <i class="ri-eye-line"></i>
                   </button>
+                  <?php endif; ?>
+                  <?php if (in_array($rol, $allowedRoles)): ?>
                   <button class="delete-user text-red-600 hover:text-red-800" data-user-id="<?= $usuario['idUsuario'] ?>">
                     <i class="ri-delete-bin-line"></i>
                   </button>
+                  <?php endif; ?>
                 </td>
               </tr>
             <?php endforeach; ?>
@@ -580,6 +640,91 @@
           .catch(err => alert(err.message));
       });
     });
+
+    /* Ordenar tabla (igual que en motocicletas) */
+      function sortTable(n) {
+        let table, rows, switching, i, x, y, shouldSwitch, dir, switchCount = 0;
+        table = document.querySelector('table');
+        switching = true;
+        dir = "asc";
+        while (switching) {
+          switching = false;
+          rows = table.rows;
+          for (i = 1; i < rows.length - 1; i++) {
+            shouldSwitch = false;
+            x = rows[i].getElementsByTagName("TD")[n];
+            y = rows[i + 1].getElementsByTagName("TD")[n];
+            if (dir === "asc") {
+              if (x.textContent.trim().toLowerCase() > y.textContent.trim().toLowerCase()) {
+                shouldSwitch = true;
+                break;
+              }
+            } else if (dir === "desc") {
+              if (x.textContent.trim().toLowerCase() < y.textContent.trim().toLowerCase()) {
+                shouldSwitch = true;
+                break;
+              }
+            }
+          }
+          if (shouldSwitch) {
+            rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+            switching = true;
+            switchCount++;
+          } else {
+            if (switchCount === 0 && dir === "asc") {
+              dir = "desc";
+              switching = true;
+            }
+          }
+        }
+      }
+
+      /* Filtros de tabla */
+      function filterTable() {
+        const search = document.getElementById('searchInput').value.toLowerCase();
+        const rolFilter = document.getElementById('filterRol').value;
+        const estadoFilter = document.getElementById('filterEstado').value;
+
+        const rows = document.querySelectorAll('table tbody tr');
+
+        rows.forEach(row => {
+          let showRow = true;
+          const nombre   = row.cells[0].textContent.trim();
+          const usuario  = row.cells[1].textContent.trim();
+          const correo   = row.cells[2].textContent.trim();
+          const rol      = row.cells[3].querySelector('span').textContent.trim();
+          const estadoEl = row.cells[4].querySelector('span');
+          const estado   = estadoEl ? estadoEl.textContent.trim() : '';
+
+          if (search && !nombre.toLowerCase().includes(search) &&
+                      !usuario.toLowerCase().includes(search) &&
+                      !correo.toLowerCase().includes(search)) showRow = false;
+          if (rolFilter     && rol !== rolFilter)                showRow = false;
+          if (estadoFilter  && estado !== estadoFilter)          showRow = false;
+
+          row.style.display = showRow ? '' : 'none';
+        });
+      }
+
+      document.addEventListener('DOMContentLoaded', () => {
+        const inputs = ['searchInput','filterRol','filterEstado'];
+        inputs.forEach(id => {
+          const el = document.getElementById(id);
+          if (el) el.addEventListener('input', filterTable);
+        });
+
+        document.getElementById('clearFilters')?.addEventListener('click', () => {
+          document.getElementById('searchInput').value   = '';
+          document.getElementById('filterRol').value     = '';
+          document.getElementById('filterEstado').value  = '';
+          filterTable();
+        });
+
+        /* Orden inicial por defecto (columna 0 Nombre ASC) */
+        sortTable(0);
+      });
+
+
   </script>
 </body>
 

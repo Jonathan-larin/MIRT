@@ -15,10 +15,18 @@ class AdminFilter implements FilterInterface
         }
 
         // Verifica si el rol del usuario es 'admin'
-        if (session()->get('rol') !== 'admin') {
+        //if (session()->get('rol') !== 'admin') {
             // Si no es admin, redirige a una página de error o al dashboard normal
+          //  session()->setFlashdata('error', 'No tienes permisos para acceder a esta sección.');
+           // return redirect()->to('/dashboard'); // O a una página de "Acceso Denegado"
+        //}
+
+        $allowedRoles = ['Administrador', 'Jefatura'];
+
+        if (! in_array(session()->get('rol'), $allowedRoles)) {
+            // If the user's role is not in the allowed roles array, redirect them.
             session()->setFlashdata('error', 'No tienes permisos para acceder a esta sección.');
-            return redirect()->to('/dashboard'); // O a una página de "Acceso Denegado"
+            return redirect()->to('/dashboard'); // Or to an "Access Denied" page
         }
     }
 
