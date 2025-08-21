@@ -69,12 +69,12 @@ class Motocicletas extends BaseController
         }
 
         $rules = [
-            'placa'       => 'required|max_length[15]|is_unique[motos.placa]',
+            'placa'       => 'required|max_length[15]',
             'marca'       => 'required|integer',
             'modelo'      => 'required|min_length[2]|max_length[50]',
             'anio'        => 'required|integer|exact_length[4]',
             'kilometraje' => 'required|max_length[50]',
-            'idestado'    => 'required|integer',
+            'idestado'    => 'required|integer',            
         ];
 
         if (!$this->validate($rules)) {
@@ -109,22 +109,27 @@ class Motocicletas extends BaseController
 
         try {
             if ($this->motocicletaModel->insert($data)) {
-                return $this->respondCreated(['message' => 'Motocicleta agregada exitosamente.', 'id' => $this->motocicletaModel->getInsertID()]);
-            } else {
-                $errors = $this->motocicletaModel->errors();
-                if (!empty($errors)) {
-                    log_message('error', 'Error de validación del modelo al insertar motocicleta: ' . json_encode($errors));
-                    return $this->fail($errors, 400);
-                } else {
-                    log_message('error', 'Error desconocido al guardar la motocicleta en la base de datos.');
-                    return $this->fail('Error desconocido al guardar la motocicleta en la base de datos.', 500);
-                }
+                return $this->respondCreated([
+                    'message' => 'Motocicleta agregada exitosamente.',
+                    'id'      => $this->motocicletaModel->getInsertID()
+                ]);
             }
+
+            // Si el modelo devolvió false pero no lanzó excepción
+            return $this->fail('Esta placa ya existe en el sistema.', 500);
+
         } catch (\CodeIgniter\Database\Exception\DatabaseException $e) {
-            log_message('error', 'Error de la base de datos al insertar motocicleta: ' . $e->getMessage() . ' SQL: ' . $e->getQuery());
+            // 1062 = entrada duplicada
+            if ($e->getCode() === 1062 || strpos($e->getMessage(), 'placa') !== false) {
+                return $this->fail('Esta placa ya existe en el sistema.', 409);
+            }
+
+            // Otros errores de BD
+            log_message('error', 'Error de BD: ' . $e->getMessage() . ' SQL: ' . $e->getQuery());
             return $this->fail('Error de la base de datos: ' . $e->getMessage(), 500);
+
         } catch (\Exception $e) {
-            log_message('error', 'Excepción inesperada al insertar motocicleta: ' . $e->getMessage());
+            log_message('error', 'Excepción inesperada: ' . $e->getMessage());
             return $this->fail('Error inesperado: ' . $e->getMessage(), 500);
         }
     }

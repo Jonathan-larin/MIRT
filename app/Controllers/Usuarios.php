@@ -132,6 +132,27 @@ class Usuarios extends BaseController
             ]);
         }
 
+        // Validar campos únicos
+        $errors = [];
+
+        if ($this->usuarioModel->where('user', trim($input['usuario']))->first()) {
+            $errors[] = 'El nombre de usuario ya está en uso.';
+        }
+
+        if ($this->usuarioModel->where('correo', trim($input['email']))->first()) {
+            $errors[] = 'El correo ya está registrado.';
+        }
+
+        if ($this->usuarioModel->where('dui', trim($input['dui']))->first()) {
+            $errors[] = 'El DUI ya está registrado.';
+        }
+
+        if (!empty($errors)) {
+            return $this->response->setStatusCode(409)->setJSON([
+                'error' => implode(' ', $errors)
+            ]);
+        }
+
         $this->usuarioModel->insert([
             'nombre'   => trim($input['name']),
             'user'     => trim($input['usuario']),
@@ -189,6 +210,27 @@ class Usuarios extends BaseController
         if (!preg_match('/^\d{8}-\d$/', $input['dui'])) {
             return $this->response->setStatusCode(400)->setJSON([
                 'error' => 'Formato de DUI inválido. Use 00000000-0.'
+            ]);
+        }
+
+        // Validar campos únicos
+        $errors = [];
+
+        if ($this->usuarioModel->where('user', trim($input['usuario']))->first()) {
+            $errors[] = 'El nombre de usuario ya está en uso.';
+        }
+
+        if ($this->usuarioModel->where('correo', trim($input['email']))->first()) {
+            $errors[] = 'El correo ya está registrado.';
+        }
+
+        if ($this->usuarioModel->where('dui', trim($input['dui']))->first()) {
+            $errors[] = 'El DUI ya está registrado.';
+        }
+
+        if (!empty($errors)) {
+            return $this->response->setStatusCode(409)->setJSON([
+                'error' => implode(' ', $errors)
             ]);
         }
 
