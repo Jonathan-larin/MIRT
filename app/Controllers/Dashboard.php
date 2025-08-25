@@ -6,6 +6,7 @@ use App\Models\MotocicletaModel;
 use App\Models\MarcaModel;
 use App\Models\EstadoModel;
 use App\Models\AgenciaModel;
+use App\Models\UsuarioModel;
 
 class Dashboard extends BaseController
 {
@@ -19,6 +20,15 @@ class Dashboard extends BaseController
 
         $rol = $session->get('rol');
 
+        // Obtener el ID del usuario desde la sesión y sus datos desde la BD
+        $userId = $session->get('idUsuario');
+        $usuarioModel = new UsuarioModel();
+        $user = $usuarioModel->find($userId);
+
+        if (!$user) {
+            return redirect()->to('/login')->with('error', 'Usuario no encontrado.');
+        }
+
         // Inicializar los modelos necesarios
         $marcaModel = new MarcaModel();
         $estadoModel = new EstadoModel();
@@ -27,14 +37,13 @@ class Dashboard extends BaseController
         $marcas = $marcaModel->findAll();
         $estados = $estadoModel->findAll();
         $agencias = $agenciaModel->findAll();
-        
 
         // Preparar los datos para la vista
         $data = [
             'title' => 'Panel de Administrador',
-            'nombre' => $session->get('nombre'),
+            'user' => $user, // Datos completos del usuario desde BD
             'current_date' => date('d/m/Y'),
-            'logged_in_user_id' => $session->get('user_id') // Pass user ID if needed for 'creadopor'
+            'logged_in_user_id' => $userId // Pass user ID if needed for 'creadopor'
         ];
 
         // Escoger la vista según el rol del usuario
@@ -54,8 +63,10 @@ class Dashboard extends BaseController
         // Informacion para usuarios no administradores
         return view('dashboard/dashboard', [
             'title' => 'Panel de Usuario',
-            'nombre' => $session->get('nombre'),
+            'user' => $user, // Database user data (already fetched above)
             'current_date' => date('d/m/Y')
         ]);
     }
+
+
 }

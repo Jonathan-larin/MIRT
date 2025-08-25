@@ -17,6 +17,12 @@ $routes->get('logout', 'Auth::logout');
 $routes->get('dashboard', 'Dashboard::dashboard');
 $routes->get('dashboarda', 'Dashboard::dashboard');
 
+// Ruta para el perfil de usuario
+$routes->get('profile', 'Profile::index');
+$routes->get('profile/edit', 'Profile::edit');
+$routes->post('profile/update', 'Profile::update');
+$routes->post('profile/change-password', 'Profile::changePassword');
+
 // Rutas para la gestión de usuarios
 
 $routes->post('usuarios/ajax-add', 'Usuarios::createViaAjax');

@@ -135,7 +135,8 @@
                         </div>
                         <span class="text-sm font-medium text-white hidden md:block">
                             <?php
-                            $session = session();                           
+                            $session = session();
+                            // Obtiene el nombre del usuario de la sesión
                             echo esc($session->get('nombre') ?: 'Invitado');
                             ?>
                         </span>
@@ -146,7 +147,7 @@
                     <div
                         class="absolute right-0 mt-2 w-48 bg-white rounded shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
                         
-                        <a href="#"
+                        <a href="/profile"
                             class="flex items-center px-4 py-2 text-sm text-primary hover:text-white hover:bg-secondary">
                             <div class="w-4 h-4 flex items-center justify-center mr-2">
                                 <i class="ri-user-settings-line"></i>
@@ -772,6 +773,9 @@
 
     }); // Cierre de DOMContentLoaded
 </script>
+
+</body>
+</html>
 
 </body>
 </html>
