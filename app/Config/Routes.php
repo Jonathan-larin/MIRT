@@ -23,6 +23,14 @@ $routes->get('profile/edit', 'Profile::edit');
 $routes->post('profile/update', 'Profile::update');
 $routes->post('profile/change-password', 'Profile::changePassword');
 
+// Rutas para la gestión de servicios
+$routes->get('servicios', 'Servicios::index');
+$routes->post('servicios/createViaAjax', 'Servicios::createViaAjax');
+$routes->get('servicios/details/(:num)', 'Servicios::details/$1');
+$routes->post('servicios/update/(:num)', 'Servicios::update/$1');
+$routes->delete('servicios/delete/(:num)', 'Servicios::delete/$1');
+$routes->get('servicios/get-motocicletas', 'Servicios::getMotocicletas');
+
 // Rutas para la gestión de usuarios
 
 $routes->post('usuarios/ajax-add', 'Usuarios::createViaAjax');
