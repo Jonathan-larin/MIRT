@@ -95,25 +95,47 @@
                 </div>
                     
                 <div class="relative group">
-                    <button>
-                        <a href="/motocicletas"
-                        class="flex items-center px-3 py-2 text-sm font-medium text-white hover:text-white hover:bg-secondary rounded whitespace-nowrap !rounded-button">
-                            <div class="w-5 h-5 flex items-center justify-center mr-1.5">
+                    <button class="flex items-center px-3 py-2 text-sm font-medium text-white hover:text-white hover:bg-secondary rounded whitespace-nowrap !rounded-button">
+                        <div class="flex items-center mr-1.5">
+                            <div class="w-5 h-5 flex items-center justify-center">
                                 <i class="ri-motorbike-line"></i>
                             </div>
                             Motocicletas
-                        </a>                        
-                    </button> 
+                        </div>
+                        <div class="w-4 h-4 flex items-center justify-center">
+                            <i class="ri-arrow-down-s-line"></i>
+                        </div>
+                    </button>
+                    <div class="absolute left-0 mt-2 w-48 bg-white rounded shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                        <a href="/motocicletas" class="flex items-center px-4 py-2 text-sm text-primary hover:text-white hover:bg-secondary">
+                            <div class="w-4 h-4 flex items-center justify-center mr-2">
+                                <i class="ri-motorbike-line"></i>
+                            </div>
+                            Ver Motocicletas
+                        </a>
+                        <a href="/servicios" class="flex items-center px-4 py-2 text-sm text-primary hover:text-white hover:bg-secondary">
+                            <div class="w-4 h-4 flex items-center justify-center mr-2">
+                                <i class="ri-tools-line"></i>
+                            </div>
+                            Servicios
+                        </a>
+                        <a href="/rentas" class="flex items-center px-4 py-2 text-sm text-primary hover:text-white hover:bg-secondary">
+                            <div class="w-4 h-4 flex items-center justify-center mr-2">
+                                <i class="ri-calendar-check-line"></i>
+                            </div>
+                            Rentas
+                        </a>
+                    </div>
                 </div>
-                    
+
                 <div class="relative group">
                     <button>
-                        <a href="#"
+                        <a href="/reportes"
                         class="flex items-center px-3 py-2 text-sm font-medium text-white hover:text-white hover:bg-secondary rounded whitespace-nowrap !rounded-button">
                             <div class="w-5 h-5 flex items-center justify-center mr-1.5">
-                                <i class="ri-money-dollar-circle-line"></i>
+                                <i class="ri-bar-chart-line"></i>
                             </div>
-                            Clientes
+                            Reportes
                         </a>
                     </button>
                 </div>
@@ -166,7 +188,7 @@
                     <div
                         class="absolute right-0 mt-2 w-48 bg-white rounded shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
                         
-                        <a href="#"
+                        <a href="/profile"
                             class="flex items-center px-4 py-2 text-sm text-primary hover:text-white hover:bg-secondary">
                             <div class="w-4 h-4 flex items-center justify-center mr-2">
                                 <i class="ri-user-settings-line"></i>

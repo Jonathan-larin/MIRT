@@ -73,10 +73,36 @@
                     </div>
                     Usuarios
                 </a>
-                  
-                </div>
+            </div>
                     
                 <div class="relative group">
+                    <button class="flex items-center px-3 py-2 text-sm font-medium text-white hover:text-white hover:bg-secondary rounded whitespace-nowrap !rounded-button">
+                        <div class="flex items-center mr-1.5">
+                            <div class="w-5 h-5 flex items-center justify-center">
+                                <i class="ri-motorbike-line"></i>
+                            </div>
+                            Motocicletas
+                        </div>
+                        <div class="w-4 h-4 flex items-center justify-center">
+                            <i class="ri-arrow-down-s-line"></i>
+                        </div>
+                    </button>
+                    <div class="absolute left-0 mt-2 w-48 bg-white rounded shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                        <a href="/motocicletas" class="flex items-center px-4 py-2 text-sm text-primary hover:text-white hover:bg-secondary">
+                            <div class="w-4 h-4 flex items-center justify-center mr-2">
+                                <i class="ri-motorbike-line"></i>
+                            </div>
+                            Ver Motocicletas
+                        </a>
+                        <a href="/servicios" class="flex items-center px-4 py-2 text-sm text-primary hover:text-white hover:bg-secondary">
+                            <div class="w-4 h-4 flex items-center justify-center mr-2">
+                                <i class="ri-tools-line"></i>
+                            </div>
+                            Servicios
+                        </a>
+                        <a href="/rentas" class="flex items-center px-4 py-2 text-sm text-primary hover:text-white hover:bg-secondary">
+                            <div class="w-4 h-4 flex items-center justify-center mr-2">
+                      <div class="relative group">
                     <button>
                         <a href="/motocicletas"
                         class="flex items-center px-3 py-2 text-sm font-medium text-white hover:text-white hover:bg-secondary rounded whitespace-nowrap !rounded-button">
@@ -98,30 +124,21 @@
                             Clientes
                         </a>
                     </button>
-                </div>
-
-                <!--<div class="relative group">
-                    <button
-                        
-                        class="flex items-center px-3 py-2 text-sm font-medium text-white hover:text-white hover:bg-secondary rounded whitespace-nowrap !rounded-button">
-                        <div class="w-5 h-5 flex items-center justify-center mr-1.5">
-                            <i class="ri-tools-line"></i>
-                        </div>
-                            Mantenimiento                            
-                    </button>                        
+                </div>        </a>
+                    </div>
                 </div>
 
                 <div class="relative group">
-                    <button
-
+                    <button>
+                        <a href="/reportes"
                         class="flex items-center px-3 py-2 text-sm font-medium text-white hover:text-white hover:bg-secondary rounded whitespace-nowrap !rounded-button">
-                        <div class="w-5 h-5 flex items-center justify-center mr-1.5">
-                            <i class="ri-bar-chart-line"></i>
-                        </div>
-                            Reportes                            
-                    </button>                    
-                </div>-->
-
+                            <div class="w-5 h-5 flex items-center justify-center mr-1.5">
+                                <i class="ri-bar-chart-line"></i>
+                            </div>
+                            Reportes
+                        </a>
+                    </button>
+                </div>
 
                 <button class="relative p-1 text-white hover:text-secondary focus:outline-none">
                     <div class="w-6 h-6 flex items-center justify-center">
@@ -243,7 +260,7 @@
                     </span>
                 </div>
                  <div class="mt-4 pt-4 border-t border-white/20">
-                    <a href="/inventario" class="text-white/80 hover:text-white text-sm flex items-center">
+                    <a href="/motocicletas" class="text-white/80 hover:text-white text-sm flex items-center">
                         Ver detalles <i class="ri-arrow-right-line ml-1"></i>
                     </a>
                 </div>
@@ -264,7 +281,7 @@
                     </span>
                 </div>
                 <div class="mt-4 pt-4 border-t border-white/20">
-                    <a href="/inventario" class="text-white/80 hover:text-white text-sm flex items-center">
+                    <a href="/motocicletas" class="text-white/80 hover:text-white text-sm flex items-center">
                         Administrar inventario <i class="ri-arrow-right-line ml-1"></i>
                     </a>
                 </div>
@@ -285,7 +302,7 @@
                     </span>
                 </div>
                 <div class="mt-4 pt-4 border-t border-white/20">
-                    <a href="/inventario" class="text-white/80 hover:text-white text-sm flex items-center">
+                    <a href="/motocicletas" class="text-white/80 hover:text-white text-sm flex items-center">
                         Revisar alertas <i class="ri-arrow-right-line ml-1"></i>
                     </a>
                 </div>

@@ -31,6 +31,12 @@ $routes->post('servicios/update/(:num)', 'Servicios::update/$1');
 $routes->delete('servicios/delete/(:num)', 'Servicios::delete/$1');
 $routes->get('servicios/get-motocicletas', 'Servicios::getMotocicletas');
 
+// Rutas para la gestión de rentas
+$routes->get('rentas', 'Rentas::index');
+
+// Rutas para la gestión de reportes
+$routes->get('reportes', 'Reportes::index');
+
 // Rutas para la gestión de usuarios
 
 $routes->post('usuarios/ajax-add', 'Usuarios::createViaAjax');

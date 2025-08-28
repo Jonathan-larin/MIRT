@@ -164,7 +164,7 @@ CREATE TABLE `marca` (
   `fecha_modificacion` datetime DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   `modificado_por` int(11) DEFAULT NULL,
   PRIMARY KEY (`idmarca`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -174,10 +174,39 @@ CREATE TABLE `marca` (
 LOCK TABLES `marca` WRITE;
 /*!40000 ALTER TABLE `marca` DISABLE KEYS */;
 INSERT INTO `marca` VALUES
-(1,'Yamaha','Juan Perez','78901234','2025-06-14 21:03:57',NULL,'2025-06-14 21:03:57',NULL),
+(1,'Hero','Juan Perez','78901234','2025-06-14 21:03:57',NULL,'2025-08-28 14:30:03',NULL),
 (2,'Honda','Maria Gomez','71234567','2025-06-14 21:03:57',NULL,'2025-06-14 21:03:57',NULL),
-(3,'Suzuki','Carlos Diaz','75678901','2025-06-14 21:04:03',NULL,'2025-06-14 21:04:03',NULL);
+(3,'Freedom','Carlos Diaz','75678901','2025-06-14 21:04:03',NULL,'2025-08-28 14:30:37',NULL),
+(4,'TVS','Jose Adan','76543123','2025-08-28 14:32:41',NULL,'2025-08-28 14:32:41',NULL);
 /*!40000 ALTER TABLE `marca` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `migrations`
+--
+
+DROP TABLE IF EXISTS `migrations`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8mb4 */;
+CREATE TABLE `migrations` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `version` varchar(255) NOT NULL,
+  `class` varchar(255) NOT NULL,
+  `group` varchar(255) NOT NULL,
+  `namespace` varchar(255) NOT NULL,
+  `time` int(11) NOT NULL,
+  `batch` int(11) unsigned NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `migrations`
+--
+
+LOCK TABLES `migrations` WRITE;
+/*!40000 ALTER TABLE `migrations` DISABLE KEYS */;
+/*!40000 ALTER TABLE `migrations` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -245,6 +274,52 @@ INSERT INTO `motos` VALUES
 UNLOCK TABLES;
 
 --
+-- Table structure for table `servicios`
+--
+
+DROP TABLE IF EXISTS `servicios`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8mb4 */;
+CREATE TABLE `servicios` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `placa_motocicleta` varchar(15) NOT NULL,
+  `tipo_servicio` varchar(100) NOT NULL,
+  `descripcion` text NOT NULL,
+  `estado_servicio` enum('pendiente','en_progreso','completado','cancelado') NOT NULL DEFAULT 'pendiente',
+  `fecha_solicitud` date NOT NULL,
+  `fecha_inicio` date DEFAULT NULL,
+  `fecha_completado` date DEFAULT NULL,
+  `costo_estimado` decimal(10,2) DEFAULT NULL,
+  `costo_real` decimal(10,2) DEFAULT NULL,
+  `tecnico_responsable` varchar(100) DEFAULT NULL,
+  `notas` text DEFAULT NULL,
+  `prioridad` enum('baja','media','alta','urgente') NOT NULL DEFAULT 'media',
+  `kilometraje_actual` int(11) unsigned DEFAULT NULL,
+  `creado_por` int(11) NOT NULL,
+  `modificado_por` int(11) DEFAULT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  `deleted_at` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_servicios_usuario` (`creado_por`),
+  KEY `fk_servicios_motos` (`placa_motocicleta`),
+  CONSTRAINT `fk_servicios_motos` FOREIGN KEY (`placa_motocicleta`) REFERENCES `motos` (`placa`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `fk_servicios_usuario` FOREIGN KEY (`creado_por`) REFERENCES `usuario` (`idUsuario`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `servicios`
+--
+
+LOCK TABLES `servicios` WRITE;
+/*!40000 ALTER TABLE `servicios` DISABLE KEYS */;
+INSERT INTO `servicios` VALUES
+(1,'BHTER12','Mantenimiento Preventivo','Probando probando','pendiente','2025-08-28',NULL,NULL,45.00,NULL,'DIPARVEL',NULL,'media',5423,3,NULL,'2025-08-28 02:46:55','2025-08-28 02:46:55',NULL);
+/*!40000 ALTER TABLE `servicios` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `usuario`
 --
 
@@ -298,4 +373,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*M!100616 SET NOTE_VERBOSITY=@OLD_NOTE_VERBOSITY */;
 
--- Dump completed on 2025-06-16 21:59:52
+-- Dump completed on 2025-08-28 15:57:56
