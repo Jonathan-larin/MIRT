@@ -860,4 +860,226 @@
         }
       });
 
-      // Evento para editar desde
+      // Evento para editar desde el modal de detalles
+      document.getElementById('editFromDetailModalBtn')?.addEventListener('click', () => {
+        const serviceId = document.getElementById('detailServiceId').textContent;
+        hideModal(serviceDetailModal);
+
+        // Load data for edit modal
+        fetch(`/servicios/details/${serviceId}`, {
+          headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+          }
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data) {
+            loadMotocicletas().then(() => {
+              // Populate edit form
+              document.getElementById('editServiceId').value = data.id;
+              document.getElementById('editPlacaMotocicleta').value = data.placa_motocicleta || '';
+              document.getElementById('editTipoServicio').value = data.tipo_servicio || '';
+              document.getElementById('editEstadoServicio').value = data.estado_servicio || '';
+              document.getElementById('editPrioridad').value = data.prioridad || '';
+              document.getElementById('editFechaSolicitud').value = data.fecha_solicitud ? data.fecha_solicitud.split(' ')[0] : '';
+              document.getElementById('editFechaInicio').value = data.fecha_inicio ? data.fecha_inicio.split(' ')[0] : '';
+              document.getElementById('editFechaCompletado').value = data.fecha_completado ? data.fecha_completado.split(' ')[0] : '';
+              document.getElementById('editCostoEstimado').value = data.costo_estimado || '';
+              document.getElementById('editCostoReal').value = data.costo_real || '';
+              document.getElementById('editKilometrajeActual').value = data.kilometraje_actual || '';
+              document.getElementById('editTecnicoResponsable').value = data.tecnico_responsable || '';
+              document.getElementById('editNotas').value = data.notas || '';
+              document.getElementById('editDescripcion').value = data.descripcion || '';
+
+              showModal(editServiceModal);
+            });
+          }
+        })
+        .catch(error => {
+          console.error('Error loading data for edit:', error);
+          showAlert('Error al cargar datos para edición.', true);
+        });
+      });
+
+      // Evento para eliminar servicio
+      document.querySelector('table tbody').addEventListener('click', async (event) => {
+        const deleteButton = event.target.closest('.delete-service');
+        if (deleteButton) {
+          const serviceId = deleteButton.dataset.serviceId;
+
+          if (confirm('¿Estás seguro de que deseas eliminar este servicio? Esta acción no se puede deshacer.')) {
+            try {
+              const response = await fetch(`/servicios/delete/${serviceId}`, {
+                method: 'DELETE',
+                headers: {
+                  'X-Requested-With': 'XMLHttpRequest'
+                }
+              });
+
+              if (response.ok) {
+                showAlert('Servicio eliminado exitosamente.');
+                location.reload();
+              } else {
+                const data = await response.json();
+                showAlert(`Error al eliminar servicio: ${data.error || 'Error desconocido'}`, true);
+              }
+            } catch (error) {
+              console.error('Error deleting service:', error);
+              showAlert('Error de conexión al eliminar servicio.', true);
+            }
+          }
+        }
+      });
+
+      // Evento de envío del formulario de edición
+      editServiceForm?.addEventListener('submit', async function (e) {
+        e.preventDefault();
+
+        if (!this.checkValidity()) {
+          showAlert('Por favor, completa todos los campos requeridos.', true);
+          return;
+        }
+
+        const serviceId = this.id.value;
+        const data = {
+          placa_motocicleta: this.placa_motocicleta.value,
+          tipo_servicio: this.tipo_servicio.value,
+          descripcion: this.descripcion.value,
+          estado_servicio: this.estado_servicio.value,
+          prioridad: this.prioridad.value,
+          fecha_solicitud: this.fecha_solicitud.value,
+          fecha_inicio: this.fecha_inicio.value || null,
+          fecha_completado: this.fecha_completado.value || null,
+          costo_estimado: this.costo_estimado.value || null,
+          costo_real: this.costo_real.value || null,
+          tecnico_responsable: this.tecnico_responsable.value || null,
+          kilometraje_actual: this.kilometraje_actual.value || null,
+          notas: this.notas.value || null
+        };
+
+        try {
+          const response = await fetch(`/servicios/update/${serviceId}`, {
+            method: 'PUT',
+            headers: {
+              'Content-Type': 'application/json',
+              'X-Requested-With': 'XMLHttpRequest'
+            },
+            body: JSON.stringify(data)
+          });
+
+          const res = await response.json();
+
+          if (!response.ok) {
+            const errorMessage = res.error || 'Error desconocido al actualizar servicio.';
+            throw new Error(errorMessage);
+          }
+
+          showAlert('Servicio actualizado exitosamente.');
+          hideModal(editServiceModal);
+          location.reload();
+
+        } catch (error) {
+          showAlert(`Error al actualizar servicio: ${error.message}`, true);
+        }
+      });
+
+      // Eventos para cerrar modales
+      document.getElementById('closeDetailModalBtn')?.addEventListener('click', () => hideModal(serviceDetailModal));
+      document.getElementById('closeDetailModalBtn2')?.addEventListener('click', () => hideModal(serviceDetailModal));
+      document.getElementById('closeEditServiceModalBtn')?.addEventListener('click', () => hideModal(editServiceModal));
+      document.getElementById('cancelEditService')?.addEventListener('click', () => hideModal(editServiceModal));
+
+      // Funcionalidad de búsqueda y filtros
+      const searchInput = document.getElementById('searchInput');
+      const filterTipoServicio = document.getElementById('filterTipoServicio');
+      const filterEstadoServicio = document.getElementById('filterEstadoServicio');
+      const filterPrioridad = document.getElementById('filterPrioridad');
+      const clearFilters = document.getElementById('clearFilters');
+
+      function filterTable() {
+        const searchTerm = searchInput?.value.toLowerCase() || '';
+        const tipoFilter = filterTipoServicio?.value || '';
+        const estadoFilter = filterEstadoServicio?.value || '';
+        const prioridadFilter = filterPrioridad?.value || '';
+
+        const rows = document.querySelectorAll('table tbody tr');
+
+        rows.forEach(row => {
+          if (row.cells.length < 7) return; // Skip if not a data row
+
+          const motocicleta = row.cells[0].textContent.toLowerCase();
+          const tipo = row.cells[1].textContent.toLowerCase();
+          const estado = row.cells[2].textContent.toLowerCase();
+          const prioridad = row.cells[3].textContent.toLowerCase();
+
+          const matchesSearch = !searchTerm ||
+            motocicleta.includes(searchTerm) ||
+            tipo.includes(searchTerm);
+
+          const matchesTipo = !tipoFilter || tipo.includes(tipoFilter.toLowerCase());
+          const matchesEstado = !estadoFilter || estado.includes(estadoFilter.toLowerCase());
+          const matchesPrioridad = !prioridadFilter || prioridad.includes(prioridadFilter.toLowerCase());
+
+          if (matchesSearch && matchesTipo && matchesEstado && matchesPrioridad) {
+            row.style.display = '';
+          } else {
+            row.style.display = 'none';
+          }
+        });
+      }
+
+      searchInput?.addEventListener('input', filterTable);
+      filterTipoServicio?.addEventListener('change', filterTable);
+      filterEstadoServicio?.addEventListener('change', filterTable);
+      filterPrioridad?.addEventListener('change', filterTable);
+
+      clearFilters?.addEventListener('click', () => {
+        if (searchInput) searchInput.value = '';
+        if (filterTipoServicio) filterTipoServicio.value = '';
+        if (filterEstadoServicio) filterEstadoServicio.value = '';
+        if (filterPrioridad) filterPrioridad.value = '';
+        filterTable();
+      });
+
+      // Función para ordenar tabla
+      function sortTable(columnIndex) {
+        const table = document.querySelector('table');
+        const tbody = table.querySelector('tbody');
+        const rows = Array.from(tbody.querySelectorAll('tr'));
+
+        // Skip the "No services" row
+        const dataRows = rows.filter(row => row.cells.length >= 7);
+
+        dataRows.sort((a, b) => {
+          const aText = a.cells[columnIndex].textContent.trim().toLowerCase();
+          const bText = b.cells[columnIndex].textContent.trim().toLowerCase();
+
+          if (aText < bText) return -1;
+          if (aText > bText) return 1;
+          return 0;
+        });
+
+        // Re-append sorted rows
+        dataRows.forEach(row => tbody.appendChild(row));
+      }
+
+      // Mobile menu functionality
+      const mobileMenuButton = document.getElementById('mobileMenuButton');
+      const mobileMenu = document.getElementById('mobileMenu');
+
+      mobileMenuButton?.addEventListener('click', () => {
+        mobileMenu.classList.toggle('hidden');
+      });
+
+      // Close mobile menu when clicking outside
+      document.addEventListener('click', (e) => {
+        if (!mobileMenuButton?.contains(e.target) && !mobileMenu?.contains(e.target)) {
+          mobileMenu?.classList.add('hidden');
+        }
+      });
+
+    });
+  </script>
+
+</body>
+</html>
