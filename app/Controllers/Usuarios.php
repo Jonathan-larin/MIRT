@@ -1,14 +1,17 @@
 <?php namespace App\Controllers;
 
 use App\Models\UsuarioModel;
+use App\Models\EmpresaModel;
 
 class Usuarios extends BaseController
 {
     protected $usuarioModel;
+    protected $empresaModel;
 
     public function __construct()
     {
         $this->usuarioModel = new UsuarioModel();
+        $this->empresaModel = new EmpresaModel();
     }
 
     // Muestra la lista de usuarios
@@ -178,11 +181,12 @@ class Usuarios extends BaseController
     }
 
     // Muestra la lista de usuarios con formato de fecha
-    
+
     public function usuarios()
     {
         $data['usuarios'] = $this->usuarioModel->findAll();
-      
+        $data['empresas'] = $this->empresaModel->getAllCompanies();
+
         $formatter = new \IntlDateFormatter('es_ES', \IntlDateFormatter::LONG, \IntlDateFormatter::NONE);
         $formatter->setPattern('d \'de\' MMMM, yyyy');
         $data['current_date'] = $formatter->format(new \DateTime());

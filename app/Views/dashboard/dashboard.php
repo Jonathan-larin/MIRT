@@ -50,171 +50,8 @@
 </head>
 
 <body class="bg-gray-50">
-    <header class="bg-primary shadow-sm fixed top-0 left-0 right-0 z-50">
-        <div class="flex items-center justify-between px-6 py-1">
-            
-            <div class="flex items-center">
-                <img src="<?= base_url('images/logow.png')?>" alt="MIRentaLogo" class="h-10 max-h-10 mr-4">
-                <nav class="hidden md:flex items-center space-x-1">
-                    
-                <a href="dashboard"
-                class="flex items-center px-3 py-2 text-sm font-medium text-white bg-secondary rounded">
-                    <div class="w-5 h-5 flex items-center justify-center mr-1.5">
-                        <i class="ri-dashboard-line"></i>
-                    </div>
-                    Panel de Control
-                </a>     
-                </nav>                
-            </div>
 
-
-            <div class="flex items-center space-x-4">
-
-            <div class="relative group">
-                    <button>
-                        <a href="/usuarios"   
-                        class="flex items-center px-3 py-2 text-sm font-medium text-white hover:text-white hover:bg-secondary rounded whitespace-nowrap !rounded-button">
-                            <div class="w-5 h-5 flex items-center justify-center mr-1.5">
-                                <i class="ri-user-line"></i>
-                            </div>
-                            Usuarios
-                        </a>
-                    </button>                  
-                </div>
-                    
-                <div class="relative group">
-                    <button class="flex items-center px-3 py-2 text-sm font-medium text-white hover:text-white hover:bg-secondary rounded whitespace-nowrap !rounded-button">
-                        <div class="flex items-center mr-1.5">
-                            <div class="w-5 h-5 flex items-center justify-center">
-                                <i class="ri-motorbike-line"></i>
-                            </div>
-                            Motocicletas
-                        </div>
-                        <div class="w-4 h-4 flex items-center justify-center">
-                            <i class="ri-arrow-down-s-line"></i>
-                        </div>
-                    </button>
-                    <div class="absolute left-0 mt-2 w-48 bg-white rounded shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
-                        <a href="/motocicletas" class="flex items-center px-4 py-2 text-sm text-primary hover:text-white hover:bg-secondary">
-                            <div class="w-4 h-4 flex items-center justify-center mr-2">
-                                <i class="ri-motorbike-line"></i>
-                            </div>
-                            Ver Motocicletas
-                        </a>
-                        <a href="/servicios" class="flex items-center px-4 py-2 text-sm text-primary hover:text-white hover:bg-secondary">
-                            <div class="w-4 h-4 flex items-center justify-center mr-2">
-                                <i class="ri-tools-line"></i>
-                            </div>
-                            Servicios
-                        </a>
-                        <a href="/rentas" class="flex items-center px-4 py-2 text-sm text-primary hover:text-white hover:bg-secondary">
-                            <div class="w-4 h-4 flex items-center justify-center mr-2">
-                                <i class="ri-calendar-check-line"></i>
-                            </div>
-                            Rentas
-                        </a>
-                    </div>
-                </div>
-
-                <div class="relative group">
-                    <button>
-                        <a href="/reportes"
-                        class="flex items-center px-3 py-2 text-sm font-medium text-white hover:text-white hover:bg-secondary rounded whitespace-nowrap !rounded-button">
-                            <div class="w-5 h-5 flex items-center justify-center mr-1.5">
-                                <i class="ri-bar-chart-line"></i>
-                            </div>
-                            Reportes
-                        </a>
-                    </button>
-                </div>
-
-                <button class="relative p-1 text-white hover:text-secondary focus:outline-none">
-                    <div class="w-6 h-6 flex items-center justify-center">
-                        <i class="ri-notification-3-line"></i>
-                    </div>
-                </button>
-                <div class="relative group">
-                    <button class="flex items-center space-x-2">
-                        <div class="w-8 h-8 bg-secondary rounded-full flex items-center justify-center text-white">
-                            <i class="ri-user-line"></i>
-                        </div>
-                        <span class="text-sm font-medium text-white hidden md:block">
-                            <?php
-                            $session = session();
-                            // Obtiene el nombre del usuario de la sesión
-                            echo esc($session->get('nombre') ?: 'Invitado');
-                            ?>
-                        </span>
-                        <div class="w-4 h-4 flex items-center justify-center">
-                            <i class="ri-arrow-down-s-line" style="color: white;"></i>
-                        </div>
-                    </button>
-                    <div
-                        class="absolute right-0 mt-2 w-48 bg-white rounded shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
-                        
-                        <a href="/profile"
-                            class="flex items-center px-4 py-2 text-sm text-primary hover:text-white hover:bg-secondary">
-                            <div class="w-4 h-4 flex items-center justify-center mr-2">
-                                <i class="ri-user-settings-line"></i>
-                            </div>
-                            Perfil
-                        </a>
-                        <div class="border-t border-gray-100 my-1"></div>
-
-                        <a href="/logout" class="flex items-center px-4 py-2 text-sm text-red-600 hover:text-white hover:bg-secondary">
-                            <div class="w-4 h-4 flex items-center justify-center mr-2">
-                                <i class="ri-logout-box-r-line"></i>
-                            </div>
-                            Cerrar sesión
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="md:hidden px-4 pb-4">
-            <button id="mobileMenuButton"
-                class="flex items-center px-3 py-2 border border-gray-300 rounded text-grayb hover:text-primary hover:border-primary whitespace-nowrap !rounded-button">
-                <div class="w-5 h-5 flex items-center justify-center mr-1">
-                    <i class="ri-menu-line"></i>
-                </div>
-                Menu
-            </button>
-        </div>
-        <div id="mobileMenu" class="hidden md:hidden px-4 pb-4">
-            <nav class="flex flex-col space-y-2">
-                <a href="#" class="flex items-center px-3 py-2 text-sm font-medium text-primary bg-blue-50 rounded">
-                    <div class="w-5 h-5 flex items-center justify-center mr-1.5">
-                        <i class="ri-dashboard-line"></i>
-                    </div>
-                    Dashboard
-                </a>
-                <div class="mobile-dropdown">
-                    <button
-                        class="flex items-center justify-between w-full px-3 py-2 text-sm font-medium text-primary hover:text-white hover:bg-secondary rounded whitespace-nowrap !rounded-button">
-                        <div class="flex items-center">
-                            <div class="w-5 h-5 flex items-center justify-center mr-1.5">
-                                <i class="ri-motorbike-line"></i>
-                            </div>
-                            Products
-                        </div>
-                        <div class="w-4 h-4 flex items-center justify-center">
-                            <i class="ri-arrow-down-s-line"></i>
-                        </div>
-                    </button>
-                    <div class="hidden pl-8 mt-1 space-y-1">
-                        <a href="#"
-                            class="block px-3 py-2 text-sm text-primary hover:text-white hover:bg-secondary rounded">Catalog</a>
-                        <a href="#"
-                            class="block px-3 py-2 text-sm text-primary hover:text-white hover:bg-secondary rounded">Categories</a>
-                        <a href="#"
-                            class="block px-3 py-2 text-sm text-primary hover:text-white hover:bg-secondary rounded">New
-                            Listing</a>
-                    </div>
-                </div>
-            </nav>
-        </div>
-    </header>
+  <?= $this->include('partials/header') ?>
 
     <main class="pt-24 pb-12 px-4 md:px-6 max-w-7xl mx-auto">
         <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8">
@@ -245,13 +82,13 @@
                     </div>
                 </div>
                 <div class="flex items-end">
-                    <p class="text-3xl font-bold text-white">$1,248,750</p>
-                    <span class="ml-2 text-sm font-medium text-green-600 flex items-center">
-                        <i class="ri-arrow-up-s-line"></i>
-                        8.2%
+                    <p class="text-3xl font-bold text-white">$<?= number_format($stats['inventory_value'] ?? 0, 0) ?></p>
+                    <span class="ml-2 text-sm font-medium <?= ($stats['inventory_change'] ?? 0) >= 0 ? 'text-green-600' : 'text-red-600' ?> flex items-center">
+                        <i class="ri-arrow-<?= ($stats['inventory_change'] ?? 0) >= 0 ? 'up' : 'down' ?>-s-line"></i>
+                        <?= abs($stats['inventory_change'] ?? 0) ?>%
                     </span>
                 </div>
-                <p class="text-sm text-gray-500 mt-1">Desde el mes anterior</p>
+                <p class="text-sm text-gray-500 mt-1">Valor total de motocicletas</p>
             </div>
 
 
@@ -263,13 +100,13 @@
                     </div>
                 </div>
                 <div class="flex items-end">
-                    <p class="text-3xl font-bold text-white">87</p>
-                    <span class="ml-2 text-sm font-medium text-green-600 flex items-center">
-                        <i class="ri-arrow-up-s-line"></i>
-                        3.5%
+                    <p class="text-3xl font-bold text-white"><?= $stats['available_motorcycles'] ?? 0 ?></p>
+                    <span class="ml-2 text-sm font-medium <?= ($stats['motorcycles_change'] ?? 0) >= 0 ? 'text-green-600' : 'text-red-600' ?> flex items-center">
+                        <i class="ri-arrow-<?= ($stats['motorcycles_change'] ?? 0) >= 0 ? 'up' : 'down' ?>-s-line"></i>
+                        <?= abs($stats['motorcycles_change'] ?? 0) ?>%
                     </span>
                 </div>
-                <p class="text-sm text-gray-500 mt-1">Desde el mes anterior</p>
+                <p class="text-sm text-gray-500 mt-1">Disponibles para alquiler</p>
             </div>
 
             <div class="bg-primaryb p-6 rounded-lg shadow-sm border border-gray-100">
@@ -280,64 +117,64 @@
                     </div>
                 </div>
                 <div class="flex items-end">
-                    <p class="text-3xl font-bold text-white">42</p>
-                    <span class="ml-2 text-sm font-medium text-red-600 flex items-center">
-                        <i class="ri-arrow-down-s-line"></i>
-                        2.1%
+                    <p class="text-3xl font-bold text-white"><?= $stats['rented_motorcycles'] ?? 0 ?></p>
+                    <span class="ml-2 text-sm font-medium <?= ($stats['rented_change'] ?? 0) >= 0 ? 'text-green-600' : 'text-red-600' ?> flex items-center">
+                        <i class="ri-arrow-<?= ($stats['rented_change'] ?? 0) >= 0 ? 'up' : 'down' ?>-s-line"></i>
+                        <?= abs($stats['rented_change'] ?? 0) ?>%
                     </span>
                 </div>
-                <p class="text-sm text-gray-500 mt-1">Desde el mes anterior</p>
+                <p class="text-sm text-gray-500 mt-1">Actualmente alquiladas</p>
             </div>
-            
+
             <div class="bg-primaryb p-6 rounded-lg shadow-sm border border-gray-100">
                 <div class="flex items-center justify-between mb-4">
-                    <h3 class="text-lg font-medium text-grayb">Alertas de bajo inventario</h3>
+                    <h3 class="text-lg font-medium text-grayb">Alertas de inventario</h3>
                     <div class="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center text-red-600">
                         <i class="ri-alert-line ri-xl"></i>
                     </div>
                 </div>
                 <div class="flex items-end">
-                    <p class="text-3xl font-bold text-white">12</p>
-                    <span class="ml-2 text-sm font-medium text-red-600 flex items-center">
-                        <i class="ri-arrow-up-s-line"></i>
-                        4.3%
+                    <p class="text-3xl font-bold text-white"><?= $stats['low_inventory_alerts'] ?? 0 ?></p>
+                    <span class="ml-2 text-sm font-medium <?= ($stats['alerts_change'] ?? 0) >= 0 ? 'text-red-600' : 'text-green-600' ?> flex items-center">
+                        <i class="ri-arrow-<?= ($stats['alerts_change'] ?? 0) >= 0 ? 'up' : 'down' ?>-s-line"></i>
+                        <?= abs($stats['alerts_change'] ?? 0) ?>%
                     </span>
                 </div>
-                <p class="text-sm text-gray-500 mt-1">Necesitan nueva orden</p>
+                <p class="text-sm text-gray-500 mt-1">Motocicletas fuera de servicio</p>
             </div>
 
             <div class="bg-primaryb p-6 rounded-lg shadow-sm border border-gray-100">
                 <div class="flex items-center justify-between mb-4">
-                    <h3 class="text-lg font-medium text-grayb">Ordenes pendientes</h3>
+                    <h3 class="text-lg font-medium text-grayb">Servicios activos</h3>
                     <div class="w-10 h-10 bg-amber-100 rounded-full flex items-center justify-center text-amber-600">
-                        <i class="ri-shopping-cart-line ri-xl"></i>
-                    </div>
-                </div>
-                <div class="flex items-end">
-                    <p class="text-3xl font-bold text-white">8</p>
-                    <span class="ml-2 text-sm font-medium text-green-600 flex items-center">
-                        <i class="ri-arrow-down-s-line"></i>
-                        1.8%
-                    </span>
-                </div>
-                <p class="text-sm text-gray-500 mt-1">Esperando entrega</p>
-            </div>
-
-            <div class="bg-primaryb p-6 rounded-lg shadow-sm border border-gray-100">
-                <div class="flex items-center justify-between mb-4">
-                    <h3 class="text-lg font-medium text-grayb">Mantenimientos pendientes</h3>
-                    <div class="w-10 h-10 bg-cyan-100 rounded-full flex items-center justify-center text-cyan-600">
                         <i class="ri-tools-line ri-xl"></i>
                     </div>
                 </div>
                 <div class="flex items-end">
-                    <p class="text-3xl font-bold text-white">15</p>
-                    <span class="ml-2 text-sm font-medium text-red-600 flex items-center">
-                        <i class="ri-arrow-up-s-line"></i>
-                        5.7%
+                    <p class="text-3xl font-bold text-white"><?= $stats['active_services'] ?? 0 ?></p>
+                    <span class="ml-2 text-sm font-medium <?= ($stats['services_change'] ?? 0) >= 0 ? 'text-red-600' : 'text-green-600' ?> flex items-center">
+                        <i class="ri-arrow-<?= ($stats['services_change'] ?? 0) >= 0 ? 'up' : 'down' ?>-s-line"></i>
+                        <?= abs($stats['services_change'] ?? 0) ?>%
                     </span>
                 </div>
-                <p class="text-sm text-gray-500 mt-1">Programados en los siguientes 7 dias</p>
+                <p class="text-sm text-gray-500 mt-1">En proceso o pendientes</p>
+            </div>
+
+            <div class="bg-primaryb p-6 rounded-lg shadow-sm border border-gray-100">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-lg font-medium text-grayb">Total de clientes</h3>
+                    <div class="w-10 h-10 bg-indigo-100 rounded-full flex items-center justify-center text-indigo-600">
+                        <i class="ri-user-line ri-xl"></i>
+                    </div>
+                </div>
+                <div class="flex items-end">
+                    <p class="text-3xl font-bold text-white"><?= $stats['total_clients'] ?? 0 ?></p>
+                    <span class="ml-2 text-sm font-medium text-green-600 flex items-center">
+                        <i class="ri-arrow-up-s-line"></i>
+                        0%
+                    </span>
+                </div>
+                <p class="text-sm text-gray-500 mt-1">Clientes registrados</p>
             </div>
         </div>
     
@@ -370,6 +207,8 @@
                 });
             });
         </script>
+
+        <?= $this->include('partials/notification-js') ?>
     </main>
 </body>
 

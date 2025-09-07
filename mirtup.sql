@@ -1,9 +1,9 @@
 /*M!999999\- enable the sandbox mode */ 
--- MariaDB dump 10.19-11.7.2-MariaDB, for Linux (x86_64)
+-- MariaDB dump 10.19-12.0.2-MariaDB, for Linux (x86_64)
 --
 -- Host: localhost    Database: MIRENTATOTAL
 -- ------------------------------------------------------
--- Server version	11.7.2-MariaDB
+-- Server version	12.0.2-MariaDB
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -38,6 +38,7 @@ CREATE TABLE `agencia` (
 
 LOCK TABLES `agencia` WRITE;
 /*!40000 ALTER TABLE `agencia` DISABLE KEYS */;
+set autocommit=0;
 INSERT INTO `agencia` VALUES
 (1,'Agencia Central','Calle Principal 123, San Salvador','7890-1234'),
 (2,'Agencia Oriente','Carretera al Litoral Km 5, San Miguel','7123-4567'),
@@ -46,6 +47,7 @@ INSERT INTO `agencia` VALUES
 (5,'Agencia Sur','Final Calle La Mascota 10, Antiguo Cuscatlán','7012-3456');
 /*!40000 ALTER TABLE `agencia` ENABLE KEYS */;
 UNLOCK TABLES;
+commit;
 
 --
 -- Table structure for table `cliente`
@@ -55,13 +57,13 @@ DROP TABLE IF EXISTS `cliente`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `cliente` (
-  `idCliente` int(11) NOT NULL,
+  `idCliente` int(11) NOT NULL AUTO_INCREMENT,
   `Cliente` varchar(100) DEFAULT NULL,
   `idempresa` int(11) DEFAULT NULL,
   PRIMARY KEY (`idCliente`),
   KEY `idempresa` (`idempresa`),
   CONSTRAINT `cliente_ibfk_1` FOREIGN KEY (`idempresa`) REFERENCES `empresa` (`idempresa`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -70,8 +72,13 @@ CREATE TABLE `cliente` (
 
 LOCK TABLES `cliente` WRITE;
 /*!40000 ALTER TABLE `cliente` DISABLE KEYS */;
+set autocommit=0;
+INSERT INTO `cliente` VALUES
+(1,'Jose',1),
+(3,'Ivan',1);
 /*!40000 ALTER TABLE `cliente` ENABLE KEYS */;
 UNLOCK TABLES;
+commit;
 
 --
 -- Table structure for table `departamento`
@@ -93,8 +100,10 @@ CREATE TABLE `departamento` (
 
 LOCK TABLES `departamento` WRITE;
 /*!40000 ALTER TABLE `departamento` DISABLE KEYS */;
+set autocommit=0;
 /*!40000 ALTER TABLE `departamento` ENABLE KEYS */;
 UNLOCK TABLES;
+commit;
 
 --
 -- Table structure for table `empresa`
@@ -106,8 +115,13 @@ DROP TABLE IF EXISTS `empresa`;
 CREATE TABLE `empresa` (
   `idempresa` int(11) NOT NULL AUTO_INCREMENT,
   `Empresa` varchar(50) DEFAULT NULL,
+  `direccion` varchar(250) DEFAULT NULL,
+  `telefono` varchar(9) DEFAULT NULL,
+  `correo` varchar(100) DEFAULT NULL,
+  `nit` varchar(17) DEFAULT NULL,
+  `representante_legal` varchar(100) DEFAULT NULL,
   PRIMARY KEY (`idempresa`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -116,8 +130,12 @@ CREATE TABLE `empresa` (
 
 LOCK TABLES `empresa` WRITE;
 /*!40000 ALTER TABLE `empresa` DISABLE KEYS */;
+set autocommit=0;
+INSERT INTO `empresa` VALUES
+(1,'Doordash','adjasfgg','7645423','sbdasjd@hjdsf.com','1234-123456-123-1','dsfsdfsf');
 /*!40000 ALTER TABLE `empresa` ENABLE KEYS */;
 UNLOCK TABLES;
+commit;
 
 --
 -- Table structure for table `estado`
@@ -139,6 +157,7 @@ CREATE TABLE `estado` (
 
 LOCK TABLES `estado` WRITE;
 /*!40000 ALTER TABLE `estado` DISABLE KEYS */;
+set autocommit=0;
 INSERT INTO `estado` VALUES
 (1,'Disponible'),
 (2,'En Mantenimiento'),
@@ -146,6 +165,7 @@ INSERT INTO `estado` VALUES
 (4,'Fuera de Servicio');
 /*!40000 ALTER TABLE `estado` ENABLE KEYS */;
 UNLOCK TABLES;
+commit;
 
 --
 -- Table structure for table `marca`
@@ -173,6 +193,7 @@ CREATE TABLE `marca` (
 
 LOCK TABLES `marca` WRITE;
 /*!40000 ALTER TABLE `marca` DISABLE KEYS */;
+set autocommit=0;
 INSERT INTO `marca` VALUES
 (1,'Hero','Juan Perez','78901234','2025-06-14 21:03:57',NULL,'2025-08-28 14:30:03',NULL),
 (2,'Honda','Maria Gomez','71234567','2025-06-14 21:03:57',NULL,'2025-06-14 21:03:57',NULL),
@@ -180,6 +201,7 @@ INSERT INTO `marca` VALUES
 (4,'TVS','Jose Adan','76543123','2025-08-28 14:32:41',NULL,'2025-08-28 14:32:41',NULL);
 /*!40000 ALTER TABLE `marca` ENABLE KEYS */;
 UNLOCK TABLES;
+commit;
 
 --
 -- Table structure for table `migrations`
@@ -197,7 +219,7 @@ CREATE TABLE `migrations` (
   `time` int(11) NOT NULL,
   `batch` int(11) unsigned NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -206,8 +228,14 @@ CREATE TABLE `migrations` (
 
 LOCK TABLES `migrations` WRITE;
 /*!40000 ALTER TABLE `migrations` DISABLE KEYS */;
+set autocommit=0;
+INSERT INTO `migrations` VALUES
+(1,'2025-08-26-204750','App\\Database\\Migrations\\CreateServiciosTable','default','App',1756845546,1),
+(2,'2025-09-02-203808','App\\Database\\Migrations\\AddEmpresaFields','default','App',1756845546,1),
+(3,'2025-09-02-212214','App\\Database\\Migrations\\FixClienteAutoIncrement','default','App',1756848167,2);
 /*!40000 ALTER TABLE `migrations` ENABLE KEYS */;
 UNLOCK TABLES;
+commit;
 
 --
 -- Table structure for table `motos`
@@ -262,16 +290,18 @@ CREATE TABLE `motos` (
 
 LOCK TABLES `motos` WRITE;
 /*!40000 ALTER TABLE `motos` DISABLE KEYS */;
+set autocommit=0;
 INSERT INTO `motos` VALUES
-('B65241',3,NULL,NULL,'1234',NULL,3,2012,'B54231',NULL,NULL,NULL,NULL,NULL,NULL,5,NULL,NULL,NULL,3,NULL),
+('B65241',3,3,NULL,'1234',NULL,3,2012,'B54231',NULL,'2025-09-08','2025-09-10',NULL,NULL,NULL,NULL,150.00,175.00,NULL,3,3),
 ('BHTER12',3,NULL,'Sport','8761',NULL,1,2020,'KJUY56','Negro','2025-06-10','2025-06-10','DHL','MotorSport',NULL,5,NULL,NULL,NULL,3,NULL),
 ('H63452',3,NULL,NULL,'12',NULL,2,2024,'YHR324',NULL,NULL,NULL,NULL,NULL,NULL,4,NULL,NULL,NULL,3,NULL),
-('M56543',2,NULL,NULL,'25431',NULL,1,2012,'JHY432',NULL,NULL,NULL,NULL,NULL,NULL,2,NULL,NULL,NULL,3,NULL),
+('M56543',1,NULL,NULL,'25431',NULL,1,2012,'JHY432',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,3,NULL),
 ('M76453',2,NULL,NULL,'76',NULL,2,2023,'YRZ9845',NULL,NULL,NULL,NULL,NULL,NULL,2,NULL,NULL,NULL,3,NULL),
 ('MB5423',4,NULL,NULL,'1235',NULL,1,2025,'YHF12341',NULL,NULL,NULL,NULL,NULL,NULL,1,NULL,NULL,NULL,3,NULL),
 ('TRE6512',4,NULL,NULL,'420',NULL,3,2016,'HJHGA',NULL,NULL,NULL,NULL,NULL,NULL,4,NULL,NULL,NULL,3,NULL);
 /*!40000 ALTER TABLE `motos` ENABLE KEYS */;
 UNLOCK TABLES;
+commit;
 
 --
 -- Table structure for table `servicios`
@@ -314,10 +344,12 @@ CREATE TABLE `servicios` (
 
 LOCK TABLES `servicios` WRITE;
 /*!40000 ALTER TABLE `servicios` DISABLE KEYS */;
+set autocommit=0;
 INSERT INTO `servicios` VALUES
 (1,'BHTER12','Mantenimiento Preventivo','Probando probando','pendiente','2025-08-28',NULL,NULL,45.00,NULL,'DIPARVEL',NULL,'media',5423,3,NULL,'2025-08-28 02:46:55','2025-08-28 02:46:55',NULL);
 /*!40000 ALTER TABLE `servicios` ENABLE KEYS */;
 UNLOCK TABLES;
+commit;
 
 --
 -- Table structure for table `usuario`
@@ -348,6 +380,7 @@ CREATE TABLE `usuario` (
 
 LOCK TABLES `usuario` WRITE;
 /*!40000 ALTER TABLE `usuario` DISABLE KEYS */;
+set autocommit=0;
 INSERT INTO `usuario` VALUES
 (1,'Arch Test User','testuser','444$','test@example.com',1,'Operativo','00000000-0','2025-06-08 17:11:49',NULL,'2025-06-09 19:09:17'),
 (2,'Test User','testuser1','pass123','test1@example.com',1,'admin','123456789','2025-06-08 17:11:49',NULL,'2025-06-09 10:01:33'),
@@ -363,6 +396,11 @@ INSERT INTO `usuario` VALUES
 (24,'hjasvsdjJKHASV','VJHADV','$2y$12$/vW2eVyT/X2T8vus9plZaOZpnSVzAiRnaZ7IS3vbOf4IqBdSJI5pe','savahdga@test.com',0,'Visualizador','32626232-1','2025-06-16 20:47:45',NULL,'2025-06-16 20:47:45');
 /*!40000 ALTER TABLE `usuario` ENABLE KEYS */;
 UNLOCK TABLES;
+commit;
+
+--
+-- Dumping routines for database 'MIRENTATOTAL'
+--
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -373,4 +411,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*M!100616 SET NOTE_VERBOSITY=@OLD_NOTE_VERBOSITY */;
 
--- Dump completed on 2025-08-28 15:57:56
+-- Dump completed on 2025-09-05 19:56:56

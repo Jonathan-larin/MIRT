@@ -95,11 +95,11 @@ class ServicioModel extends Model
     // Callbacks
     protected $allowCallbacks = true;
     protected $beforeInsert   = [];
-    protected $afterInsert    = [];
+    protected $afterInsert    = ['updateMotorcycleStatus'];
     protected $beforeUpdate   = [];
-    protected $afterUpdate    = [];
+    protected $afterUpdate    = ['updateMotorcycleStatus'];
     protected $beforeDelete   = [];
-    protected $afterDelete    = [];
+    protected $afterDelete    = ['restoreMotorcycleStatus'];
 
     // Relationships
     public function getWithMotorcycle()
@@ -116,5 +116,151 @@ class ServicioModel extends Model
                     ->join('motos', 'motos.placa = servicios.placa_motocicleta')
                     ->join('marca', 'marca.idmarca = motos.idmarca')
                     ->find($id);
+    }
+
+    /**
+     * Get upcoming services within specified days
+     */
+    public function getUpcomingServices($daysAhead = 7)
+    {
+        $currentDate = date('Y-m-d');
+        $futureDate = date('Y-m-d', strtotime("+{$daysAhead} days"));
+
+        try {
+            // Get services with upcoming start dates
+            $upcomingStartServices = $this->select('servicios.*, motos.modelo, marca.marca AS nombre_marca, motos.año, motos.color')
+                                       ->join('motos', 'motos.placa = servicios.placa_motocicleta')
+                                       ->join('marca', 'marca.idmarca = motos.idmarca')
+                                       ->where('servicios.fecha_inicio >=', $currentDate)
+                                       ->where('servicios.fecha_inicio <=', $futureDate)
+                                       ->where('servicios.estado_servicio !=', 'completado')
+                                       ->where('servicios.estado_servicio !=', 'cancelado')
+                                       ->findAll();
+
+            // Get services with upcoming completion dates
+            $upcomingCompletionServices = $this->select('servicios.*, motos.modelo, marca.marca AS nombre_marca, motos.año, motos.color')
+                                            ->join('motos', 'motos.placa = servicios.placa_motocicleta')
+                                            ->join('marca', 'marca.idmarca = motos.idmarca')
+                                            ->where('servicios.fecha_completado >=', $currentDate)
+                                            ->where('servicios.fecha_completado <=', $futureDate)
+                                            ->where('servicios.estado_servicio', 'en_progreso')
+                                            ->findAll();
+
+            // Combine and remove duplicates
+            $allServices = array_merge($upcomingStartServices, $upcomingCompletionServices);
+
+            // Remove duplicates based on service ID
+            $uniqueServices = [];
+            $seenIds = [];
+            foreach ($allServices as $service) {
+                if (!in_array($service['id'], $seenIds)) {
+                    $uniqueServices[] = $service;
+                    $seenIds[] = $service['id'];
+                }
+            }
+
+            // Sort by date (earliest first)
+            usort($uniqueServices, function($a, $b) {
+                $dateA = $a['fecha_inicio'] ?? $a['fecha_completado'];
+                $dateB = $b['fecha_inicio'] ?? $b['fecha_completado'];
+                return strtotime($dateA) - strtotime($dateB);
+            });
+
+            return $uniqueServices;
+        } catch (\Exception $e) {
+            log_message('error', 'Error in getUpcomingServices: ' . $e->getMessage());
+            return [];
+        }
+    }
+
+    /**
+     * Get count of upcoming services within specified days
+     */
+    public function getUpcomingServicesCount($daysAhead = 7)
+    {
+        $currentDate = date('Y-m-d');
+        $futureDate = date('Y-m-d', strtotime("+{$daysAhead} days"));
+
+        try {
+            // Count services with upcoming start dates
+            $startCount = $this->where('fecha_inicio >=', $currentDate)
+                             ->where('fecha_inicio <=', $futureDate)
+                             ->where('estado_servicio !=', 'completado')
+                             ->where('estado_servicio !=', 'cancelado')
+                             ->countAllResults();
+
+            // Count services with upcoming completion dates
+            $completionCount = $this->where('fecha_completado >=', $currentDate)
+                                  ->where('fecha_completado <=', $futureDate)
+                                  ->where('estado_servicio', 'en_progreso')
+                                  ->countAllResults();
+
+            return $startCount + $completionCount;
+        } catch (\Exception $e) {
+            log_message('error', 'Error in getUpcomingServicesCount: ' . $e->getMessage());
+            return 0;
+        }
+    }
+
+    /**
+     * Update motorcycle status based on service status
+     * Called after insert and update operations
+     */
+    protected function updateMotorcycleStatus(array $data)
+    {
+        if (!isset($data['data']['placa_motocicleta']) || !isset($data['data']['estado_servicio'])) {
+            return $data;
+        }
+
+        $placa = $data['data']['placa_motocicleta'];
+        $estadoServicio = $data['data']['estado_servicio'];
+
+        try {
+            $db = \Config\Database::connect();
+            $builder = $db->table('motos');
+
+            // Update motorcycle status based on service status
+            if ($estadoServicio === 'en_progreso') {
+                // Set motorcycle to "En Mantenimiento" (idestado = 2)
+                $builder->where('placa', $placa)->update(['idestado' => 2]);
+                log_message('info', "Motorcycle {$placa} status updated to 'En Mantenimiento' due to service in progress");
+            } elseif (in_array($estadoServicio, ['completado', 'cancelado'])) {
+                // Set motorcycle back to "Disponible" (idestado = 1)
+                $builder->where('placa', $placa)->update(['idestado' => 1]);
+                log_message('info', "Motorcycle {$placa} status updated to 'Disponible' due to service completion/cancellation");
+            }
+
+        } catch (\Exception $e) {
+            log_message('error', 'Error updating motorcycle status: ' . $e->getMessage());
+        }
+
+        return $data;
+    }
+
+    /**
+     * Restore motorcycle status when service is deleted
+     * Called after delete operations
+     */
+    protected function restoreMotorcycleStatus(array $data)
+    {
+        if (!isset($data['placa_motocicleta'])) {
+            return $data;
+        }
+
+        $placa = $data['placa_motocicleta'];
+
+        try {
+            $db = \Config\Database::connect();
+            $builder = $db->table('motos');
+
+            // Set motorcycle back to "Disponible" (idestado = 1)
+            $builder->where('placa', $placa)->update(['idestado' => 1]);
+            log_message('info', "Motorcycle {$placa} status restored to 'Disponible' due to service deletion");
+
+        } catch (\Exception $e) {
+            log_message('error', 'Error restoring motorcycle status: ' . $e->getMessage());
+        }
+
+        return $data;
     }
 }

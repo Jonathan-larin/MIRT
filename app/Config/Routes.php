@@ -27,15 +27,30 @@ $routes->post('profile/change-password', 'Profile::changePassword');
 $routes->get('servicios', 'Servicios::index');
 $routes->post('servicios/createViaAjax', 'Servicios::createViaAjax');
 $routes->get('servicios/details/(:num)', 'Servicios::details/$1');
-$routes->post('servicios/update/(:num)', 'Servicios::update/$1');
+$routes->match(['POST', 'PUT'], 'servicios/update/(:num)', 'Servicios::update/$1');
 $routes->delete('servicios/delete/(:num)', 'Servicios::delete/$1');
 $routes->get('servicios/get-motocicletas', 'Servicios::getMotocicletas');
+$routes->get('servicios/upcoming-count', 'Servicios::getUpcomingServicesCount');
+$routes->get('servicios/upcoming-services', 'Servicios::getUpcomingServices');
 
 // Rutas para la gestión de rentas
 $routes->get('rentas', 'Rentas::index');
+$routes->post('rentas/createRental', 'Rentas::createRental');
+$routes->get('rentas/details/(:segment)', 'Rentas::getRentalDetails/$1');
+$routes->post('rentas/update/(:segment)', 'Rentas::updateRental/$1');
+$routes->post('rentas/end/(:segment)', 'Rentas::endRental/$1');
+$routes->get('rentas/available-motorcycles', 'Rentas::getAvailableMotorcycles');
+$routes->get('rentas/clients', 'Rentas::getClients');
+$routes->get('rentas/expiring-count', 'Rentas::getExpiringLeasesCount');
+$routes->get('rentas/expiring-leases', 'Rentas::getExpiringLeases');
 
 // Rutas para la gestión de reportes
 $routes->get('reportes', 'Reportes::index');
+$routes->get('reportes/available-motorcycles', 'Reportes::generateAvailableMotorcyclesReport');
+$routes->get('reportes/leased-motorcycles', 'Reportes::generateLeasedMotorcyclesReport');
+$routes->get('reportes/active-services', 'Reportes::generateActiveServicesReport');
+$routes->get('reportes/historical-services', 'Reportes::generateHistoricalServicesReport');
+$routes->get('reportes/system', 'Reportes::generateSystemReport');
 
 // Rutas para la gestión de usuarios
 
@@ -45,6 +60,22 @@ $routes->get('usuarios', 'Usuarios::usuarios');
 $routes->delete('usuarios/delete/(:num)', 'Usuarios::delete/$1');
 $routes->get('usuarios/show/(:num)', 'Usuarios::show/$1');
 $routes->put('usuarios/update/(:num)', 'Usuarios::updateUser/$1');
+
+// Rutas para la gestión de clientes
+$routes->get('clientes', 'Clientes::index');
+$routes->post('clientes/create', 'Clientes::create');
+$routes->get('clientes/list', 'Clientes::getClients');
+$routes->get('clientes/getClient/(:num)', 'Clientes::getClient/$1');
+$routes->put('clientes/update/(:num)', 'Clientes::update/$1');
+$routes->delete('clientes/delete/(:num)', 'Clientes::delete/$1');
+
+// Rutas para la gestión de empresas
+$routes->get('empresas', 'Empresas::index');
+$routes->post('empresas/create', 'Empresas::create');
+$routes->get('empresas/list', 'Empresas::getCompanies');
+$routes->get('empresas/getCompany/(:num)', 'Empresas::getCompany/$1');
+$routes->put('empresas/update/(:num)', 'Empresas::update/$1');
+$routes->delete('empresas/delete/(:num)', 'Empresas::delete/$1');
 
 $routes->resource('usuarios');
 //$routes->resource('motos');

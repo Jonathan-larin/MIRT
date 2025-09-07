@@ -6,6 +6,6 @@ class UsuarioModel extends Model
 {
     protected $table = 'usuario';
     protected $primaryKey = 'idUsuario';
-    protected $allowedFields = ['nombre', 'user', 'Password', 'correo', 'estado', 'rol', 'dui', 'created_at', 'updated_at', 'last_login'];
+    protected $allowedFields = ['nombre', 'user', 'Password', 'correo', 'estado', 'rol', 'dui'];
     protected $useTimestamps = true;
 }

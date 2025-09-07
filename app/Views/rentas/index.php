@@ -41,175 +41,26 @@
     body {
       font-family: 'Inter', sans-serif;
       background-color: #f9fafb;
+      overflow-x: hidden;
+    }
+
+    /* Ensure notification dropdown is visible */
+    #notificationDropdown {
+      position: fixed !important;
+      z-index: 10000 !important;
+      top: 60px !important;
+      right: 20px !important;
+      left: auto !important;
+      transform: none !important;
     }
   </style>
 </head>
 
 <body class="bg-white">
-  <header class="bg-primary shadow-sm fixed top-0 left-0 right-0 z-50">
-        <div class="flex items-center justify-between px-6 py-1">
 
-            <div class="flex items-center">
-                <img src="<?= base_url('images/logow.png')?>" alt="MIRentaLogo" class="h-10 max-h-10 mr-4">
-                <nav class="hidden md:flex items-center space-x-1">
+  <!-- Header -->
 
-                <a href="dashboard"
-                class="flex items-center px-3 py-2 text-sm font-medium text-white bg-secondary rounded">
-                    <div class="w-5 h-5 flex items-center justify-center mr-1.5">
-                        <i class="ri-dashboard-line"></i>
-                    </div>
-                    Panel de Control
-                </a>
-                </nav>
-            </div>
-
-
-            <div class="flex items-center space-x-4">
-
-            <div class="relative group">
-                    <button>
-                        <a href="/usuarios"
-                        class="flex items-center px-3 py-2 text-sm font-medium text-white hover:text-white hover:bg-secondary rounded whitespace-nowrap !rounded-button">
-                            <div class="w-5 h-5 flex items-center justify-center mr-1.5">
-                                <i class="ri-user-line"></i>
-                            </div>
-                            Usuarios
-                        </a>
-                    </button>
-                </div>
-
-                <div class="relative group">
-                    <button class="flex items-center px-3 py-2 text-sm font-medium text-white hover:text-white hover:bg-secondary rounded whitespace-nowrap !rounded-button">
-                        <div class="flex items-center mr-1.5">
-                            <div class="w-5 h-5 flex items-center justify-center">
-                                <i class="ri-motorbike-line"></i>
-                            </div>
-                            Motocicletas
-                        </div>
-                        <div class="w-4 h-4 flex items-center justify-center">
-                            <i class="ri-arrow-down-s-line"></i>
-                        </div>
-                    </button>
-                    <div class="absolute left-0 mt-2 w-48 bg-white rounded shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
-                        <a href="/motocicletas" class="flex items-center px-4 py-2 text-sm text-primary hover:text-white hover:bg-secondary">
-                            <div class="w-4 h-4 flex items-center justify-center mr-2">
-                                <i class="ri-motorbike-line"></i>
-                            </div>
-                            Ver Motocicletas
-                        </a>
-                        <a href="/servicios" class="flex items-center px-4 py-2 text-sm text-primary hover:text-white hover:bg-secondary">
-                            <div class="w-4 h-4 flex items-center justify-center mr-2">
-                                <i class="ri-tools-line"></i>
-                            </div>
-                            Servicios
-                        </a>
-                        <a href="/rentas" class="flex items-center px-4 py-2 text-sm text-primary hover:text-white hover:bg-secondary">
-                            <div class="w-4 h-4 flex items-center justify-center mr-2">
-                                <i class="ri-calendar-check-line"></i>
-                            </div>
-                            Rentas
-                        </a>
-                    </div>
-                </div>
-
-                <div class="relative group">
-                    <button>
-                        <a href="/reportes"
-                        class="flex items-center px-3 py-2 text-sm font-medium text-white hover:text-white hover:bg-secondary rounded whitespace-nowrap !rounded-button">
-                            <div class="w-5 h-5 flex items-center justify-center mr-1.5">
-                                <i class="ri-bar-chart-line"></i>
-                            </div>
-                            Reportes
-                        </a>
-                    </button>
-                </div>
-
-                <button class="relative p-1 text-white hover:text-secondary focus:outline-none">
-                    <div class="w-6 h-6 flex items-center justify-center">
-                        <i class="ri-notification-3-line"></i>
-                    </div>
-                   </button>
-                <div class="relative group">
-                    <button class="flex items-center space-x-2">
-                        <div class="w-8 h-8 bg-secondary rounded-full flex items-center justify-center text-white">
-                            <i class="ri-user-line"></i>
-                        </div>
-                        <span class="text-sm font-medium text-white hidden md:block">
-                            <?php
-                            $session = session();
-                            echo esc($session->get('nombre') ?: 'Invitado');
-                            ?>
-                        </span>
-                        <div class="w-4 h-4 flex items-center justify-center">
-                            <i class="ri-arrow-down-s-line" style="color: white;"></i>
-                        </div>
-                    </button>
-                    <div
-                        class="absolute right-0 mt-2 w-48 bg-white rounded shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
-
-                        <a href="/profile"
-                            class="flex items-center px-4 py-2 text-sm text-primary hover:text-white hover:bg-secondary">
-                            <div class="w-4 h-4 flex items-center justify-center mr-2">
-                                <i class="ri-user-settings-line"></i>
-                            </div>
-                            Perfil
-                        </a>
-                        <div class="border-t border-gray-100 my-1"></div>
-
-                        <a href="/logout" class="flex items-center px-4 py-2 text-sm text-red-600 hover:text-white hover:bg-secondary">
-                            <div class="w-4 h-4 flex items-center justify-center mr-2">
-                                <i class="ri-logout-box-r-line"></i>
-                            </div>
-                            Cerrar sesión
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="md:hidden px-4 pb-4">
-            <button id="mobileMenuButton"
-                class="flex items-center px-3 py-2 border border-gray-300 rounded text-grayb hover:text-primary hover:border-primary whitespace-nowrap !rounded-button">
-                <div class="w-5 h-5 flex items-center justify-center mr-1">
-                    <i class="ri-menu-line"></i>
-                </div>
-                Menu
-            </button>
-        </div>
-        <div id="mobileMenu" class="hidden md:hidden px-4 pb-4">
-            <nav class="flex flex-col space-y-2">
-                <a href="dashboard" class="flex items-center px-3 py-2 text-sm font-medium text-primary bg-blue-50 rounded">
-                    <div class="w-5 h-5 flex items-center justify-center mr-1.5">
-                        <i class="ri-dashboard-line"></i>
-                    </div>
-                    Dashboard
-                </a>
-                <div class="mobile-dropdown">
-                    <button
-                        class="flex items-center justify-between w-full px-3 py-2 text-sm font-medium text-primary hover:text-white hover:bg-secondary rounded whitespace-nowrap !rounded-button">
-                        <div class="flex items-center">
-                            <div class="w-5 h-5 flex items-center justify-center mr-1.5">
-                                <i class="ri-motorbike-line"></i>
-                            </div>
-                            Products
-                        </div>
-                        <div class="w-4 h-4 flex items-center justify-center">
-                            <i class="ri-arrow-down-s-line"></i>
-                        </div>
-                    </button>
-                    <div class="hidden pl-8 mt-1 space-y-1">
-                        <a href="#"
-                            class="block px-3 py-2 text-sm text-primary hover:text-white hover:bg-secondary rounded">Catalog</a>
-                        <a href="#"
-                            class="block px-3 py-2 text-sm text-primary hover:text-white hover:bg-secondary rounded">Categories</a>
-                        <a href="#"
-                            class="block px-3 py-2 text-sm text-primary hover:text-white hover:bg-secondary rounded">New
-                            Listing</a>
-                    </div>
-                </div>
-            </nav>
-        </div>
-    </header>
+  <?= $this->include('partials/header') ?>
 
   <main class="pt-24 pb-12 px-4 md:px-6 max-w-7xl mx-auto">
     <div class="flex items-center justify-between mb-6">
@@ -227,20 +78,213 @@
       </div>
     </div>
 
-    <div class="bg-white p-6 rounded shadow">
-      <div class="text-center py-12">
-        <div class="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
-          <i class="ri-calendar-check-line text-3xl text-primary"></i>
-        </div>
-        <h3 class="text-lg font-semibold text-primary mb-2">Sistema de Rentas</h3>
-        <p class="text-gray-600 mb-6">Aquí podrás gestionar todas las rentas de motocicletas de manera eficiente.</p>
-        <p class="text-sm text-gray-500">Funcionalidad próximamente disponible</p>
+    <!-- Active Rentals Table -->
+    <div class="bg-white rounded-lg shadow mb-6">
+      <div class="px-6 py-4 border-b border-gray-200">
+        <h2 class="text-lg font-semibold text-primary">Rentas Activas</h2>
+      </div>
+      <div class="overflow-x-auto">
+        <table class="w-full">
+          <thead class="bg-gray-50">
+            <tr>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Placa</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Marca/Modelo</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Cliente</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Fecha Entrega</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Fecha Renovación</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Renta (sin IVA)</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Renta (con IVA)</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Estado</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Acciones</th>
+            </tr>
+          </thead>
+          <tbody class="bg-white divide-y divide-gray-200">
+            <?php if (!empty($rentas)): ?>
+              <?php foreach ($rentas as $renta): ?>
+              <tr>
+                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900"><?= esc($renta['placa']) ?></td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                  <?= esc($renta['nombre_marca']) ?> <?= esc($renta['modelo']) ?> (<?= esc($renta['año']) ?>)
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"><?= esc($renta['nombre_cliente']) ?></td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                  <?= date('d/m/Y', strtotime($renta['fecha_entrega'])) ?>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                  <?= date('d/m/Y', strtotime($renta['fecha_renovacion'])) ?>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">$<?= number_format($renta['renta_sinIva'], 2) ?></td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">$<?= number_format($renta['renta_conIva'], 2) ?></td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">
+                    <?= esc($renta['nombre_estado']) ?>
+                  </span>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                  <button onclick="editRental('<?= esc($renta['placa']) ?>')" class="text-primary hover:text-secondary mr-3">
+                    <i class="ri-edit-line"></i> Editar
+                  </button>
+                  <button onclick="endRental('<?= esc($renta['placa']) ?>')" class="text-red-600 hover:text-red-900">
+                    <i class="ri-close-line"></i> Finalizar
+                  </button>
+                </td>
+              </tr>
+              <?php endforeach; ?>
+            <?php else: ?>
+              <tr>
+                <td colspan="9" class="px-6 py-4 text-center text-gray-500">
+                  No hay rentas activas en este momento.
+                </td>
+              </tr>
+            <?php endif; ?>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Available Motorcycles Table -->
+    <div class="bg-white rounded-lg shadow">
+      <div class="px-6 py-4 border-b border-gray-200">
+        <h2 class="text-lg font-semibold text-primary">Motocicletas Disponibles</h2>
+      </div>
+      <div class="overflow-x-auto">
+        <table class="w-full">
+          <thead class="bg-gray-50">
+            <tr>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Placa</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Marca/Modelo</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Año</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Estado</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Acciones</th>
+            </tr>
+          </thead>
+          <tbody class="bg-white divide-y divide-gray-200">
+            <?php if (!empty($motos_disponibles)): ?>
+              <?php foreach ($motos_disponibles as $moto): ?>
+              <tr>
+                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900"><?= esc($moto['placa']) ?></td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                  <?= esc($moto['nombre_marca']) ?> <?= esc($moto['modelo']) ?>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"><?= esc($moto['año']) ?></td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                    <?= esc($moto['nombre_estado']) ?>
+                  </span>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                  <button onclick="rentMotorcycle('<?= esc($moto['placa']) ?>')" class="text-primary hover:text-secondary">
+                    <i class="ri-play-line"></i> Rentar
+                  </button>
+                </td>
+              </tr>
+              <?php endforeach; ?>
+            <?php else: ?>
+              <tr>
+                <td colspan="5" class="px-6 py-4 text-center text-gray-500">
+                  No hay motocicletas disponibles para rentar.
+                </td>
+              </tr>
+            <?php endif; ?>
+          </tbody>
+        </table>
       </div>
     </div>
 
   </main>
 
+  <!-- Create/Edit Rental Modal -->
+  <div id="rentalModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden z-50">
+    <div class="relative top-20 mx-auto p-5 border w-11/12 md:w-3/4 lg:w-1/2 shadow-lg rounded-md bg-white">
+      <div class="mt-3">
+        <div class="flex items-center justify-between mb-4">
+          <h3 class="text-lg font-medium text-primary" id="modalTitle">Nueva Renta</h3>
+          <button onclick="closeModal()" class="text-gray-400 hover:text-gray-600">
+            <i class="ri-close-line text-xl"></i>
+          </button>
+        </div>
+
+        <form id="rentalForm">
+          <input type="hidden" id="rentalId" name="placa">
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+            <div>
+              <label for="modalPlaca" class="block text-sm font-medium text-gray-700 mb-1">Placa</label>
+              <input type="text" id="modalPlaca" name="placa" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary" readonly>
+            </div>
+
+            <div>
+              <label for="modalCliente" class="block text-sm font-medium text-gray-700 mb-1">Cliente</label>
+              <select id="modalCliente" name="idcliente" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary" required>
+                <option value="">Seleccionar cliente</option>
+                <?php if (!empty($clientes)): ?>
+                  <?php foreach ($clientes as $cliente): ?>
+                    <option value="<?= esc($cliente['idCliente']) ?>"><?= esc($cliente['Cliente']) ?></option>
+                  <?php endforeach; ?>
+                <?php endif; ?>
+              </select>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+            <div>
+              <label for="modalFechaEntrega" class="block text-sm font-medium text-gray-700 mb-1">Fecha de Entrega</label>
+              <input type="date" id="modalFechaEntrega" name="fecha_entrega" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary" required>
+            </div>
+
+            <div>
+              <label for="modalFechaRenovacion" class="block text-sm font-medium text-gray-700 mb-1">Fecha de Renovación</label>
+              <input type="date" id="modalFechaRenovacion" name="fecha_renovacion" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary" required>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+            <div>
+              <label for="modalRentaSinIva" class="block text-sm font-medium text-gray-700 mb-1">Renta sin IVA ($)</label>
+              <input type="number" step="0.01" id="modalRentaSinIva" name="renta_sinIva" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary" required>
+            </div>
+
+            <div>
+              <label for="modalRentaConIva" class="block text-sm font-medium text-gray-700 mb-1">Renta con IVA ($)</label>
+              <input type="number" step="0.01" id="modalRentaConIva" name="renta_conIva" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary" required>
+            </div>
+          </div>
+
+          <div class="flex justify-end space-x-3">
+            <button type="button" onclick="closeModal()" class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 border border-gray-300 rounded-md hover:bg-gray-200">
+              Cancelar
+            </button>
+            <button type="submit" class="px-4 py-2 text-sm font-medium text-white bg-primary border border-transparent rounded-md hover:bg-secondary">
+              Guardar
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Success/Error Messages -->
+  <div id="message" class="fixed top-4 right-4 p-4 rounded-md shadow-lg hidden z-50">
+    <div class="flex">
+      <div class="flex-shrink-0">
+        <i id="messageIcon" class="text-xl"></i>
+      </div>
+      <div class="ml-3">
+        <p id="messageText" class="text-sm font-medium"></p>
+      </div>
+      <div class="ml-auto pl-3">
+        <button onclick="closeMessage()" class="text-gray-400 hover:text-gray-600">
+          <i class="ri-close-line"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+
   <script>
+    let editingPlaca = null;
+    let availableMotorcycles = <?= json_encode($motos_disponibles) ?>;
+    let clients = <?= json_encode($clientes) ?>;
+
     document.addEventListener('DOMContentLoaded', () => {
       // Mobile menu functionality
       const mobileMenuButton = document.getElementById('mobileMenuButton');
@@ -256,8 +300,149 @@
           mobileMenu?.classList.add('hidden');
         }
       });
+
+      // Form submission
+      document.getElementById('rentalForm').addEventListener('submit', handleFormSubmit);
+
+      // Initialize notifications (functions loaded from partial)
     });
+
+    function showMessage(message, type = 'success') {
+      const messageDiv = document.getElementById('message');
+      const messageText = document.getElementById('messageText');
+      const messageIcon = document.getElementById('messageIcon');
+
+      messageText.textContent = message;
+      messageDiv.className = `fixed top-4 right-4 p-4 rounded-md shadow-lg z-50 ${type === 'success' ? 'bg-green-100 border-l-4 border-green-500' : 'bg-red-100 border-l-4 border-red-500'}`;
+      messageIcon.className = `text-xl ${type === 'success' ? 'text-green-500 ri-check-line' : 'text-red-500 ri-error-warning-line'}`;
+
+      messageDiv.classList.remove('hidden');
+      setTimeout(() => closeMessage(), 5000);
+    }
+
+    function closeMessage() {
+      document.getElementById('message').classList.add('hidden');
+    }
+
+    function openModal(title = 'Nueva Renta') {
+      document.getElementById('modalTitle').textContent = title;
+      document.getElementById('rentalModal').classList.remove('hidden');
+    }
+
+    function closeModal() {
+      document.getElementById('rentalModal').classList.add('hidden');
+      document.getElementById('rentalForm').reset();
+      editingPlaca = null;
+    }
+
+    function rentMotorcycle(placa) {
+      editingPlaca = null;
+      const motorcycle = availableMotorcycles.find(m => m.placa === placa);
+      if (motorcycle) {
+        document.getElementById('modalPlaca').value = motorcycle.placa;
+        document.getElementById('rentalId').value = motorcycle.placa;
+        openModal('Nueva Renta');
+      }
+    }
+
+    function editRental(placa) {
+      editingPlaca = placa;
+
+      fetch(`/rentas/details/${placa}`, {
+        headers: {
+          'X-Requested-With': 'XMLHttpRequest',
+        }
+      })
+      .then(response => response.json())
+        .then(data => {
+          if (data.placa) {
+            document.getElementById('modalPlaca').value = data.placa;
+            document.getElementById('rentalId').value = data.placa;
+            document.getElementById('modalCliente').value = data.idcliente;
+            document.getElementById('modalFechaEntrega').value = data.fecha_entrega;
+            document.getElementById('modalFechaRenovacion').value = data.fecha_renovacion;
+            document.getElementById('modalRentaSinIva').value = data.renta_sinIva;
+            document.getElementById('modalRentaConIva').value = data.renta_conIva;
+            openModal('Editar Renta');
+          }
+        })
+        .catch(error => {
+          console.error('Error:', error);
+          showMessage('Error al cargar los datos de la renta', 'error');
+        });
+    }
+
+    function endRental(placa) {
+      if (confirm('¿Está seguro de que desea finalizar esta renta? La motocicleta volverá a estar disponible.')) {
+        fetch(`/rentas/end/${placa}`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-Requested-With': 'XMLHttpRequest',
+          }
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.message) {
+            showMessage(data.message, 'success');
+            setTimeout(() => location.reload(), 2000);
+          }
+        })
+        .catch(error => {
+          console.error('Error:', error);
+          showMessage('Error al finalizar la renta', 'error');
+        });
+      }
+    }
+
+    function handleFormSubmit(e) {
+      e.preventDefault();
+
+      const formData = new FormData(e.target);
+      const data = Object.fromEntries(formData);
+
+      const url = editingPlaca ? `/rentas/update/${editingPlaca}` : '/rentas/createRental';
+      const method = editingPlaca ? 'POST' : 'POST';
+
+      fetch(url, {
+        method: method,
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Requested-With': 'XMLHttpRequest',
+        },
+        body: JSON.stringify(data)
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.message) {
+          showMessage(data.message, 'success');
+          closeModal();
+          setTimeout(() => location.reload(), 2000);
+        } else if (data.error) {
+          showMessage(data.error, 'error');
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        showMessage('Error al guardar la renta', 'error');
+      });
+    }
+
+    document.getElementById('addRentalButton').addEventListener('click', () => {
+      if (availableMotorcycles.length === 0) {
+        showMessage('No hay motocicletas disponibles para rentar', 'error');
+        return;
+      }
+      editingPlaca = null;
+      document.getElementById('rentalForm').reset();
+      document.getElementById('rentalId').value = '';
+      openModal('Nueva Renta');
+    });
+
+
   </script>
+
+  <?= $this->include('partials/notification-js') ?>
 
 </body>
 

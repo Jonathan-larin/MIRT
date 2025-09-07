@@ -46,199 +46,212 @@
 </head>
 
 <body class="bg-white">
-  <header class="bg-primary shadow-sm fixed top-0 left-0 right-0 z-50">
-        <div class="flex items-center justify-between px-6 py-1">
 
-            <div class="flex items-center">
-                <img src="<?= base_url('images/logow.png')?>" alt="MIRentaLogo" class="h-10 max-h-10 mr-4">
-                <nav class="hidden md:flex items-center space-x-1">
-
-                <a href="dashboard"
-                class="flex items-center px-3 py-2 text-sm font-medium text-white bg-secondary rounded">
-                    <div class="w-5 h-5 flex items-center justify-center mr-1.5">
-                        <i class="ri-dashboard-line"></i>
-                    </div>
-                    Panel de Control
-                </a>
-                </nav>
-            </div>
-
-
-            <div class="flex items-center space-x-4">
-
-            <div class="relative group">
-                    <button>
-                        <a href="/usuarios"
-                        class="flex items-center px-3 py-2 text-sm font-medium text-white hover:text-white hover:bg-secondary rounded whitespace-nowrap !rounded-button">
-                            <div class="w-5 h-5 flex items-center justify-center mr-1.5">
-                                <i class="ri-user-line"></i>
-                            </div>
-                            Usuarios
-                        </a>
-                    </button>
-                </div>
-
-                <div class="relative group">
-                    <button class="flex items-center px-3 py-2 text-sm font-medium text-white hover:text-white hover:bg-secondary rounded whitespace-nowrap !rounded-button">
-                        <div class="flex items-center mr-1.5">
-                            <div class="w-5 h-5 flex items-center justify-center">
-                                <i class="ri-motorbike-line"></i>
-                            </div>
-                            Motocicletas
-                        </div>
-                        <div class="w-4 h-4 flex items-center justify-center">
-                            <i class="ri-arrow-down-s-line"></i>
-                        </div>
-                    </button>
-                    <div class="absolute left-0 mt-2 w-48 bg-white rounded shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
-                        <a href="/motocicletas" class="flex items-center px-4 py-2 text-sm text-primary hover:text-white hover:bg-secondary">
-                            <div class="w-4 h-4 flex items-center justify-center mr-2">
-                                <i class="ri-motorbike-line"></i>
-                            </div>
-                            Ver Motocicletas
-                        </a>
-                        <a href="/servicios" class="flex items-center px-4 py-2 text-sm text-primary hover:text-white hover:bg-secondary">
-                            <div class="w-4 h-4 flex items-center justify-center mr-2">
-                                <i class="ri-tools-line"></i>
-                            </div>
-                            Servicios
-                        </a>
-                        <a href="/rentas" class="flex items-center px-4 py-2 text-sm text-primary hover:text-white hover:bg-secondary">
-                            <div class="w-4 h-4 flex items-center justify-center mr-2">
-                                <i class="ri-calendar-check-line"></i>
-                            </div>
-                            Rentas
-                        </a>
-                    </div>
-                </div>
-
-                <div class="relative group">
-                    <button>
-                        <a href="/reportes"
-                        class="flex items-center px-3 py-2 text-sm font-medium text-white hover:text-white hover:bg-secondary rounded whitespace-nowrap !rounded-button">
-                            <div class="w-5 h-5 flex items-center justify-center mr-1.5">
-                                <i class="ri-bar-chart-line"></i>
-                            </div>
-                            Reportes
-                        </a>
-                    </button>
-                </div>
-
-                <button class="relative p-1 text-white hover:text-secondary focus:outline-none">
-                    <div class="w-6 h-6 flex items-center justify-center">
-                        <i class="ri-notification-3-line"></i>
-                    </div>
-                   </button>
-                <div class="relative group">
-                    <button class="flex items-center space-x-2">
-                        <div class="w-8 h-8 bg-secondary rounded-full flex items-center justify-center text-white">
-                            <i class="ri-user-line"></i>
-                        </div>
-                        <span class="text-sm font-medium text-white hidden md:block">
-                            <?php
-                            $session = session();
-                            echo esc($session->get('nombre') ?: 'Invitado');
-                            ?>
-                        </span>
-                        <div class="w-4 h-4 flex items-center justify-center">
-                            <i class="ri-arrow-down-s-line" style="color: white;"></i>
-                        </div>
-                    </button>
-                    <div
-                        class="absolute right-0 mt-2 w-48 bg-white rounded shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
-
-                        <a href="/profile"
-                            class="flex items-center px-4 py-2 text-sm text-primary hover:text-white hover:bg-secondary">
-                            <div class="w-4 h-4 flex items-center justify-center mr-2">
-                                <i class="ri-user-settings-line"></i>
-                            </div>
-                            Perfil
-                        </a>
-                        <div class="border-t border-gray-100 my-1"></div>
-
-                        <a href="/logout" class="flex items-center px-4 py-2 text-sm text-red-600 hover:text-white hover:bg-secondary">
-                            <div class="w-4 h-4 flex items-center justify-center mr-2">
-                                <i class="ri-logout-box-r-line"></i>
-                            </div>
-                            Cerrar sesión
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="md:hidden px-4 pb-4">
-            <button id="mobileMenuButton"
-                class="flex items-center px-3 py-2 border border-gray-300 rounded text-grayb hover:text-primary hover:border-primary whitespace-nowrap !rounded-button">
-                <div class="w-5 h-5 flex items-center justify-center mr-1">
-                    <i class="ri-menu-line"></i>
-                </div>
-                Menu
-            </button>
-        </div>
-        <div id="mobileMenu" class="hidden md:hidden px-4 pb-4">
-            <nav class="flex flex-col space-y-2">
-                <a href="dashboard" class="flex items-center px-3 py-2 text-sm font-medium text-primary bg-blue-50 rounded">
-                    <div class="w-5 h-5 flex items-center justify-center mr-1.5">
-                        <i class="ri-dashboard-line"></i>
-                    </div>
-                    Dashboard
-                </a>
-                <div class="mobile-dropdown">
-                    <button
-                        class="flex items-center justify-between w-full px-3 py-2 text-sm font-medium text-primary hover:text-white hover:bg-secondary rounded whitespace-nowrap !rounded-button">
-                        <div class="flex items-center">
-                            <div class="w-5 h-5 flex items-center justify-center mr-1.5">
-                                <i class="ri-motorbike-line"></i>
-                            </div>
-                            Products
-                        </div>
-                        <div class="w-4 h-4 flex items-center justify-center">
-                            <i class="ri-arrow-down-s-line"></i>
-                        </div>
-                    </button>
-                    <div class="hidden pl-8 mt-1 space-y-1">
-                        <a href="#"
-                            class="block px-3 py-2 text-sm text-primary hover:text-white hover:bg-secondary rounded">Catalog</a>
-                        <a href="#"
-                            class="block px-3 py-2 text-sm text-primary hover:text-white hover:bg-secondary rounded">Categories</a>
-                        <a href="#"
-                            class="block px-3 py-2 text-sm text-primary hover:text-white hover:bg-secondary rounded">New
-                            Listing</a>
-                    </div>
-                </div>
-            </nav>
-        </div>
-    </header>
+  <?= $this->include('partials/header') ?>
 
   <main class="pt-24 pb-12 px-4 md:px-6 max-w-7xl mx-auto">
     <div class="flex items-center justify-between mb-6">
       <h1 class="text-2xl font-bold text-primary">Sistema de Reportes</h1>
       <div class="flex items-center space-x-2">
         <span class="text-sm text-gray-700 font-medium"><?= $current_date ?></span>
-
-        <button id="generateReportButton"
-          class="bg-primary text-white px-4 py-2 rounded-button hover:bg-secondary transition-all duration-200 flex items-center whitespace-nowrap !rounded-button">
-          <div class="w-4 h-4 flex items-center justify-center mr-1.5">
-            <i class="ri-file-chart-line"></i>
-          </div>
-          Generar Reporte
-        </button>
       </div>
     </div>
 
-    <div class="bg-white p-6 rounded shadow">
-      <div class="text-center py-12">
-        <div class="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
-          <i class="ri-bar-chart-line text-3xl text-primary"></i>
+    <!-- System Statistics Dashboard -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+      <div class="bg-white p-6 rounded-lg shadow">
+        <div class="flex items-center">
+          <div class="p-3 bg-blue-100 rounded-full">
+            <i class="ri-motorbike-line text-2xl text-blue-600"></i>
+          </div>
+          <div class="ml-4">
+            <h3 class="text-sm font-medium text-gray-500">Total Motocicletas</h3>
+            <p class="text-2xl font-bold text-gray-900"><?= $stats['total_motorcycles'] ?? 0 ?></p>
+          </div>
         </div>
-        <h3 class="text-lg font-semibold text-primary mb-2">Sistema de Reportes</h3>
-        <p class="text-gray-600 mb-6">Aquí podrás generar y visualizar reportes detallados del sistema.</p>
-        <p class="text-sm text-gray-500">Funcionalidad próximamente disponible</p>
+      </div>
+
+      <div class="bg-white p-6 rounded-lg shadow">
+        <div class="flex items-center">
+          <div class="p-3 bg-green-100 rounded-full">
+            <i class="ri-check-line text-2xl text-green-600"></i>
+          </div>
+          <div class="ml-4">
+            <h3 class="text-sm font-medium text-gray-500">Disponibles</h3>
+            <p class="text-2xl font-bold text-gray-900"><?= $stats['available_motorcycles'] ?? 0 ?></p>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-white p-6 rounded-lg shadow">
+        <div class="flex items-center">
+          <div class="p-3 bg-red-100 rounded-full">
+            <i class="ri-calendar-check-line text-2xl text-red-600"></i>
+          </div>
+          <div class="ml-4">
+            <h3 class="text-sm font-medium text-gray-500">Alquiladas</h3>
+            <p class="text-2xl font-bold text-gray-900"><?= $stats['rented_motorcycles'] ?? 0 ?></p>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-white p-6 rounded-lg shadow">
+        <div class="flex items-center">
+          <div class="p-3 bg-yellow-100 rounded-full">
+            <i class="ri-tools-line text-2xl text-yellow-600"></i>
+          </div>
+          <div class="ml-4">
+            <h3 class="text-sm font-medium text-gray-500">Servicios Activos</h3>
+            <p class="text-2xl font-bold text-gray-900"><?= $stats['active_services'] ?? 0 ?></p>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-white p-6 rounded-lg shadow">
+        <div class="flex items-center">
+          <div class="p-3 bg-purple-100 rounded-full">
+            <i class="ri-checkbox-circle-line text-2xl text-purple-600"></i>
+          </div>
+          <div class="ml-4">
+            <h3 class="text-sm font-medium text-gray-500">Servicios Completados</h3>
+            <p class="text-2xl font-bold text-gray-900"><?= $stats['completed_services'] ?? 0 ?></p>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-white p-6 rounded-lg shadow">
+        <div class="flex items-center">
+          <div class="p-3 bg-indigo-100 rounded-full">
+            <i class="ri-user-line text-2xl text-indigo-600"></i>
+          </div>
+          <div class="ml-4">
+            <h3 class="text-sm font-medium text-gray-500">Total Clientes</h3>
+            <p class="text-2xl font-bold text-gray-900"><?= $stats['total_clients'] ?? 0 ?></p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Report Generation Section -->
+    <div class="bg-white rounded-lg shadow p-6">
+      <h2 class="text-xl font-bold text-primary mb-6">Generar Reportes</h2>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <!-- Available Motorcycles Report -->
+        <div class="border border-gray-200 rounded-lg p-4 hover:border-primary transition-colors">
+          <div class="flex items-center mb-3">
+            <div class="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center mr-3">
+              <i class="ri-motorbike-line text-green-600"></i>
+            </div>
+            <h3 class="font-semibold text-gray-900">Motocicletas Disponibles</h3>
+          </div>
+          <p class="text-sm text-gray-600 mb-4">Reporte de motocicletas disponibles para alquiler</p>
+          <button onclick="generateReport('available-motorcycles')"
+            class="w-full bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition-colors flex items-center justify-center">
+            <i class="ri-file-pdf-line mr-2"></i>
+            Generar PDF
+          </button>
+        </div>
+
+        <!-- Leased Motorcycles Report -->
+        <div class="border border-gray-200 rounded-lg p-4 hover:border-primary transition-colors">
+          <div class="flex items-center mb-3">
+            <div class="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center mr-3">
+              <i class="ri-calendar-check-line text-red-600"></i>
+            </div>
+            <h3 class="font-semibold text-gray-900">Motocicletas Alquiladas</h3>
+          </div>
+          <p class="text-sm text-gray-600 mb-4">Reporte de motocicletas actualmente alquiladas</p>
+          <button onclick="generateReport('leased-motorcycles')"
+            class="w-full bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 transition-colors flex items-center justify-center">
+            <i class="ri-file-pdf-line mr-2"></i>
+            Generar PDF
+          </button>
+        </div>
+
+        <!-- Active Services Report -->
+        <div class="border border-gray-200 rounded-lg p-4 hover:border-primary transition-colors">
+          <div class="flex items-center mb-3">
+            <div class="w-10 h-10 bg-yellow-100 rounded-full flex items-center justify-center mr-3">
+              <i class="ri-tools-line text-yellow-600"></i>
+            </div>
+            <h3 class="font-semibold text-gray-900">Servicios Activos</h3>
+          </div>
+          <p class="text-sm text-gray-600 mb-4">Reporte de servicios en proceso o pendientes</p>
+          <button onclick="generateReport('active-services')"
+            class="w-full bg-yellow-600 text-white px-4 py-2 rounded hover:bg-yellow-700 transition-colors flex items-center justify-center">
+            <i class="ri-file-pdf-line mr-2"></i>
+            Generar PDF
+          </button>
+        </div>
+
+        <!-- Historical Services Report -->
+        <div class="border border-gray-200 rounded-lg p-4 hover:border-primary transition-colors">
+          <div class="flex items-center mb-3">
+            <div class="w-10 h-10 bg-purple-100 rounded-full flex items-center justify-center mr-3">
+              <i class="ri-history-line text-purple-600"></i>
+            </div>
+            <h3 class="font-semibold text-gray-900">Historial de Servicios</h3>
+          </div>
+          <p class="text-sm text-gray-600 mb-4">Historial completo de servicios realizados</p>
+          <button onclick="generateReport('historical-services')"
+            class="w-full bg-purple-600 text-white px-4 py-2 rounded hover:bg-purple-700 transition-colors flex items-center justify-center">
+            <i class="ri-file-pdf-line mr-2"></i>
+            Generar PDF
+          </button>
+        </div>
+
+        <!-- System Report -->
+        <div class="border border-gray-200 rounded-lg p-4 hover:border-primary transition-colors md:col-span-2 lg:col-span-1">
+          <div class="flex items-center mb-3">
+            <div class="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center mr-3">
+              <i class="ri-bar-chart-line text-primary"></i>
+            </div>
+            <h3 class="font-semibold text-gray-900">Reporte General</h3>
+          </div>
+          <p class="text-sm text-gray-600 mb-4">Reporte completo del estado del sistema</p>
+          <button onclick="generateReport('system')"
+            class="w-full bg-primary text-white px-4 py-2 rounded hover:bg-secondary transition-colors flex items-center justify-center">
+            <i class="ri-file-pdf-line mr-2"></i>
+            Generar PDF
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Information Section -->
+    <div class="bg-blue-50 border border-blue-200 rounded-lg p-6 mt-6">
+      <div class="flex items-start">
+        <div class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center mr-3 mt-1">
+          <i class="ri-information-line text-blue-600"></i>
+        </div>
+        <div>
+          <h3 class="font-semibold text-blue-900 mb-2">Información sobre Reportes</h3>
+          <ul class="text-sm text-blue-800 space-y-1">
+            <li>• Los reportes se generan en formato PDF para impresión externa</li>
+            <li>• Cada reporte incluye fecha de generación y estadísticas relevantes</li>
+            <li>• Los reportes de motocicletas incluyen información detallada de marca, modelo y estado</li>
+            <li>• Los reportes de servicios incluyen costos estimados y reales</li>
+            <li>• El reporte general del sistema incluye un resumen completo de todas las operaciones</li>
+          </ul>
+        </div>
       </div>
     </div>
 
   </main>
+
+  <!-- Loading Modal -->
+  <div id="loadingModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden z-50">
+    <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+      <div class="mt-3 text-center">
+        <div class="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
+          <i class="ri-loader-4-line text-3xl text-primary animate-spin"></i>
+        </div>
+        <h3 class="text-lg font-medium text-primary mb-2">Generando Reporte</h3>
+        <p class="text-gray-600">Por favor espere mientras se genera el reporte PDF...</p>
+      </div>
+    </div>
+  </div>
 
   <script>
     document.addEventListener('DOMContentLoaded', () => {
@@ -257,7 +270,20 @@
         }
       });
     });
+
+    function generateReport(type) {
+      const loadingModal = document.getElementById('loadingModal');
+      loadingModal.classList.remove('hidden');
+
+      // Simulate loading time and redirect to PDF generation
+      setTimeout(() => {
+        window.location.href = `/reportes/${type}`;
+        loadingModal.classList.add('hidden');
+      }, 1000);
+    }
   </script>
+
+  <?= $this->include('partials/notification-js') ?>
 
 </body>
 
