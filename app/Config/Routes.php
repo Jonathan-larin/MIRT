@@ -90,6 +90,7 @@ $routes->put('motocicletas/update/(:num)', 'Motocicletas::update/$1');
 $routes->delete('motocicletas/delete/(:num)', 'Motocicletas::delete/$1');
 
 $routes->get('motocicletas/details/(:segment)', 'Motocicletas::getMotocicletaDetails/$1');
+$routes->get('motocicletas/services/(:segment)', 'Motocicletas::getServicesForMotorcycle/$1');
 $routes->post('motocicletas/update/(:segment)', 'Motocicletas::update/$1');
 $routes->delete('motocicletas/delete/(:segment)', 'Motocicletas::delete/$1');
 

@@ -209,8 +209,17 @@
 
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
             <div>
-              <label for="modalPlaca" class="block text-sm font-medium text-gray-700 mb-1">Placa</label>
-              <input type="text" id="modalPlaca" name="placa" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary" readonly>
+              <label for="modalMotocicleta" class="block text-sm font-medium text-gray-700 mb-1">Motocicleta</label>
+              <select id="modalMotocicleta" name="motocicleta" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary" required>
+                <option value="">Seleccionar motocicleta</option>
+                <?php if (!empty($motos_disponibles)): ?>
+                  <?php foreach ($motos_disponibles as $moto): ?>
+                    <option value="<?= esc($moto['placa']) ?>" data-marca="<?= esc($moto['nombre_marca']) ?>" data-modelo="<?= esc($moto['modelo']) ?>" data-año="<?= esc($moto['año']) ?>">
+                      <?= esc($moto['placa']) ?> - <?= esc($moto['nombre_marca']) ?> <?= esc($moto['modelo']) ?> (<?= esc($moto['año']) ?>)
+                    </option>
+                  <?php endforeach; ?>
+                <?php endif; ?>
+              </select>
             </div>
 
             <div>
@@ -224,6 +233,11 @@
                 <?php endif; ?>
               </select>
             </div>
+          </div>
+
+          <div class="mb-4">
+            <label for="modalPlaca" class="block text-sm font-medium text-gray-700 mb-1">Placa</label>
+            <input type="text" id="modalPlaca" name="placa" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary bg-gray-50" readonly>
           </div>
 
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
@@ -301,6 +315,14 @@
         }
       });
 
+      // Motorcycle selection handler
+      document.getElementById('modalMotocicleta').addEventListener('change', function(e) {
+        const selectedOption = e.target.options[e.target.selectedIndex];
+        const placa = e.target.value;
+        document.getElementById('modalPlaca').value = placa;
+        document.getElementById('rentalId').value = placa;
+      });
+
       // Form submission
       document.getElementById('rentalForm').addEventListener('submit', handleFormSubmit);
 
@@ -332,6 +354,7 @@
     function closeModal() {
       document.getElementById('rentalModal').classList.add('hidden');
       document.getElementById('rentalForm').reset();
+      document.getElementById('modalMotocicleta').value = '';
       editingPlaca = null;
     }
 
@@ -339,6 +362,7 @@
       editingPlaca = null;
       const motorcycle = availableMotorcycles.find(m => m.placa === placa);
       if (motorcycle) {
+        document.getElementById('modalMotocicleta').value = motorcycle.placa;
         document.getElementById('modalPlaca').value = motorcycle.placa;
         document.getElementById('rentalId').value = motorcycle.placa;
         openModal('Nueva Renta');
@@ -356,6 +380,7 @@
       .then(response => response.json())
         .then(data => {
           if (data.placa) {
+            document.getElementById('modalMotocicleta').value = data.placa;
             document.getElementById('modalPlaca').value = data.placa;
             document.getElementById('rentalId').value = data.placa;
             document.getElementById('modalCliente').value = data.idcliente;
@@ -400,6 +425,9 @@
 
       const formData = new FormData(e.target);
       const data = Object.fromEntries(formData);
+
+      // Remove the motocicleta field since we only need placa
+      delete data.motocicleta;
 
       const url = editingPlaca ? `/rentas/update/${editingPlaca}` : '/rentas/createRental';
       const method = editingPlaca ? 'POST' : 'POST';

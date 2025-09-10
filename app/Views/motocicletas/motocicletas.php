@@ -140,7 +140,7 @@
       <div class="mb-4 grid grid-cols-1 md:grid-cols-4 gap-4">
           <div>
               <label class="block text-sm font-medium text-gray-700 mb-1">Buscar</label>
-              <input type="text" id="searchInput" placeholder="Placa o modelo..." 
+              <input type="text" id="searchInput" placeholder="Placa o modelo..."
                     class="w-full px-3 py-2 border border-gray-300 rounded-button focus:outline-none focus:ring-primary">
           </div>
           <div>
@@ -194,7 +194,7 @@
               <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase cursor-pointer hover:bg-gray-50"
                   onclick="sortTable(1)">
                 <div class="flex items-center justify-between">
-                  Modelo
+                  Placa
                   <i class="ri-arrow-up-down-line text-xs ml-1"></i>
                 </div>
               </th>
@@ -227,10 +227,21 @@
           <tbody class="bg-white divide-y divide-gray-200">
             <?php if (!empty($motocicletas)): ?>
               <?php foreach ($motocicletas as $moto): ?>
-                <tr>
+                <tr data-modelo="<?= esc($moto['modelo']) ?>">
                   <td class="px-6 py-4 text-sm text-gray-900"><?= esc($moto['nombre_marca']) ?></td>
-                  <td class="px-6 py-4 text-sm text-gray-500"><?= esc($moto['modelo']) ?></td>
-                  <td class="px-6 py-4 text-sm text-gray-500"><?= esc($moto['año']) ?></td> 
+                  <td class="px-6 py-4 text-sm text-gray-500"><?= esc($moto['placa']) ?></td>
+                  <td class="px-6 py-4 text-sm text-gray-500">
+                    <?= esc($moto['año']) ?>
+                    <?php
+                      $currentYear = date('Y');
+                      $motorcycleAge = $currentYear - $moto['año'];
+                      if ($motorcycleAge > 5):
+                    ?>
+                      <span class="ml-2 inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-yellow-100 text-yellow-800" title="Esta motocicleta tiene más de 5 años">
+                        <i class="ri-alert-line mr-1"></i>Antigua
+                      </span>
+                    <?php endif; ?>
+                  </td>
                   <td class="px-6 py-4 text-sm">
                     <?php 
                       $estadoTexto = 'Desconocido';
@@ -302,6 +313,17 @@
           </button>
         </div>
 
+        <!-- Age Warning Alert -->
+        <div id="ageWarningAlert" class="mb-4 p-4 bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 hidden">
+          <div class="flex items-center">
+            <i class="ri-alert-line text-xl mr-2"></i>
+            <div>
+              <p class="font-bold">¡Atención!</p>
+              <p>Esta motocicleta tiene más de 5 años. Considere realizar una inspección de mantenimiento adicional.</p>
+            </div>
+          </div>
+        </div>
+
         <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4 text-left text-gray-700">
           <div>
             <p class="mb-2"><span class="font-medium text-gray-900">Placa:</span> <span id="detailMotorcyclePlaca"></span></p>
@@ -328,7 +350,11 @@
           </div>
         </div>
 
-        <div class="flex justify-end gap-3 pt-4 mt-6 border-t"> <button id="editFromDetailModalBtn" class="px-6 py-2 bg-gray-200 text-primary rounded-md hover:text-white hover:bg-secondary focus:outline-none focus:ring-2 focus:ring-blue-500">
+        <div class="flex justify-end gap-3 pt-4 mt-6 border-t">
+          <button id="viewServicesBtn" class="px-6 py-2 bg-gray-200 text-primary rounded-md hover:text-white hover:bg-secondary focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <i class="ri-tools-line mr-2"></i>Ver Servicios
+          </button>
+          <button id="editFromDetailModalBtn" class="px-6 py-2 bg-gray-200 text-primary rounded-md hover:text-white hover:bg-secondary focus:outline-none focus:ring-2 focus:ring-blue-500">
             Editar
           </button>
           <button id="closeDetailModalBtn" class="px-6 py-2 bg-primary text-white rounded-md hover:text-white hover:bg-secondary focus:outline-none focus:ring-2 focus:ring-gray-400">
@@ -487,6 +513,86 @@
       </div>
     </div>
 
+    <!-- Services Modal -->
+    <div id="servicesModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50 hidden flex justify-center items-center">
+      <div class="relative bg-white rounded-lg shadow-xl p-6 w-11/12 md:w-4/5 lg:w-3/4 xl:w-2/3 max-h-[90vh] overflow-y-auto">
+        <div class="flex justify-between items-center border-b pb-4 mb-4">
+          <h3 class="text-2xl font-semibold text-gray-800">Historial de Servicios</h3>
+          <button id="closeServicesModalXBtn" class="text-gray-400 hover:text-gray-600">
+            <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+            </svg>
+          </button>
+        </div>
+
+        <div class="mb-4">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center space-x-4">
+              <span class="text-sm font-medium text-gray-700">Motocicleta:</span>
+              <span id="servicesMotorcycleInfo" class="text-sm text-gray-900 font-medium"></span>
+            </div>
+            <div class="flex items-center space-x-4">
+              <span class="text-sm text-gray-600">Total Servicios:</span>
+              <span id="totalServicesCount" class="text-sm font-medium text-primary bg-primary/10 px-2 py-1 rounded">0</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Services Tabs -->
+        <div class="mb-4">
+          <div class="border-b border-gray-200">
+            <nav class="-mb-px flex space-x-8">
+              <button id="activeServicesTab" class="whitespace-nowrap py-2 px-1 border-b-2 font-medium text-sm border-primary text-primary">
+                Servicios Activos
+                <span id="activeServicesBadge" class="ml-2 py-0.5 px-2 rounded-full text-xs bg-blue-100 text-blue-800">0</span>
+              </button>
+              <button id="completedServicesTab" class="whitespace-nowrap py-2 px-1 border-b-2 font-medium text-sm border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300">
+                Servicios Completados
+                <span id="completedServicesBadge" class="ml-2 py-0.5 px-2 rounded-full text-xs bg-green-100 text-green-800">0</span>
+              </button>
+            </nav>
+          </div>
+        </div>
+
+        <!-- Active Services -->
+        <div id="activeServicesSection" class="services-section">
+          <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
+            <div class="flex items-center mb-3">
+              <i class="ri-tools-line text-blue-600 mr-2"></i>
+              <h4 class="text-lg font-medium text-blue-900">Servicios Activos</h4>
+            </div>
+            <div id="activeServicesList" class="space-y-3">
+              <div class="text-center text-gray-500 py-4">
+                <i class="ri-loader-4-line animate-spin text-xl"></i>
+                <p class="mt-2">Cargando servicios activos...</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Completed Services -->
+        <div id="completedServicesSection" class="services-section hidden">
+          <div class="bg-green-50 border border-green-200 rounded-lg p-4">
+            <div class="flex items-center mb-3">
+              <i class="ri-check-circle-line text-green-600 mr-2"></i>
+              <h4 class="text-lg font-medium text-green-900">Servicios Completados</h4>
+            </div>
+            <div id="completedServicesList" class="space-y-3">
+              <div class="text-center text-gray-500 py-4">
+                <i class="ri-loader-4-line animate-spin text-xl"></i>
+                <p class="mt-2">Cargando servicios completados...</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="flex justify-end gap-3 pt-4 mt-6 border-t">
+          <button id="closeServicesModalBtn" class="px-6 py-2 bg-primary text-white rounded-md hover:text-white hover:bg-secondary focus:outline-none focus:ring-2 focus:ring-gray-400">
+            Cerrar
+          </button>
+        </div>
+      </div>
+    </div>
 
   </main>
 
@@ -674,6 +780,17 @@
                     document.getElementById('detailMotorcycleRentaSinIva').textContent = data.renta_sinIva || 'N/A';
                     document.getElementById('detailMotorcycleRentaConIva').textContent = data.renta_conIva || 'N/A';
                     document.getElementById('detailMotorcycleNAF').textContent = data.naf || 'N/A';
+
+                    // Check if motorcycle is over 5 years old and show warning
+                    const currentYear = new Date().getFullYear();
+                    const motorcycleAge = currentYear - parseInt(data.año);
+                    const ageWarningAlert = document.getElementById('ageWarningAlert');
+
+                    if (motorcycleAge > 5 && ageWarningAlert) {
+                        ageWarningAlert.classList.remove('hidden');
+                    } else if (ageWarningAlert) {
+                        ageWarningAlert.classList.add('hidden');
+                    }
 
                     // Muestra el modal con los detalles
                     showModal(motorcycleDetailModal);
@@ -890,6 +1007,181 @@
       document.getElementById('closeEditMotorcycleModal')?.addEventListener('click', () => hideModal(editMotorcycleModal));
       document.getElementById('cancelEditMotorcycle')?.addEventListener('click', () => hideModal(editMotorcycleModal));
 
+      // Services Modal Functionality
+      const servicesModal = document.getElementById('servicesModal');
+      const viewServicesBtn = document.getElementById('viewServicesBtn');
+      const closeServicesModalBtn = document.getElementById('closeServicesModalBtn');
+      const closeServicesModalXBtn = document.getElementById('closeServicesModalXBtn');
+      const activeServicesTab = document.getElementById('activeServicesTab');
+      const completedServicesTab = document.getElementById('completedServicesTab');
+
+      // View Services Button
+      viewServicesBtn?.addEventListener('click', () => {
+        if (currentMotorcyclePlaca) {
+          loadServicesForMotorcycle(currentMotorcyclePlaca);
+          showModal(servicesModal);
+        } else {
+          showAlert('No se ha seleccionado ninguna motocicleta.', true);
+        }
+      });
+
+      // Close Services Modal
+      closeServicesModalBtn?.addEventListener('click', () => hideModal(servicesModal));
+      closeServicesModalXBtn?.addEventListener('click', () => hideModal(servicesModal));
+
+      // Services Tabs
+      activeServicesTab?.addEventListener('click', () => {
+        showActiveServices();
+      });
+
+      completedServicesTab?.addEventListener('click', () => {
+        showCompletedServices();
+      });
+
+      // Load Services Function
+      async function loadServicesForMotorcycle(placa) {
+        try {
+          const response = await fetch(`/motocicletas/services/${placa}`, {
+            headers: {
+              'X-Requested-With': 'XMLHttpRequest'
+            }
+          });
+
+          const data = await response.json();
+
+          if (response.ok) {
+            displayServices(data);
+          } else {
+            showAlert(`Error al cargar servicios: ${data.message || 'Error desconocido'}`, true);
+          }
+        } catch (error) {
+          console.error('Error loading services:', error);
+          showAlert('Error de conexión al cargar servicios.', true);
+        }
+      }
+
+      // Display Services Function
+      function displayServices(data) {
+        const motorcycleInfo = document.getElementById('servicesMotorcycleInfo');
+        const totalCount = document.getElementById('totalServicesCount');
+        const activeBadge = document.getElementById('activeServicesBadge');
+        const completedBadge = document.getElementById('completedServicesBadge');
+
+        // Update header info
+        motorcycleInfo.textContent = `${data.motocicleta?.marca || 'N/A'} ${data.motocicleta?.modelo || 'N/A'} (${data.motocicleta?.placa || 'N/A'})`;
+        totalCount.textContent = (data.total_completed + data.total_active) || 0;
+        activeBadge.textContent = data.total_active || 0;
+        completedBadge.textContent = data.total_completed || 0;
+
+        // Display active services
+        displayActiveServices(data.active || []);
+
+        // Display completed services
+        displayCompletedServices(data.completed || []);
+
+        // Show active services by default
+        showActiveServices();
+      }
+
+      // Display Active Services
+      function displayActiveServices(services) {
+        const container = document.getElementById('activeServicesList');
+
+        if (!services || services.length === 0) {
+          container.innerHTML = '<div class="text-center text-gray-500 py-4"><i class="ri-tools-line text-2xl mb-2"></i><p>No hay servicios activos</p></div>';
+          return;
+        }
+
+        let html = '';
+        services.forEach(service => {
+          const startDate = new Date(service.fecha_inicio).toLocaleDateString('es-ES');
+          const technician = service.tecnico_responsable || 'Pendiente';
+
+          html += `
+            <div class="bg-white border border-blue-200 rounded-lg p-4 shadow-sm">
+              <div class="flex items-start justify-between">
+                <div class="flex-1">
+                  <div class="flex items-center mb-2">
+                    <i class="ri-tools-line text-blue-600 mr-2"></i>
+                    <h5 class="font-medium text-gray-900">${service.tipo_servicio || 'Servicio'}</h5>
+                    <span class="ml-2 px-2 py-1 text-xs bg-blue-100 text-blue-800 rounded-full">${service.estado_servicio || 'Activo'}</span>
+                  </div>
+                  <div class="grid grid-cols-1 md:grid-cols-2 gap-2 text-sm text-gray-600">
+                    <p><span class="font-medium">Técnico:</span> ${technician}</p>
+                    <p><span class="font-medium">Fecha Inicio:</span> ${startDate}</p>
+                    <p><span class="font-medium">Descripción:</span> ${service.descripcion || 'Sin descripción'}</p>
+                    <p><span class="font-medium">Costo Estimado:</span> $${service.costo_estimado ? parseFloat(service.costo_estimado).toFixed(2) : '0.00'}</p>
+                    <p><span class="font-medium">Costo Real:</span> $${service.costo_real ? parseFloat(service.costo_real).toFixed(2) : '0.00'}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          `;
+        });
+
+        container.innerHTML = html;
+      }
+
+      // Display Completed Services
+      function displayCompletedServices(services) {
+        const container = document.getElementById('completedServicesList');
+
+        if (!services || services.length === 0) {
+          container.innerHTML = '<div class="text-center text-gray-500 py-4"><i class="ri-check-circle-line text-2xl mb-2"></i><p>No hay servicios completados</p></div>';
+          return;
+        }
+
+        let html = '';
+        services.forEach(service => {
+          const startDate = new Date(service.fecha_inicio).toLocaleDateString('es-ES');
+          const completionDate = service.fecha_completado ? new Date(service.fecha_completado).toLocaleDateString('es-ES') : 'N/A';
+          const technician = service.tecnico_responsable || 'Pendiente';
+
+          html += `
+            <div class="bg-white border border-green-200 rounded-lg p-4 shadow-sm">
+              <div class="flex items-start justify-between">
+                <div class="flex-1">
+                  <div class="flex items-center mb-2">
+                    <i class="ri-check-circle-line text-green-600 mr-2"></i>
+                    <h5 class="font-medium text-gray-900">${service.tipo_servicio || 'Servicio'}</h5>
+                    <span class="ml-2 px-2 py-1 text-xs bg-green-100 text-green-800 rounded-full">${service.estado_servicio || 'Completado'}</span>
+                  </div>
+                  <div class="grid grid-cols-1 md:grid-cols-2 gap-2 text-sm text-gray-600">
+                    <p><span class="font-medium">Técnico:</span> ${technician}</p>
+                    <p><span class="font-medium">Fecha Inicio:</span> ${startDate}</p>
+                    <p><span class="font-medium">Fecha Completado:</span> ${completionDate}</p>
+                    <p><span class="font-medium">Descripción:</span> ${service.descripcion || 'Sin descripción'}</p>
+                    <p><span class="font-medium">Costo Estimado:</span> $${service.costo_estimado ? parseFloat(service.costo_estimado).toFixed(2) : '0.00'}</p>
+                    <p><span class="font-medium">Costo Real:</span> $${service.costo_real ? parseFloat(service.costo_real).toFixed(2) : '0.00'}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          `;
+        });
+
+        container.innerHTML = html;
+      }
+
+      // Tab switching functions
+      function showActiveServices() {
+        document.getElementById('activeServicesSection').classList.remove('hidden');
+        document.getElementById('completedServicesSection').classList.add('hidden');
+        activeServicesTab.classList.add('border-primary', 'text-primary');
+        activeServicesTab.classList.remove('border-transparent', 'text-gray-500');
+        completedServicesTab.classList.remove('border-primary', 'text-primary');
+        completedServicesTab.classList.add('border-transparent', 'text-gray-500');
+      }
+
+      function showCompletedServices() {
+        document.getElementById('activeServicesSection').classList.add('hidden');
+        document.getElementById('completedServicesSection').classList.remove('hidden');
+        completedServicesTab.classList.add('border-primary', 'text-primary');
+        completedServicesTab.classList.remove('border-transparent', 'text-gray-500');
+        activeServicesTab.classList.remove('border-primary', 'text-primary');
+        activeServicesTab.classList.add('border-transparent', 'text-gray-500');
+      }
+
     });
 
   // Función para filtrar la tabla
@@ -905,14 +1197,16 @@
             let showRow = true;
             
             // Buscar en PLACA Y MODELO
-            // Columnas: 0-Marca, 1-Modelo, 2-Año, 3-Estado, 4-Agencia, 5-Acciones
+            // Columnas: 0-Marca, 1-Placa, 2-Año, 3-Estado, 4-Agencia, 5-Acciones
             const marcaCell = row.cells[0]?.textContent.trim() || '';
-            const modeloCell = row.cells[1]?.textContent.trim() || '';
+            const placaCell = row.cells[1]?.textContent.trim() || '';
             const placa = row.querySelector('[data-motorcycle-id]')?.dataset.motorcycleId.toLowerCase() || '';
-            
-            if (searchValue && 
-                !modeloCell.toLowerCase().includes(searchValue) && 
-                !placa.includes(searchValue)) {
+            const modelo = row.dataset.modelo?.toLowerCase() || '';
+
+            if (searchValue &&
+                !placaCell.toLowerCase().includes(searchValue) &&
+                !placa.includes(searchValue) &&
+                !modelo.includes(searchValue)) {
                 showRow = false;
             }
             

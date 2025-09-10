@@ -219,7 +219,7 @@ CREATE TABLE `migrations` (
   `time` int(11) NOT NULL,
   `batch` int(11) unsigned NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -232,7 +232,8 @@ set autocommit=0;
 INSERT INTO `migrations` VALUES
 (1,'2025-08-26-204750','App\\Database\\Migrations\\CreateServiciosTable','default','App',1756845546,1),
 (2,'2025-09-02-203808','App\\Database\\Migrations\\AddEmpresaFields','default','App',1756845546,1),
-(3,'2025-09-02-212214','App\\Database\\Migrations\\FixClienteAutoIncrement','default','App',1756848167,2);
+(3,'2025-09-02-212214','App\\Database\\Migrations\\FixClienteAutoIncrement','default','App',1756848167,2),
+(4,'2025-09-08-140000','App\\Database\\Migrations\\AddEstadoOriginalMotocicletaToServicios','default','App',1757362023,3);
 /*!40000 ALTER TABLE `migrations` ENABLE KEYS */;
 UNLOCK TABLES;
 commit;
@@ -297,7 +298,7 @@ INSERT INTO `motos` VALUES
 ('H63452',3,NULL,NULL,'12',NULL,2,2024,'YHR324',NULL,NULL,NULL,NULL,NULL,NULL,4,NULL,NULL,NULL,3,NULL),
 ('M56543',1,NULL,NULL,'25431',NULL,1,2012,'JHY432',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,3,NULL),
 ('M76453',2,NULL,NULL,'76',NULL,2,2023,'YRZ9845',NULL,NULL,NULL,NULL,NULL,NULL,2,NULL,NULL,NULL,3,NULL),
-('MB5423',4,NULL,NULL,'1235',NULL,1,2025,'YHF12341',NULL,NULL,NULL,NULL,NULL,NULL,1,NULL,NULL,NULL,3,NULL),
+('MB5423',2,NULL,NULL,'1235',NULL,1,2025,'YHF12341',NULL,NULL,NULL,NULL,NULL,NULL,1,NULL,NULL,NULL,3,NULL),
 ('TRE6512',4,NULL,NULL,'420',NULL,3,2016,'HJHGA',NULL,NULL,NULL,NULL,NULL,NULL,4,NULL,NULL,NULL,3,NULL);
 /*!40000 ALTER TABLE `motos` ENABLE KEYS */;
 UNLOCK TABLES;
@@ -325,6 +326,7 @@ CREATE TABLE `servicios` (
   `notas` text DEFAULT NULL,
   `prioridad` enum('baja','media','alta','urgente') NOT NULL DEFAULT 'media',
   `kilometraje_actual` int(11) unsigned DEFAULT NULL,
+  `estado_original_motocicleta` int(11) DEFAULT NULL COMMENT 'Estado original de la motocicleta antes del servicio',
   `creado_por` int(11) NOT NULL,
   `modificado_por` int(11) DEFAULT NULL,
   `created_at` datetime DEFAULT NULL,
@@ -335,7 +337,7 @@ CREATE TABLE `servicios` (
   KEY `fk_servicios_motos` (`placa_motocicleta`),
   CONSTRAINT `fk_servicios_motos` FOREIGN KEY (`placa_motocicleta`) REFERENCES `motos` (`placa`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `fk_servicios_usuario` FOREIGN KEY (`creado_por`) REFERENCES `usuario` (`idUsuario`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -346,7 +348,9 @@ LOCK TABLES `servicios` WRITE;
 /*!40000 ALTER TABLE `servicios` DISABLE KEYS */;
 set autocommit=0;
 INSERT INTO `servicios` VALUES
-(1,'BHTER12','Mantenimiento Preventivo','Probando probando','pendiente','2025-08-28',NULL,NULL,45.00,NULL,'DIPARVEL',NULL,'media',5423,3,NULL,'2025-08-28 02:46:55','2025-08-28 02:46:55',NULL);
+(1,'BHTER12','Mantenimiento Preventivo','Probando probando','pendiente','2025-08-28','2025-09-08',NULL,45.00,24.00,'DIPARVEL',NULL,'media',5423,NULL,3,3,'2025-08-28 02:46:55','2025-09-07 02:11:51',NULL),
+(2,'MB5423','Cambio de Aceite','Test2 para notificaciones','completado','2025-09-07','2025-09-08','2025-09-09',54.00,NULL,'DIPARVEL',NULL,'media',432,NULL,3,3,'2025-09-07 01:21:23','2025-09-07 01:47:42',NULL),
+(3,'MB5423','Reparación','Se esta reparando','en_progreso','2025-09-07','2025-09-06','2025-09-10',123.00,NULL,'Jose Perez',NULL,'alta',13121,NULL,3,3,'2025-09-07 01:52:07','2025-09-07 01:52:36',NULL);
 /*!40000 ALTER TABLE `servicios` ENABLE KEYS */;
 UNLOCK TABLES;
 commit;
@@ -411,4 +415,4 @@ commit;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*M!100616 SET NOTE_VERBOSITY=@OLD_NOTE_VERBOSITY */;
 
--- Dump completed on 2025-09-05 19:56:56
+-- Dump completed on 2025-09-09 20:06:09

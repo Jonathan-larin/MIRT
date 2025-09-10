@@ -3,9 +3,10 @@
 use CodeIgniter\Controller;
 use CodeIgniter\API\ResponseTrait;
 use App\Models\MotocicletaModel;
-use App\Models\MarcaModel; 
-use App\Models\EstadoModel;   
+use App\Models\MarcaModel;
+use App\Models\EstadoModel;
 use App\Models\AgenciaModel;
+use App\Models\ServicioModel;
 
 class Motocicletas extends BaseController
 {
@@ -15,7 +16,7 @@ class Motocicletas extends BaseController
     protected $marcaModel;
     protected $estadoModel;
     protected $agenciaModel;
-    
+    protected $servicioModel;
 
     public function __construct()
     {
@@ -23,6 +24,7 @@ class Motocicletas extends BaseController
         $this->marcaModel = new MarcaModel();
         $this->estadoModel = new EstadoModel();
         $this->agenciaModel = new AgenciaModel();
+        $this->servicioModel = new ServicioModel();
     }
 
     /**
@@ -203,9 +205,65 @@ class Motocicletas extends BaseController
         } 
         
         // Si la motocicleta no se pudo eliminar, verificar si existe
-        
+
         else {
             return $this->failServerError('No se pudo eliminar la motocicleta. Podría no existir o tener dependencias.');
+        }
+    }
+
+    /**
+     * Get all services for a specific motorcycle (both completed and active)
+     */
+    public function getServicesForMotorcycle($placa)
+    {
+        if (!$this->request->isAJAX()) {
+            return $this->failUnauthorized('Acceso no autorizado.');
+        }
+
+        if ($placa === null) {
+            return $this->failNotFound('Placa no especificada.');
+        }
+
+        try {
+            // Get motorcycle details
+            $motocicleta = $this->motocicletaModel
+                ->select('motos.*, marca.marca AS marca, estado.estado AS estado, agencia.agencia AS agencia')
+                ->join('marca', 'marca.idmarca = motos.idmarca')
+                ->join('estado', 'estado.idestado = motos.idestado')
+                ->join('agencia', 'agencia.idagencia = motos.idagencia', 'left')
+                ->find($placa);
+
+            if (!$motocicleta) {
+                return $this->failNotFound('Motocicleta no encontrada.');
+            }
+
+            // Get completed services
+            $completedServices = $this->servicioModel
+                ->select('servicios.*')
+                ->where('servicios.placa_motocicleta', $placa)
+                ->where('servicios.estado_servicio', 'completado')
+                ->orderBy('servicios.fecha_completado', 'DESC')
+                ->findAll();
+
+            // Get active services
+            $activeServices = $this->servicioModel
+                ->select('servicios.*')
+                ->where('servicios.placa_motocicleta', $placa)
+                ->whereIn('servicios.estado_servicio', ['pendiente', 'en_progreso'])
+                ->orderBy('servicios.fecha_inicio', 'DESC')
+                ->findAll();
+
+            return $this->respond([
+                'motocicleta' => $motocicleta,
+                'completed' => $completedServices,
+                'active' => $activeServices,
+                'total_completed' => count($completedServices),
+                'total_active' => count($activeServices)
+            ]);
+
+        } catch (\Exception $e) {
+            log_message('error', 'Error getting services for motorcycle: ' . $e->getMessage());
+            return $this->fail('Error al obtener los servicios.', 500);
         }
     }
 

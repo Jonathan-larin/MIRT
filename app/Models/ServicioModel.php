@@ -26,6 +26,7 @@ class ServicioModel extends Model
         'notas',
         'prioridad',
         'kilometraje_actual',
+        'estado_original_motocicleta',
         'creado_por',
         'modificado_por'
     ];
@@ -214,20 +215,33 @@ class ServicioModel extends Model
 
         $placa = $data['data']['placa_motocicleta'];
         $estadoServicio = $data['data']['estado_servicio'];
+        $serviceId = $data['id'] ?? null;
 
         try {
             $db = \Config\Database::connect();
-            $builder = $db->table('motos');
+            $motoBuilder = $db->table('motos');
+            $servicioBuilder = $db->table('servicios');
 
             // Update motorcycle status based on service status
             if ($estadoServicio === 'en_progreso') {
-                // Set motorcycle to "En Mantenimiento" (idestado = 2)
-                $builder->where('placa', $placa)->update(['idestado' => 2]);
-                log_message('info', "Motorcycle {$placa} status updated to 'En Mantenimiento' due to service in progress");
+                // Get current motorcycle status before changing it
+                $currentMoto = $motoBuilder->where('placa', $placa)->get()->getRowArray();
+                if ($currentMoto) {
+                    // Store the original status in the service record
+                    $servicioBuilder->where('id', $serviceId)->update(['estado_original_motocicleta' => $currentMoto['idestado']]);
+
+                    // Set motorcycle to "En Mantenimiento" (idestado = 2)
+                    $motoBuilder->where('placa', $placa)->update(['idestado' => 2]);
+                    log_message('info', "Motorcycle {$placa} status changed from {$currentMoto['idestado']} to 'En Mantenimiento' due to service in progress");
+                }
             } elseif (in_array($estadoServicio, ['completado', 'cancelado'])) {
-                // Set motorcycle back to "Disponible" (idestado = 1)
-                $builder->where('placa', $placa)->update(['idestado' => 1]);
-                log_message('info', "Motorcycle {$placa} status updated to 'Disponible' due to service completion/cancellation");
+                // Get the original status from the service record
+                $service = $servicioBuilder->where('id', $serviceId)->get()->getRowArray();
+                $originalStatus = $service['estado_original_motocicleta'] ?? 1; // Default to "Disponible" if not found
+
+                // Restore motorcycle to its original status
+                $motoBuilder->where('placa', $placa)->update(['idestado' => $originalStatus]);
+                log_message('info', "Motorcycle {$placa} status restored to {$originalStatus} due to service completion/cancellation");
             }
 
         } catch (\Exception $e) {
@@ -248,14 +262,15 @@ class ServicioModel extends Model
         }
 
         $placa = $data['placa_motocicleta'];
+        $originalStatus = $data['estado_original_motocicleta'] ?? 1; // Default to "Disponible" if not found
 
         try {
             $db = \Config\Database::connect();
             $builder = $db->table('motos');
 
-            // Set motorcycle back to "Disponible" (idestado = 1)
-            $builder->where('placa', $placa)->update(['idestado' => 1]);
-            log_message('info', "Motorcycle {$placa} status restored to 'Disponible' due to service deletion");
+            // Restore motorcycle to its original status
+            $builder->where('placa', $placa)->update(['idestado' => $originalStatus]);
+            log_message('info', "Motorcycle {$placa} status restored to {$originalStatus} due to service deletion");
 
         } catch (\Exception $e) {
             log_message('error', 'Error restoring motorcycle status: ' . $e->getMessage());
