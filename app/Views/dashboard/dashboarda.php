@@ -365,6 +365,75 @@
         </div>
     </div>
 
+    <!-- Activity Log Section -->
+    <section id="activity-log-section" class="mb-16 scroll-mt-20">
+        <div class="flex justify-between items-center mb-6">
+            <h3 class="text-xl font-bold text-gray-900 border-b-2 border-secondary pb-2 inline-block">Registro de Actividad</h3>
+            <a href="<?= base_url('activity-log') ?>" class="text-primary hover:text-primaryb font-medium flex items-center">
+                <i class="ri-external-link-line mr-2"></i>Ver todas las actividades
+            </a>
+        </div>
+        <div class="bg-white p-6 rounded-lg shadow-md">
+            <div class="space-y-4 max-h-96 overflow-y-auto">
+                <?php if (!empty($recent_activities)): ?>
+                    <?php foreach ($recent_activities as $activity): ?>
+                        <div class="flex items-start space-x-3 p-3 border-l-4 bg-gray-50 rounded-r-lg <?php
+                            if ($activity['action'] === 'INSERT') echo 'border-green-500';
+                            elseif ($activity['action'] === 'UPDATE') echo 'border-blue-500';
+                            else echo 'border-red-500';
+                        ?>">
+                            <div class="flex-shrink-0">
+                                <?php if ($activity['action'] === 'INSERT'): ?>
+                                    <i class="ri-add-circle-line text-green-600 text-lg"></i>
+                                <?php elseif ($activity['action'] === 'UPDATE'): ?>
+                                    <i class="ri-edit-circle-line text-blue-600 text-lg"></i>
+                                <?php else: ?>
+                                    <i class="ri-delete-bin-line text-red-600 text-lg"></i>
+                                <?php endif; ?>
+                            </div>
+                            <div class="flex-1 min-w-0">
+                                <p class="text-sm font-medium text-gray-900">
+                                    <?= ucfirst(strtolower($activity['action'])) ?> en <?= ucfirst($activity['table_name']) ?>
+                                    <span class="text-gray-500">(ID: <?= esc($activity['record_id']) ?>)</span>
+                                </p>
+                                <p class="text-xs text-gray-600">
+                                    <?= date('d/m/Y H:i', strtotime($activity['created_at'])) ?>
+                                    <?php if ($activity['user_username']): ?>
+                                        - Usuario: <?= esc($activity['user_username']) ?>
+                                    <?php endif; ?>
+                                </p>
+                                <?php if ($activity['old_values'] || $activity['new_values']): ?>
+                                    <details class="mt-2">
+                                        <summary class="text-xs text-gray-500 cursor-pointer hover:text-gray-700">Ver detalles</summary>
+                                        <div class="mt-1 text-xs text-gray-600">
+                                            <?php if ($activity['old_values']): ?>
+                                                <div class="mb-1">
+                                                    <strong>Antes:</strong>
+                                                    <pre class="bg-red-50 p-1 rounded text-xs overflow-x-auto"><?= esc(json_encode(json_decode($activity['old_values'], true), JSON_PRETTY_PRINT)) ?></pre>
+                                                </div>
+                                            <?php endif; ?>
+                                            <?php if ($activity['new_values']): ?>
+                                                <div>
+                                                    <strong>Después:</strong>
+                                                    <pre class="bg-green-50 p-1 rounded text-xs overflow-x-auto"><?= esc(json_encode(json_decode($activity['new_values'], true), JSON_PRETTY_PRINT)) ?></pre>
+                                                </div>
+                                            <?php endif; ?>
+                                        </div>
+                                    </details>
+                                <?php endif; ?>
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
+                <?php else: ?>
+                    <div class="text-center py-8 text-gray-500">
+                        <i class="ri-file-list-line text-4xl mb-2"></i>
+                        <p>No hay actividades recientes para mostrar.</p>
+                    </div>
+                <?php endif; ?>
+            </div>
+        </div>
+    </section>
+
     <!-- Customers Section -->
     <!-- <section id="customers-section" class="mb-16 scroll-mt-20">
         <h3 class="text-xl font-bold text-gray-900 mb-6 border-b-2 border-secondary pb-2 inline-block">Clientes</h3>

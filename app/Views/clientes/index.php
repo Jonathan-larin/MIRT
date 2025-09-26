@@ -258,7 +258,7 @@
   <script>
 
     document.addEventListener('DOMContentLoaded', () => {
-      // Client modal functionality
+      // Funcionalidad modal agregar cliente
       const addClientButton = document.getElementById('addClientButton');
       const addClientModal = document.getElementById('addClientModal');
       const closeAddClientModal = document.getElementById('closeAddClientModal');
@@ -301,11 +301,11 @@
           });
       });
 
-      // Action button event handlers
+      // Botones de vista, editar y eliminar
       document.addEventListener('click', function(e) {
         const target = e.target;
 
-        // View client details
+        // Ver detalles del cliente
         if (target.closest('.view-client')) {
           e.preventDefault();
           const button = target.closest('.view-client');
@@ -333,16 +333,16 @@
           });
         }
 
-        // Edit button inside view details modal
+        // Boton editar desde modal detalles
         if (target.closest('#editClientButton')) {
           e.preventDefault();
           const button = target.closest('#editClientButton');
           const clientId = button.getAttribute('data-client-id');
 
-          // Close detail modal and open edit modal
+          // Cerrar modal detalles
           document.getElementById('clientDetailModal').classList.add('hidden');
 
-          // Load client data for editing
+          // cargar datos del cliente en el modal de editar
           fetch(`/clientes/getClient/${clientId}`, {
             method: 'GET',
             headers: {
@@ -366,7 +366,7 @@
         }
       });
 
-      // Edit client
+      // Editar cliente
       document.addEventListener('click', function(e) {
         if (e.target.closest('.edit-client')) {
           const button = e.target.closest('.edit-client');
@@ -395,7 +395,7 @@
         }
       });
 
-      // Close modals
+      // Cerrar modals
       document.getElementById('closeDetailModalButton')?.addEventListener('click', () => {
         document.getElementById('clientDetailModal').classList.add('hidden');
       });
@@ -412,7 +412,7 @@
         document.getElementById('editClientModal').classList.add('hidden');
       });
 
-      // Edit client form submission
+      // Editar cliente - submit
       document.getElementById('editClientForm')?.addEventListener('submit', function (e) {
         e.preventDefault();
         const clientId = document.getElementById('editClientId').value;
@@ -440,7 +440,7 @@
           .catch(err => alert(err.message));
       });
 
-      // Delete client
+      // Borrar cliente
       document.addEventListener('click', function(e) {
         if (e.target.closest('.delete-client')) {
           const button = e.target.closest('.delete-client');

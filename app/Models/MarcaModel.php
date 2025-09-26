@@ -1,15 +1,24 @@
 <?php namespace App\Models;
 
 use CodeIgniter\Model;
+use App\Traits\ActivityLoggable;
 
 class MarcaModel extends Model
 {
+    use ActivityLoggable;
+
+    public function __construct()
+    {
+        parent::__construct();
+        $this->initializeActivityLog();
+    }
+
     // Asegúrate de que el nombre de la tabla coincida exactamente con tu DB
     // Según tu descripción, la tabla se llama 'marca' (en minúsculas), no 'marcas'
     protected $table      = 'marca';
-    
+
     // Tu clave primaria es 'idmarca', no 'id'
-    protected $primaryKey = 'idmarca';     
+    protected $primaryKey = 'idmarca';
 
     protected $useAutoIncrement = true;
 

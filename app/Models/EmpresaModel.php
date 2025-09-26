@@ -1,9 +1,18 @@
 <?php namespace App\Models;
 
 use CodeIgniter\Model;
+use App\Traits\ActivityLoggable;
 
 class EmpresaModel extends Model
 {
+    use ActivityLoggable;
+
+    public function __construct()
+    {
+        parent::__construct();
+        $this->initializeActivityLog();
+    }
+
     protected $table = 'empresa';
     protected $primaryKey = 'idempresa';
 

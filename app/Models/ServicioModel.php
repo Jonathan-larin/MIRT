@@ -3,9 +3,18 @@
 namespace App\Models;
 
 use CodeIgniter\Model;
+use App\Traits\ActivityLoggable;
 
 class ServicioModel extends Model
 {
+    use ActivityLoggable;
+
+    public function __construct()
+    {
+        parent::__construct();
+        $this->initializeActivityLog();
+    }
+
     protected $table            = 'servicios';
     protected $primaryKey       = 'id';
     protected $useAutoIncrement = true;

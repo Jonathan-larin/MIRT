@@ -10,6 +10,7 @@ use App\Models\UsuarioModel;
 use App\Models\RentaModel;
 use App\Models\ServicioModel;
 use App\Models\ClienteModel;
+use App\Models\ActivityLogModel;
 
 class Dashboard extends BaseController
 {
@@ -17,6 +18,7 @@ class Dashboard extends BaseController
     protected $servicioModel;
     protected $clienteModel;
     protected $motocicletaModel;
+    protected $activityLogModel;
 
     public function __construct()
     {
@@ -24,6 +26,7 @@ class Dashboard extends BaseController
         $this->servicioModel = new ServicioModel();
         $this->clienteModel = new ClienteModel();
         $this->motocicletaModel = new MotocicletaModel();
+        $this->activityLogModel = new ActivityLogModel();
     }
 
     public function dashboard()
@@ -57,13 +60,17 @@ class Dashboard extends BaseController
         // Get real statistics
         $stats = $this->getDashboardStats();
 
+        // Get recent activity logs
+        $recentActivities = $this->activityLogModel->getRecentActivities(20);
+
         // Preparar los datos para la vista
         $data = [
             'title' => 'Panel de Administrador',
             'user' => $user, // Datos completos del usuario desde BD
             'current_date' => date('d/m/Y'),
             'logged_in_user_id' => $userId, // Pass user ID if needed for 'creadopor'
-            'stats' => $stats
+            'stats' => $stats,
+            'recent_activities' => $recentActivities
         ];
 
         // Escoger la vista según el rol del usuario
@@ -165,5 +172,139 @@ class Dashboard extends BaseController
         } else {
             return mt_rand(1, 8); // Positive change
         }
+    }
+
+    /**
+     * Activity Log Page
+     */
+    public function activityLog()
+    {
+        $session = session();
+
+        if (!$session->get('isLoggedIn')) {
+            return redirect()->to('/login')->with('error', 'Debes iniciar sesión primero.');
+        }
+
+        $rol = $session->get('rol');
+
+        // Check if user has permission to view activity log
+        $allowedRoles = ['admin', 'Administrador', 'Jefatura'];
+        if (!in_array($rol, $allowedRoles)) {
+            return redirect()->to('/dashboard')->with('error', 'No tienes permisos para ver el registro de actividades.');
+        }
+
+        // Get date filter parameters
+        $startDate = $this->request->getGet('start_date');
+        $endDate = $this->request->getGet('end_date');
+
+        // Get activities with date filtering
+        $activities = $this->activityLogModel->getActivitiesWithDateFilter($startDate, $endDate);
+
+        // Prepare data for view
+        $data = [
+            'title' => 'Registro de Actividad',
+            'activities' => $activities,
+            'start_date' => $startDate,
+            'end_date' => $endDate,
+            'current_date' => date('d/m/Y')
+        ];
+
+        return view('activity_log/index', $data);
+    }
+
+    /**
+     * Export Activity Log to CSV
+     */
+    public function exportActivityLogCsv()
+    {
+        $session = session();
+
+        if (!$session->get('isLoggedIn')) {
+            return redirect()->to('/login')->with('error', 'Debes iniciar sesión primero.');
+        }
+
+        $rol = $session->get('rol');
+
+        // Check if user has permission to export activity log
+        $allowedRoles = ['admin', 'Administrador', 'Jefatura'];
+        if (!in_array($rol, $allowedRoles)) {
+            return redirect()->to('/dashboard')->with('error', 'No tienes permisos para exportar el registro de actividades.');
+        }
+
+        // Get date filter parameters
+        $startDate = $this->request->getGet('start_date');
+        $endDate = $this->request->getGet('end_date');
+
+        // Get activities with date filtering
+        $activities = $this->activityLogModel->getActivitiesWithDateFilter($startDate, $endDate);
+
+        // Generate filename with date range
+        $filename = 'registro_actividad';
+        if ($startDate || $endDate) {
+            $filename .= '_';
+            if ($startDate) $filename .= str_replace('-', '', $startDate);
+            $filename .= '_';
+            if ($endDate) $filename .= str_replace('-', '', $endDate);
+        }
+        $filename .= '_' . date('Y-m-d_H-i-s') . '.csv';
+
+        // Set headers for CSV download
+        $response = $this->response;
+        $response->setHeader('Content-Type', 'text/csv; charset=utf-8');
+        $response->setHeader('Content-Disposition', 'attachment; filename="' . $filename . '"');
+        $response->setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+        $response->setHeader('Pragma', 'no-cache');
+        $response->setHeader('Expires', '0');
+
+        // Create CSV content
+        $output = fopen('php://output', 'w');
+
+        // Add BOM for UTF-8
+        fprintf($output, chr(0xEF).chr(0xBB).chr(0xBF));
+
+        // CSV headers
+        fputcsv($output, [
+            'ID',
+            'Tabla',
+            'ID Registro',
+            'Acción',
+            'Usuario',
+            'Fecha y Hora',
+            'Valores Anteriores',
+            'Valores Nuevos'
+        ]);
+
+        // Add data rows
+        foreach ($activities as $activity) {
+            fputcsv($output, [
+                $activity['id'],
+                ucfirst($activity['table_name']),
+                $activity['record_id'],
+                ucfirst(strtolower($activity['action'])),
+                $activity['user_username'] ?: 'Usuario desconocido',
+                date('d/m/Y H:i:s', strtotime($activity['created_at'])),
+                $activity['old_values'] ? $this->formatJsonForCsv($activity['old_values']) : '',
+                $activity['new_values'] ? $this->formatJsonForCsv($activity['new_values']) : ''
+            ]);
+        }
+
+        fclose($output);
+        return $response;
+    }
+
+    /**
+     * Format JSON data for CSV export
+     */
+    private function formatJsonForCsv($jsonString)
+    {
+        $data = json_decode($jsonString, true);
+        if (!$data) return '';
+
+        $formatted = [];
+        foreach ($data as $key => $value) {
+            $formatted[] = $key . ': ' . (is_array($value) ? json_encode($value) : $value);
+        }
+
+        return implode(' | ', $formatted);
     }
 }

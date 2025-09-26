@@ -17,6 +17,40 @@
 /*M!100616 SET @OLD_NOTE_VERBOSITY=@@NOTE_VERBOSITY, NOTE_VERBOSITY=0 */;
 
 --
+-- Table structure for table `activity_log`
+--
+
+DROP TABLE IF EXISTS `activity_log`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8mb4 */;
+CREATE TABLE `activity_log` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `table_name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `record_id` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `action` enum('INSERT','UPDATE','DELETE') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `old_values` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `new_values` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `user_id` int(11) DEFAULT NULL,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `activity_log`
+--
+
+LOCK TABLES `activity_log` WRITE;
+/*!40000 ALTER TABLE `activity_log` DISABLE KEYS */;
+set autocommit=0;
+INSERT INTO `activity_log` VALUES
+(1,'motos','M76453','UPDATE','{\"placa\":\"M76453\",\"idestado\":\"2\",\"idcliente\":null,\"chasis\":null,\"Motor\":\"76\",\"Sucursal\":null,\"idmarca\":\"2\",\"a\\u00f1o\":\"2023\",\"modelo\":\"YRZ9845\",\"color\":null,\"fecha_entrega\":null,\"fecha_renovacion\":null,\"Envio\":null,\"taller\":null,\"iddepartamento\":null,\"idagencia\":\"2\",\"renta_sinIva\":null,\"renta_conIva\":null,\"naf\":null,\"creado_por\":\"3\",\"modificado_por\":null}','{\"idmarca\":\"2\",\"modelo\":\"YRZ9845\",\"a\\u00f1o\":\"2023\",\"Motor\":\"76\",\"idestado\":\"4\",\"idagencia\":null,\"chasis\":null,\"idcliente\":null,\"color\":null,\"fecha_entrega\":null,\"fecha_renovacion\":null,\"Envio\":null,\"taller\":null,\"iddepartamento\":null,\"renta_sinIva\":null,\"renta_conIva\":null,\"naf\":null}',3,'2025-09-24 19:57:40'),
+(2,'servicios','2','DELETE','{\"id\":\"2\",\"placa_motocicleta\":\"MB5423\",\"tipo_servicio\":\"Cambio de Aceite\",\"descripcion\":\"Test2 para notificaciones\",\"estado_servicio\":\"completado\",\"fecha_solicitud\":\"2025-09-07\",\"fecha_inicio\":\"2025-09-08\",\"fecha_completado\":\"2025-09-09\",\"costo_estimado\":\"54.00\",\"costo_real\":null,\"tecnico_responsable\":\"DIPARVEL\",\"notas\":null,\"prioridad\":\"media\",\"kilometraje_actual\":\"432\",\"estado_original_motocicleta\":null,\"creado_por\":\"3\",\"modificado_por\":\"3\",\"created_at\":\"2025-09-07 01:21:23\",\"updated_at\":\"2025-09-07 01:47:42\",\"deleted_at\":null}',NULL,3,'2025-09-24 20:00:41');
+/*!40000 ALTER TABLE `activity_log` ENABLE KEYS */;
+UNLOCK TABLES;
+commit;
+
+--
 -- Table structure for table `agencia`
 --
 
@@ -296,8 +330,8 @@ INSERT INTO `motos` VALUES
 ('B65241',3,3,NULL,'1234',NULL,3,2012,'B54231',NULL,'2025-09-08','2025-09-10',NULL,NULL,NULL,NULL,150.00,175.00,NULL,3,3),
 ('BHTER12',3,NULL,'Sport','8761',NULL,1,2020,'KJUY56','Negro','2025-06-10','2025-06-10','DHL','MotorSport',NULL,5,NULL,NULL,NULL,3,NULL),
 ('H63452',3,NULL,NULL,'12',NULL,2,2024,'YHR324',NULL,NULL,NULL,NULL,NULL,NULL,4,NULL,NULL,NULL,3,NULL),
-('M56543',1,NULL,NULL,'25431',NULL,1,2012,'JHY432',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,3,NULL),
-('M76453',2,NULL,NULL,'76',NULL,2,2023,'YRZ9845',NULL,NULL,NULL,NULL,NULL,NULL,2,NULL,NULL,NULL,3,NULL),
+('M56543',3,3,NULL,'25431',NULL,1,2012,'JHY432',NULL,'2025-09-25','2025-09-30',NULL,NULL,NULL,NULL,54.00,67.00,NULL,3,3),
+('M76453',4,NULL,NULL,'76',NULL,2,2023,'YRZ9845',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,3,NULL),
 ('MB5423',2,NULL,NULL,'1235',NULL,1,2025,'YHF12341',NULL,NULL,NULL,NULL,NULL,NULL,1,NULL,NULL,NULL,3,NULL),
 ('TRE6512',4,NULL,NULL,'420',NULL,3,2016,'HJHGA',NULL,NULL,NULL,NULL,NULL,NULL,4,NULL,NULL,NULL,3,NULL);
 /*!40000 ALTER TABLE `motos` ENABLE KEYS */;
@@ -349,7 +383,6 @@ LOCK TABLES `servicios` WRITE;
 set autocommit=0;
 INSERT INTO `servicios` VALUES
 (1,'BHTER12','Mantenimiento Preventivo','Probando probando','pendiente','2025-08-28','2025-09-08',NULL,45.00,24.00,'DIPARVEL',NULL,'media',5423,NULL,3,3,'2025-08-28 02:46:55','2025-09-07 02:11:51',NULL),
-(2,'MB5423','Cambio de Aceite','Test2 para notificaciones','completado','2025-09-07','2025-09-08','2025-09-09',54.00,NULL,'DIPARVEL',NULL,'media',432,NULL,3,3,'2025-09-07 01:21:23','2025-09-07 01:47:42',NULL),
 (3,'MB5423','Reparación','Se esta reparando','en_progreso','2025-09-07','2025-09-06','2025-09-10',123.00,NULL,'Jose Perez',NULL,'alta',13121,NULL,3,3,'2025-09-07 01:52:07','2025-09-07 01:52:36',NULL);
 /*!40000 ALTER TABLE `servicios` ENABLE KEYS */;
 UNLOCK TABLES;
@@ -415,4 +448,4 @@ commit;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*M!100616 SET NOTE_VERBOSITY=@OLD_NOTE_VERBOSITY */;
 
--- Dump completed on 2025-09-09 20:06:09
+-- Dump completed on 2025-09-26 13:19:48

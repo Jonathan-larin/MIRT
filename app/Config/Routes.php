@@ -17,6 +17,10 @@ $routes->get('logout', 'Auth::logout');
 $routes->get('dashboard', 'Dashboard::dashboard');
 $routes->get('dashboarda', 'Dashboard::dashboard');
 
+// Ruta para el registro de actividad
+$routes->get('activity-log', 'Dashboard::activityLog');
+$routes->get('activity-log/export-csv', 'Dashboard::exportActivityLogCsv');
+
 // Ruta para el perfil de usuario
 $routes->get('profile', 'Profile::index');
 $routes->get('profile/edit', 'Profile::edit');

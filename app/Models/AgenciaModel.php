@@ -1,10 +1,19 @@
 <?php namespace App\Models;
 
 use CodeIgniter\Model;
+use App\Traits\ActivityLoggable;
 
 class AgenciaModel extends Model
 {
-    protected $table      = 'agencia';    
+    use ActivityLoggable;
+
+    public function __construct()
+    {
+        parent::__construct();
+        $this->initializeActivityLog();
+    }
+
+    protected $table      = 'agencia';
     protected $primaryKey = 'idagencia';
 
     protected $useAutoIncrement = true;
