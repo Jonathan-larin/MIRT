@@ -54,57 +54,129 @@ class Reportes extends BaseController
     /**
      * Generate PDF report for available motorcycles
      */
-    public function generateAvailableMotorcyclesReport()
+    public function generateAvailableMotorcyclesReport($period = null)
     {
         $motorcycles = $this->rentaModel->getAvailableMotorcycles();
+        $periodText = $this->getPeriodText($period);
 
-        $html = $this->generateMotorcyclesReportHTML($motorcycles, 'MOTOCICLETAS DISPONIBLES', 'Listado de motocicletas disponibles para alquiler');
+        $html = $this->generateMotorcyclesReportHTML($motorcycles, 'MOTOCICLETAS DISPONIBLES ' . $periodText, 'Listado de motocicletas disponibles para alquiler' . ($periodText ? ' (' . $periodText . ')' : ''));
 
         return $this->generatePDF($html, 'motocicletas_disponibles_' . date('Y-m-d'));
     }
 
     /**
+     * Preview available motorcycles report
+     */
+    public function previewAvailableMotorcyclesReport($period = null)
+    {
+        $motorcycles = $this->rentaModel->getAvailableMotorcycles();
+        $periodText = $this->getPeriodText($period);
+
+        $data = [
+            'title' => 'MOTOCICLETAS DISPONIBLES ' . $periodText,
+            'subtitle' => 'Listado de motocicletas disponibles para alquiler' . ($periodText ? ' (' . $periodText . ')' : ''),
+            'motorcycles' => $motorcycles,
+            'report_type' => 'available-motorcycles',
+            'period' => $period
+        ];
+
+        return view('reportes/preview', $data);
+    }
+
+    /**
      * Generate PDF report for leased motorcycles
      */
-    public function generateLeasedMotorcyclesReport()
+    public function generateLeasedMotorcyclesReport($period = null)
     {
-        $rentals = $this->rentaModel->getActiveRentals();
+        $rentals = $this->getRentalsByPeriod($period);
+        $periodText = $this->getPeriodText($period);
 
-        $html = $this->generateRentalsReportHTML($rentals, 'MOTOCICLETAS ALQUILADAS', 'Listado de motocicletas actualmente alquiladas');
+        $html = $this->generateRentalsReportHTML($rentals, 'MOTOCICLETAS ALQUILADAS ' . $periodText, 'Listado de motocicletas actualmente alquiladas' . ($periodText ? ' (' . $periodText . ')' : ''));
 
         return $this->generatePDF($html, 'motocicletas_alquiladas_' . date('Y-m-d'));
     }
 
     /**
+     * Preview leased motorcycles report
+     */
+    public function previewLeasedMotorcyclesReport($period = null)
+    {
+        $rentals = $this->getRentalsByPeriod($period);
+        $periodText = $this->getPeriodText($period);
+
+        $data = [
+            'title' => 'MOTOCICLETAS ALQUILADAS ' . $periodText,
+            'subtitle' => 'Listado de motocicletas actualmente alquiladas' . ($periodText ? ' (' . $periodText . ')' : ''),
+            'rentals' => $rentals,
+            'report_type' => 'leased-motorcycles',
+            'period' => $period
+        ];
+
+        return view('reportes/preview', $data);
+    }
+
+    /**
      * Generate PDF report for active services
      */
-    public function generateActiveServicesReport()
+    public function generateActiveServicesReport($period = null)
     {
-        $services = $this->servicioModel->select('servicios.*, motos.placa, motos.modelo, marca.marca as nombre_marca')
-                                       ->join('motos', 'motos.placa = servicios.placa_motocicleta')
-                                       ->join('marca', 'marca.idmarca = motos.idmarca')
-                                       ->whereIn('estado_servicio', ['pendiente', 'en_progreso'])
-                                       ->findAll();
+        $services = $this->getServicesByPeriod($period, ['pendiente', 'en_progreso']);
+        $periodText = $this->getPeriodText($period);
 
-        $html = $this->generateServicesReportHTML($services, 'SERVICIOS ACTIVOS', 'Listado de servicios en proceso o pendientes');
+        $html = $this->generateServicesReportHTML($services, 'SERVICIOS ACTIVOS ' . $periodText, 'Listado de servicios en proceso o pendientes' . ($periodText ? ' (' . $periodText . ')' : ''));
 
         return $this->generatePDF($html, 'servicios_activos_' . date('Y-m-d'));
     }
 
     /**
+     * Preview active services report
+     */
+    public function previewActiveServicesReport($period = null)
+    {
+        $services = $this->getServicesByPeriod($period, ['pendiente', 'en_progreso']);
+        $periodText = $this->getPeriodText($period);
+
+        $data = [
+            'title' => 'SERVICIOS ACTIVOS ' . $periodText,
+            'subtitle' => 'Listado de servicios en proceso o pendientes' . ($periodText ? ' (' . $periodText . ')' : ''),
+            'services' => $services,
+            'report_type' => 'active-services',
+            'period' => $period
+        ];
+
+        return view('reportes/preview', $data);
+    }
+
+    /**
      * Generate PDF report for historical services
      */
-    public function generateHistoricalServicesReport()
+    public function generateHistoricalServicesReport($period = null)
     {
-        $services = $this->servicioModel->select('servicios.*, motos.placa, motos.modelo, marca.marca as nombre_marca')
-                                       ->join('motos', 'motos.placa = servicios.placa_motocicleta')
-                                       ->join('marca', 'marca.idmarca = motos.idmarca')
-                                       ->whereIn('estado_servicio', ['completado', 'cancelado'])
-                                       ->findAll();
+        $services = $this->getServicesByPeriod($period, ['completado', 'cancelado']);
+        $periodText = $this->getPeriodText($period);
 
-        $html = $this->generateServicesReportHTML($services, 'HISTORIAL DE SERVICIOS', 'Historial completo de servicios realizados');
+        $html = $this->generateServicesReportHTML($services, 'HISTORIAL DE SERVICIOS ' . $periodText, 'Historial completo de servicios realizados' . ($periodText ? ' (' . $periodText . ')' : ''));
 
         return $this->generatePDF($html, 'historial_servicios_' . date('Y-m-d'));
+    }
+
+    /**
+     * Preview historical services report
+     */
+    public function previewHistoricalServicesReport($period = null)
+    {
+        $services = $this->getServicesByPeriod($period, ['completado', 'cancelado']);
+        $periodText = $this->getPeriodText($period);
+
+        $data = [
+            'title' => 'HISTORIAL DE SERVICIOS ' . $periodText,
+            'subtitle' => 'Historial completo de servicios realizados' . ($periodText ? ' (' . $periodText . ')' : ''),
+            'services' => $services,
+            'report_type' => 'historical-services',
+            'period' => $period
+        ];
+
+        return view('reportes/preview', $data);
     }
 
     /**
@@ -480,5 +552,78 @@ class Reportes extends BaseController
         $dompdf->render();
 
         $dompdf->stream($filename . '.pdf', ['Attachment' => true]);
+    }
+
+    /**
+     * Get period text for report titles
+     */
+    private function getPeriodText($period)
+    {
+        switch ($period) {
+            case 'week':
+                return 'SEMANAL';
+            case 'month':
+                return 'MENSUAL';
+            default:
+                return '';
+        }
+    }
+
+    /**
+     * Get rentals filtered by period
+     */
+    private function getRentalsByPeriod($period)
+    {
+        if (!$period) {
+            return $this->rentaModel->getActiveRentals();
+        }
+
+        $dateCondition = $this->getDateCondition($period);
+
+        // Assuming rentals have a date field like 'fecha_entrega' or 'created_at'
+        return $this->rentaModel->getActiveRentals(); // For now, return all active rentals
+        // TODO: Implement filtering by period when date fields are clarified
+    }
+
+    /**
+     * Get services filtered by period and status
+     */
+    private function getServicesByPeriod($period, $statuses)
+    {
+        if (!$period) {
+            return $this->servicioModel->select('servicios.*, motos.placa, motos.modelo, marca.marca as nombre_marca')
+                                       ->join('motos', 'motos.placa = servicios.placa_motocicleta')
+                                       ->join('marca', 'marca.idmarca = motos.idmarca')
+                                       ->whereIn('estado_servicio', $statuses)
+                                       ->findAll();
+        }
+
+        $dateCondition = $this->getDateCondition($period);
+
+        return $this->servicioModel->select('servicios.*, motos.placa, motos.modelo, marca.marca as nombre_marca')
+                                   ->join('motos', 'motos.placa = servicios.placa_motocicleta')
+                                   ->join('marca', 'marca.idmarca = motos.idmarca')
+                                   ->whereIn('estado_servicio', $statuses)
+                                   // TODO: Add date filtering when date fields are clarified
+                                   ->findAll();
+    }
+
+    /**
+     * Get date condition for period filtering
+     */
+    private function getDateCondition($period)
+    {
+        $today = date('Y-m-d');
+
+        switch ($period) {
+            case 'week':
+                $startDate = date('Y-m-d', strtotime('monday this week'));
+                return ['start' => $startDate, 'end' => $today];
+            case 'month':
+                $startDate = date('Y-m-01');
+                return ['start' => $startDate, 'end' => $today];
+            default:
+                return null;
+        }
     }
 }

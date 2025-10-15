@@ -11,6 +11,8 @@ use App\Models\RentaModel;
 use App\Models\ServicioModel;
 use App\Models\ClienteModel;
 use App\Models\ActivityLogModel;
+use App\Services\NotificationService;
+use App\Models\NotificationModel;
 
 class Dashboard extends BaseController
 {
@@ -19,6 +21,8 @@ class Dashboard extends BaseController
     protected $clienteModel;
     protected $motocicletaModel;
     protected $activityLogModel;
+    protected $notificationService;
+    protected $notificationModel;
 
     public function __construct()
     {
@@ -27,6 +31,8 @@ class Dashboard extends BaseController
         $this->clienteModel = new ClienteModel();
         $this->motocicletaModel = new MotocicletaModel();
         $this->activityLogModel = new ActivityLogModel();
+        $this->notificationService = new NotificationService();
+        $this->notificationModel = new NotificationModel();
     }
 
     public function dashboard()
@@ -306,5 +312,135 @@ class Dashboard extends BaseController
         }
 
         return implode(' | ', $formatted);
+    }
+
+    /**
+     * Get notifications count for current user
+     */
+    public function getNotificationsCount()
+    {
+        $session = session();
+
+        if (!$session->get('isLoggedIn')) {
+            return $this->response->setJSON(['count' => 0])->setStatusCode(401);
+        }
+
+        $userId = $session->get('idUsuario');
+        $count = $this->notificationService->getUserNotificationCount($userId);
+
+        return $this->response->setJSON(['count' => $count])->setStatusCode(200);
+    }
+
+    /**
+     * Get notifications list for current user
+     */
+    public function getNotificationsList()
+    {
+        $session = session();
+
+        if (!$session->get('isLoggedIn')) {
+            return $this->response->setJSON([])->setStatusCode(401);
+        }
+
+        $userId = $session->get('idUsuario');
+        $limit = $this->request->getGet('limit') ?: 50;
+
+        $notifications = $this->notificationService->getUserNotifications($userId, $limit, false);
+
+        // Format notifications for display
+        $formattedNotifications = array_map(function($notification) {
+            return [
+                'id' => $notification['id'],
+                'title' => $notification['title'],
+                'message' => $notification['message'],
+                'type' => $notification['type'],
+                'is_read' => (bool)$notification['is_read'],
+                'created_at' => $notification['created_at'],
+                'relative_time' => $this->getRelativeTime($notification['created_at'])
+            ];
+        }, $notifications);
+
+        return $this->response->setJSON($formattedNotifications)->setStatusCode(200);
+    }
+
+    /**
+     * Mark a notification as read
+     */
+    public function markNotificationAsRead($notificationId)
+    {
+        $session = session();
+
+        if (!$session->get('isLoggedIn')) {
+            return $this->response->setJSON(['success' => false, 'message' => 'No autorizado'])->setStatusCode(401);
+        }
+
+        $userId = $session->get('idUsuario');
+
+        try {
+            $result = $this->notificationService->markNotificationAsRead($notificationId, $userId);
+
+            if ($result) {
+                return $this->response->setJSON(['success' => true])->setStatusCode(200);
+            } else {
+                return $this->response->setJSON(['success' => false, 'message' => 'No se pudo marcar la notificación como leída'])->setStatusCode(400);
+            }
+        } catch (\Exception $e) {
+            log_message('error', 'Error marking notification as read: ' . $e->getMessage());
+            return $this->response->setJSON(['success' => false, 'message' => 'Error interno del servidor'])->setStatusCode(500);
+        }
+    }
+
+    /**
+     * Mark all notifications as read for current user
+     */
+    public function markAllNotificationsAsRead()
+    {
+        $session = session();
+
+        if (!$session->get('isLoggedIn')) {
+            return $this->response->setJSON(['success' => false, 'message' => 'No autorizado'])->setStatusCode(401);
+        }
+
+        $userId = $session->get('idUsuario');
+
+        try {
+            $result = $this->notificationService->markAllNotificationsAsRead($userId);
+
+            return $this->response->setJSON(['success' => true, 'marked_count' => $result])->setStatusCode(200);
+        } catch (\Exception $e) {
+            log_message('error', 'Error marking all notifications as read: ' . $e->getMessage());
+            return $this->response->setJSON(['success' => false, 'message' => 'Error interno del servidor'])->setStatusCode(500);
+        }
+    }
+
+    /**
+     * Helper function to get relative time
+     */
+    private function getRelativeTime($timestamp)
+    {
+        $now = new \DateTime();
+        $then = new \DateTime($timestamp);
+        $diff = $now->diff($then);
+
+        if ($diff->days == 0) {
+            if ($diff->h == 0) {
+                if ($diff->i == 0) {
+                    return 'Hace ' . $diff->s . ' segundos';
+                } else {
+                    return 'Hace ' . $diff->i . ' minutos';
+                }
+            } else {
+                return 'Hace ' . $diff->h . ' horas';
+            }
+        } elseif ($diff->days == 1) {
+            return 'Ayer';
+        } elseif ($diff->days < 7) {
+            return 'Hace ' . $diff->days . ' días';
+        } elseif ($diff->days < 30) {
+            $weeks = floor($diff->days / 7);
+            return 'Hace ' . $weeks . ' semana' . ($weeks > 1 ? 's' : '');
+        } else {
+            return $then->format('d/m/Y');
+        }
     }
 }

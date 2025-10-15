@@ -7,6 +7,7 @@ use App\Models\MarcaModel;
 use App\Models\EstadoModel;
 use App\Models\AgenciaModel;
 use App\Models\ServicioModel;
+use App\Models\RentaModel;
 
 class Motocicletas extends BaseController
 {
@@ -17,6 +18,7 @@ class Motocicletas extends BaseController
     protected $estadoModel;
     protected $agenciaModel;
     protected $servicioModel;
+    protected $rentaModel;
 
     public function __construct()
     {
@@ -25,6 +27,7 @@ class Motocicletas extends BaseController
         $this->estadoModel = new EstadoModel();
         $this->agenciaModel = new AgenciaModel();
         $this->servicioModel = new ServicioModel();
+        $this->rentaModel = new RentaModel();
     }
 
     /**
@@ -212,7 +215,7 @@ class Motocicletas extends BaseController
     }
 
     /**
-     * Get all services for a specific motorcycle (both completed and active)
+     * Get all services and rental history for a specific motorcycle (both completed and active services, plus rental history)
      */
     public function getServicesForMotorcycle($placa)
     {
@@ -253,17 +256,23 @@ class Motocicletas extends BaseController
                 ->orderBy('servicios.fecha_inicio', 'DESC')
                 ->findAll();
 
+            // Get rental history for the motorcycle (from the dedicated rental_history table)
+            $rentalHistoryModel = new \App\Models\RentalHistoryModel();
+            $rentalHistory = $rentalHistoryModel->getRentalHistoryByPlaca($placa);
+
             return $this->respond([
                 'motocicleta' => $motocicleta,
                 'completed' => $completedServices,
                 'active' => $activeServices,
+                'rentas' => $rentalHistory,
                 'total_completed' => count($completedServices),
-                'total_active' => count($activeServices)
+                'total_active' => count($activeServices),
+                'total_rentas' => count($rentalHistory)
             ]);
 
         } catch (\Exception $e) {
-            log_message('error', 'Error getting services for motorcycle: ' . $e->getMessage());
-            return $this->fail('Error al obtener los servicios.', 500);
+            log_message('error', 'Error getting services and rentals for motorcycle: ' . $e->getMessage());
+            return $this->fail('Error al obtener los servicios y rentas.', 500);
         }
     }
 

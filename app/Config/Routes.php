@@ -21,6 +21,12 @@ $routes->get('dashboarda', 'Dashboard::dashboard');
 $routes->get('activity-log', 'Dashboard::activityLog');
 $routes->get('activity-log/export-csv', 'Dashboard::exportActivityLogCsv');
 
+// Rutas para notificaciones
+$routes->get('notifications/count', 'Dashboard::getNotificationsCount');
+$routes->get('notifications/list', 'Dashboard::getNotificationsList');
+$routes->post('notifications/mark-read/(:num)', 'Dashboard::markNotificationAsRead/$1');
+$routes->post('notifications/mark-all-read', 'Dashboard::markAllNotificationsAsRead');
+
 // Ruta para el perfil de usuario
 $routes->get('profile', 'Profile::index');
 $routes->get('profile/edit', 'Profile::edit');
@@ -49,12 +55,24 @@ $routes->get('rentas/expiring-count', 'Rentas::getExpiringLeasesCount');
 $routes->get('rentas/expiring-leases', 'Rentas::getExpiringLeases');
 
 // Rutas para la gestión de reportes
-$routes->get('reportes', 'Reportes::index');
-$routes->get('reportes/available-motorcycles', 'Reportes::generateAvailableMotorcyclesReport');
-$routes->get('reportes/leased-motorcycles', 'Reportes::generateLeasedMotorcyclesReport');
-$routes->get('reportes/active-services', 'Reportes::generateActiveServicesReport');
-$routes->get('reportes/historical-services', 'Reportes::generateHistoricalServicesReport');
-$routes->get('reportes/system', 'Reportes::generateSystemReport');
+$routes->get('reportes', 'Reportes::index', ['filter' => 'auth:userRolesFilter:Administrador,Jefatura,Visualizador']);
+$routes->get('reportes/available-motorcycles', 'Reportes::generateAvailableMotorcyclesReport', ['filter' => 'auth:userRolesFilter:Administrador,Jefatura,Visualizador']);
+$routes->get('reportes/available-motorcycles/(:segment)', 'Reportes::generateAvailableMotorcyclesReport/$1', ['filter' => 'auth:userRolesFilter:Administrador,Jefatura,Visualizador']);
+$routes->get('reportes/preview/available-motorcycles', 'Reportes::previewAvailableMotorcyclesReport', ['filter' => 'auth:userRolesFilter:Administrador,Jefatura,Visualizador']);
+$routes->get('reportes/preview/available-motorcycles/(:segment)', 'Reportes::previewAvailableMotorcyclesReport/$1', ['filter' => 'auth:userRolesFilter:Administrador,Jefatura,Visualizador']);
+$routes->get('reportes/leased-motorcycles', 'Reportes::generateLeasedMotorcyclesReport', ['filter' => 'auth:userRolesFilter:Administrador,Jefatura,Visualizador']);
+$routes->get('reportes/leased-motorcycles/(:segment)', 'Reportes::generateLeasedMotorcyclesReport/$1', ['filter' => 'auth:userRolesFilter:Administrador,Jefatura,Visualizador']);
+$routes->get('reportes/preview/leased-motorcycles', 'Reportes::previewLeasedMotorcyclesReport', ['filter' => 'auth:userRolesFilter:Administrador,Jefatura,Visualizador']);
+$routes->get('reportes/preview/leased-motorcycles/(:segment)', 'Reportes::previewLeasedMotorcyclesReport/$1', ['filter' => 'auth:userRolesFilter:Administrador,Jefatura,Visualizador']);
+$routes->get('reportes/active-services', 'Reportes::generateActiveServicesReport', ['filter' => 'auth:userRolesFilter:Administrador,Jefatura,Visualizador']);
+$routes->get('reportes/active-services/(:segment)', 'Reportes::generateActiveServicesReport/$1', ['filter' => 'auth:userRolesFilter:Administrador,Jefatura,Visualizador']);
+$routes->get('reportes/preview/active-services', 'Reportes::previewActiveServicesReport', ['filter' => 'auth:userRolesFilter:Administrador,Jefatura,Visualizador']);
+$routes->get('reportes/preview/active-services/(:segment)', 'Reportes::previewActiveServicesReport/$1', ['filter' => 'auth:userRolesFilter:Administrador,Jefatura,Visualizador']);
+$routes->get('reportes/historical-services', 'Reportes::generateHistoricalServicesReport', ['filter' => 'auth:userRolesFilter:Administrador,Jefatura,Visualizador']);
+$routes->get('reportes/historical-services/(:segment)', 'Reportes::generateHistoricalServicesReport/$1', ['filter' => 'auth:userRolesFilter:Administrador,Jefatura,Visualizador']);
+$routes->get('reportes/preview/historical-services', 'Reportes::previewHistoricalServicesReport', ['filter' => 'auth:userRolesFilter:Administrador,Jefatura,Visualizador']);
+$routes->get('reportes/preview/historical-services/(:segment)', 'Reportes::previewHistoricalServicesReport/$1', ['filter' => 'auth:userRolesFilter:Administrador,Jefatura,Visualizador']);
+$routes->get('reportes/system', 'Reportes::generateSystemReport', ['filter' => 'auth:userRolesFilter:Administrador,Jefatura,Visualizador']);
 
 // Rutas para la gestión de usuarios
 

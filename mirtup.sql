@@ -33,7 +33,7 @@ CREATE TABLE `activity_log` (
   `user_id` int(11) DEFAULT NULL,
   `created_at` datetime NOT NULL DEFAULT current_timestamp(),
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -45,7 +45,27 @@ LOCK TABLES `activity_log` WRITE;
 set autocommit=0;
 INSERT INTO `activity_log` VALUES
 (1,'motos','M76453','UPDATE','{\"placa\":\"M76453\",\"idestado\":\"2\",\"idcliente\":null,\"chasis\":null,\"Motor\":\"76\",\"Sucursal\":null,\"idmarca\":\"2\",\"a\\u00f1o\":\"2023\",\"modelo\":\"YRZ9845\",\"color\":null,\"fecha_entrega\":null,\"fecha_renovacion\":null,\"Envio\":null,\"taller\":null,\"iddepartamento\":null,\"idagencia\":\"2\",\"renta_sinIva\":null,\"renta_conIva\":null,\"naf\":null,\"creado_por\":\"3\",\"modificado_por\":null}','{\"idmarca\":\"2\",\"modelo\":\"YRZ9845\",\"a\\u00f1o\":\"2023\",\"Motor\":\"76\",\"idestado\":\"4\",\"idagencia\":null,\"chasis\":null,\"idcliente\":null,\"color\":null,\"fecha_entrega\":null,\"fecha_renovacion\":null,\"Envio\":null,\"taller\":null,\"iddepartamento\":null,\"renta_sinIva\":null,\"renta_conIva\":null,\"naf\":null}',3,'2025-09-24 19:57:40'),
-(2,'servicios','2','DELETE','{\"id\":\"2\",\"placa_motocicleta\":\"MB5423\",\"tipo_servicio\":\"Cambio de Aceite\",\"descripcion\":\"Test2 para notificaciones\",\"estado_servicio\":\"completado\",\"fecha_solicitud\":\"2025-09-07\",\"fecha_inicio\":\"2025-09-08\",\"fecha_completado\":\"2025-09-09\",\"costo_estimado\":\"54.00\",\"costo_real\":null,\"tecnico_responsable\":\"DIPARVEL\",\"notas\":null,\"prioridad\":\"media\",\"kilometraje_actual\":\"432\",\"estado_original_motocicleta\":null,\"creado_por\":\"3\",\"modificado_por\":\"3\",\"created_at\":\"2025-09-07 01:21:23\",\"updated_at\":\"2025-09-07 01:47:42\",\"deleted_at\":null}',NULL,3,'2025-09-24 20:00:41');
+(2,'servicios','2','DELETE','{\"id\":\"2\",\"placa_motocicleta\":\"MB5423\",\"tipo_servicio\":\"Cambio de Aceite\",\"descripcion\":\"Test2 para notificaciones\",\"estado_servicio\":\"completado\",\"fecha_solicitud\":\"2025-09-07\",\"fecha_inicio\":\"2025-09-08\",\"fecha_completado\":\"2025-09-09\",\"costo_estimado\":\"54.00\",\"costo_real\":null,\"tecnico_responsable\":\"DIPARVEL\",\"notas\":null,\"prioridad\":\"media\",\"kilometraje_actual\":\"432\",\"estado_original_motocicleta\":null,\"creado_por\":\"3\",\"modificado_por\":\"3\",\"created_at\":\"2025-09-07 01:21:23\",\"updated_at\":\"2025-09-07 01:47:42\",\"deleted_at\":null}',NULL,3,'2025-09-24 20:00:41'),
+(3,'motos','M56543','UPDATE','{\"placa\":\"M56543\",\"idestado\":\"3\",\"idcliente\":\"3\",\"chasis\":null,\"Motor\":\"25431\",\"Sucursal\":null,\"idmarca\":\"1\",\"a\\u00f1o\":\"2012\",\"modelo\":\"JHY432\",\"color\":null,\"fecha_entrega\":\"2025-09-25\",\"fecha_renovacion\":\"2025-09-30\",\"Envio\":null,\"taller\":null,\"iddepartamento\":null,\"idagencia\":null,\"renta_sinIva\":\"54.00\",\"renta_conIva\":\"67.00\",\"naf\":null,\"creado_por\":\"3\",\"modificado_por\":\"3\"}','{\"placa\":\"M56543\",\"idcliente\":\"3\",\"fecha_entrega\":\"2025-09-25\",\"fecha_renovacion\":\"2025-09-30\",\"renta_sinIva\":\"55.00\",\"renta_conIva\":\"67.00\",\"modificado_por\":\"3\",\"idestado\":3}',3,'2025-10-14 10:05:44'),
+(4,'motos','M56543','UPDATE','{\"placa\":\"M56543\",\"idestado\":\"3\",\"idcliente\":\"3\",\"chasis\":null,\"Motor\":\"25431\",\"Sucursal\":null,\"idmarca\":\"1\",\"a\\u00f1o\":\"2012\",\"modelo\":\"JHY432\",\"color\":null,\"fecha_entrega\":\"2025-09-25\",\"fecha_renovacion\":\"2025-09-30\",\"Envio\":null,\"taller\":null,\"iddepartamento\":null,\"idagencia\":null,\"renta_sinIva\":\"55.00\",\"renta_conIva\":\"67.00\",\"naf\":null,\"creado_por\":\"3\",\"modificado_por\":\"3\"}','{\"placa\":\"M56543\",\"idcliente\":\"3\",\"fecha_entrega\":\"2025-09-25\",\"fecha_renovacion\":\"2025-09-30\",\"renta_sinIva\":\"55.00\",\"renta_conIva\":\"90.00\",\"modificado_por\":\"3\",\"idestado\":3}',3,'2025-10-14 10:15:55'),
+(5,'motos','B65241','UPDATE','{\"placa\":\"B65241\",\"idestado\":\"3\",\"idcliente\":\"3\",\"chasis\":null,\"Motor\":\"1234\",\"Sucursal\":null,\"idmarca\":\"3\",\"a\\u00f1o\":\"2012\",\"modelo\":\"B54231\",\"color\":null,\"fecha_entrega\":\"2025-09-08\",\"fecha_renovacion\":\"2025-09-10\",\"Envio\":null,\"taller\":null,\"iddepartamento\":null,\"idagencia\":null,\"renta_sinIva\":\"150.00\",\"renta_conIva\":\"175.00\",\"naf\":null,\"creado_por\":\"3\",\"modificado_por\":\"3\"}','{\"placa\":\"B65241\",\"idcliente\":\"1\",\"fecha_entrega\":\"2025-09-08\",\"fecha_renovacion\":\"2025-09-10\",\"renta_sinIva\":\"150.00\",\"renta_conIva\":\"175.00\",\"modificado_por\":\"3\",\"idestado\":3}',3,'2025-10-14 10:30:11'),
+(6,'motos','M56543','UPDATE','{\"placa\":\"M56543\",\"idestado\":\"3\",\"idcliente\":\"3\",\"chasis\":null,\"Motor\":\"25431\",\"Sucursal\":null,\"idmarca\":\"1\",\"a\\u00f1o\":\"2012\",\"modelo\":\"JHY432\",\"color\":null,\"fecha_entrega\":\"2025-09-25\",\"fecha_renovacion\":\"2025-09-30\",\"Envio\":null,\"taller\":null,\"iddepartamento\":null,\"idagencia\":null,\"renta_sinIva\":\"55.00\",\"renta_conIva\":\"90.00\",\"naf\":null,\"creado_por\":\"3\",\"modificado_por\":\"3\"}','{\"idcliente\":null,\"idestado\":1,\"fecha_entrega\":null,\"fecha_renovacion\":null,\"renta_sinIva\":0,\"renta_conIva\":0,\"modificado_por\":\"3\"}',3,'2025-10-14 10:38:18'),
+(7,'motos','B65241','UPDATE','{\"placa\":\"B65241\",\"idestado\":\"3\",\"idcliente\":\"1\",\"chasis\":null,\"Motor\":\"1234\",\"Sucursal\":null,\"idmarca\":\"3\",\"a\\u00f1o\":\"2012\",\"modelo\":\"B54231\",\"color\":null,\"fecha_entrega\":\"2025-09-08\",\"fecha_renovacion\":\"2025-09-10\",\"Envio\":null,\"taller\":null,\"iddepartamento\":null,\"idagencia\":null,\"renta_sinIva\":\"150.00\",\"renta_conIva\":\"175.00\",\"naf\":null,\"creado_por\":\"3\",\"modificado_por\":\"3\"}','{\"placa\":\"B65241\",\"idcliente\":\"3\",\"fecha_entrega\":\"2025-09-08\",\"fecha_renovacion\":\"2025-09-10\",\"renta_sinIva\":\"150.00\",\"renta_conIva\":\"175.00\",\"modificado_por\":\"3\",\"idestado\":3}',3,'2025-10-14 10:39:14'),
+(8,'motos','M56543','UPDATE','{\"placa\":\"M56543\",\"idestado\":\"1\",\"idcliente\":null,\"chasis\":null,\"Motor\":\"25431\",\"Sucursal\":null,\"idmarca\":\"1\",\"a\\u00f1o\":\"2012\",\"modelo\":\"JHY432\",\"color\":null,\"fecha_entrega\":null,\"fecha_renovacion\":null,\"Envio\":null,\"taller\":null,\"iddepartamento\":null,\"idagencia\":null,\"renta_sinIva\":\"0.00\",\"renta_conIva\":\"0.00\",\"naf\":null,\"creado_por\":\"3\",\"modificado_por\":\"3\"}','{\"placa\":\"M56543\",\"idcliente\":\"1\",\"fecha_entrega\":\"2025-10-15\",\"fecha_renovacion\":\"2025-10-17\",\"renta_sinIva\":\"54\",\"renta_conIva\":\"65\",\"modificado_por\":\"3\",\"idestado\":3}',3,'2025-10-14 10:40:19'),
+(9,'motos','M56543','UPDATE','{\"placa\":\"M56543\",\"idestado\":\"3\",\"idcliente\":\"1\",\"chasis\":null,\"Motor\":\"25431\",\"Sucursal\":null,\"idmarca\":\"1\",\"a\\u00f1o\":\"2012\",\"modelo\":\"JHY432\",\"color\":null,\"fecha_entrega\":\"2025-10-15\",\"fecha_renovacion\":\"2025-10-17\",\"Envio\":null,\"taller\":null,\"iddepartamento\":null,\"idagencia\":null,\"renta_sinIva\":\"54.00\",\"renta_conIva\":\"65.00\",\"naf\":null,\"creado_por\":\"3\",\"modificado_por\":\"3\"}','{\"placa\":\"M56543\",\"idcliente\":\"1\",\"fecha_entrega\":\"2025-10-14\",\"fecha_renovacion\":\"2025-12-10\",\"renta_sinIva\":\"54.00\",\"renta_conIva\":\"65.00\",\"modificado_por\":\"3\",\"idestado\":3}',3,'2025-10-14 10:43:08'),
+(10,'servicios','1','UPDATE','{\"id\":\"1\",\"placa_motocicleta\":\"BHTER12\",\"tipo_servicio\":\"Mantenimiento Preventivo\",\"descripcion\":\"Probando probando\",\"estado_servicio\":\"pendiente\",\"fecha_solicitud\":\"2025-08-28\",\"fecha_inicio\":\"2025-09-08\",\"fecha_completado\":null,\"costo_estimado\":\"45.00\",\"costo_real\":\"24.00\",\"tecnico_responsable\":\"DIPARVEL\",\"notas\":null,\"prioridad\":\"media\",\"kilometraje_actual\":\"5423\",\"estado_original_motocicleta\":null,\"creado_por\":\"3\",\"modificado_por\":\"3\",\"created_at\":\"2025-08-28 02:46:55\",\"updated_at\":\"2025-09-07 02:11:51\",\"deleted_at\":null}','{\"placa_motocicleta\":\"BHTER12\",\"tipo_servicio\":\"Mantenimiento Preventivo\",\"descripcion\":\"Probando probando\",\"estado_servicio\":\"pendiente\",\"fecha_solicitud\":\"2025-08-28\",\"fecha_inicio\":\"2025-09-08\",\"fecha_completado\":null,\"costo_estimado\":\"45.00\",\"costo_real\":\"24.00\",\"tecnico_responsable\":\"DIPARVEL\",\"notas\":\"Prueba\",\"prioridad\":\"media\",\"kilometraje_actual\":\"5423\",\"modificado_por\":\"3\"}',3,'2025-10-14 11:06:45'),
+(11,'servicios','1','DELETE','{\"id\":\"1\",\"placa_motocicleta\":\"BHTER12\",\"tipo_servicio\":\"Mantenimiento Preventivo\",\"descripcion\":\"Probando probando\",\"estado_servicio\":\"pendiente\",\"fecha_solicitud\":\"2025-08-28\",\"fecha_inicio\":\"2025-09-08\",\"fecha_completado\":null,\"costo_estimado\":\"45.00\",\"costo_real\":\"24.00\",\"tecnico_responsable\":\"DIPARVEL\",\"notas\":\"Prueba\",\"prioridad\":\"media\",\"kilometraje_actual\":\"5423\",\"estado_original_motocicleta\":null,\"creado_por\":\"3\",\"modificado_por\":\"3\",\"created_at\":\"2025-08-28 02:46:55\",\"updated_at\":\"2025-10-14 17:06:45\",\"deleted_at\":null}',NULL,3,'2025-10-14 11:06:57'),
+(12,'servicios','4','INSERT',NULL,'{\"placa_motocicleta\":\"M76453\",\"tipo_servicio\":\"Mantenimiento Preventivo\",\"descripcion\":\"Prueba de notificaciones\",\"estado_servicio\":\"pendiente\",\"fecha_solicitud\":\"2025-10-14\",\"costo_estimado\":\"50\",\"tecnico_responsable\":null,\"prioridad\":\"media\",\"kilometraje_actual\":\"12544\",\"creado_por\":\"3\"}',3,'2025-10-14 14:39:52'),
+(13,'usuario','25','INSERT',NULL,'{\"nombre\":\"Jefe\",\"user\":\"Jefatura\",\"Password\":\"$2y$12$2qhqxfFwcuKXVVzJwdlivugtUlsYJLlaCCSyI5OeIAwqxhtv4.uV6\",\"correo\":\"asgfdha@gmail.com\",\"dui\":\"15615615-7\",\"estado\":1,\"rol\":\"Jefatura\"}',3,'2025-10-14 14:41:10'),
+(14,'usuario','26','INSERT',NULL,'{\"nombre\":\"Jonathan\",\"user\":\"JonathanL12\",\"Password\":\"$2y$12$rfBSPTp21zyxy8uBjzImguzvqM52.qM.AZLV2DLt8qBFIYa2GF7QG\",\"correo\":\"anything@test.com\",\"dui\":\"49494894-7\",\"estado\":1,\"rol\":\"Operativo\"}',3,'2025-10-14 14:42:09'),
+(15,'usuario','27','INSERT',NULL,'{\"nombre\":\"Visu\",\"user\":\"Soporte\",\"Password\":\"$2y$12$dwenrcDqb3HlkFVAkPke7ObKF\\/U0b.qH.GB898Q9quCaRuS.usMe6\",\"correo\":\"test121@test.com\",\"dui\":\"44949421-4\",\"estado\":1,\"rol\":\"Visualizador\"}',3,'2025-10-14 14:42:56'),
+(16,'servicios','4','DELETE','{\"id\":\"4\",\"placa_motocicleta\":\"M76453\",\"tipo_servicio\":\"Mantenimiento Preventivo\",\"descripcion\":\"Prueba de notificaciones\",\"estado_servicio\":\"pendiente\",\"fecha_solicitud\":\"2025-10-14\",\"fecha_inicio\":null,\"fecha_completado\":null,\"costo_estimado\":\"50.00\",\"costo_real\":null,\"tecnico_responsable\":null,\"notas\":null,\"prioridad\":\"media\",\"kilometraje_actual\":\"12544\",\"estado_original_motocicleta\":null,\"creado_por\":\"3\",\"modificado_por\":null,\"created_at\":\"2025-10-14 20:39:52\",\"updated_at\":\"2025-10-14 20:39:52\",\"deleted_at\":null}',NULL,25,'2025-10-14 14:43:45'),
+(17,'motos','B65241','UPDATE','{\"placa\":\"B65241\",\"idestado\":\"3\",\"idcliente\":\"3\",\"chasis\":null,\"Motor\":\"1234\",\"Sucursal\":null,\"idmarca\":\"3\",\"a\\u00f1o\":\"2012\",\"modelo\":\"B54231\",\"color\":null,\"fecha_entrega\":\"2025-09-08\",\"fecha_renovacion\":\"2025-09-10\",\"Envio\":null,\"taller\":null,\"iddepartamento\":null,\"idagencia\":null,\"renta_sinIva\":\"150.00\",\"renta_conIva\":\"175.00\",\"naf\":null,\"creado_por\":\"3\",\"modificado_por\":\"3\"}','{\"placa\":\"B65241\",\"idcliente\":\"3\",\"fecha_entrega\":\"2025-09-08\",\"fecha_renovacion\":\"2025-09-10\",\"renta_sinIva\":\"150.00\",\"renta_conIva\":\"180\",\"modificado_por\":\"25\",\"idestado\":3}',25,'2025-10-14 14:45:04'),
+(18,'motos','M76453','UPDATE','{\"placa\":\"M76453\",\"idestado\":\"4\",\"idcliente\":null,\"chasis\":null,\"Motor\":\"76\",\"Sucursal\":null,\"idmarca\":\"2\",\"a\\u00f1o\":\"2023\",\"modelo\":\"YRZ9845\",\"color\":null,\"fecha_entrega\":null,\"fecha_renovacion\":null,\"Envio\":null,\"taller\":null,\"iddepartamento\":null,\"idagencia\":null,\"renta_sinIva\":null,\"renta_conIva\":null,\"naf\":null,\"creado_por\":\"3\",\"modificado_por\":null}','{\"idmarca\":\"2\",\"modelo\":\"YRZ9845\",\"a\\u00f1o\":\"2023\",\"Motor\":\"76\",\"idestado\":\"1\",\"idagencia\":null,\"chasis\":null,\"idcliente\":null,\"color\":null,\"fecha_entrega\":null,\"fecha_renovacion\":null,\"Envio\":null,\"taller\":null,\"iddepartamento\":null,\"renta_sinIva\":null,\"renta_conIva\":null,\"naf\":null}',26,'2025-10-14 14:46:10'),
+(19,'usuario','11','DELETE','{\"idUsuario\":\"11\",\"nombre\":\"eqw23423\",\"user\":\"2342342\",\"Password\":\"$2y$12$MNQVpyGZZ\\/1VKrw3RuWJ4.xnC3SOyN5hxcVkMf8Gsecmpdu.1Qdo.\",\"correo\":\"werwerw@test.com\",\"estado\":\"1\",\"rol\":\"Operativo\",\"dui\":\"12312314-5\",\"created_at\":\"2025-06-09 18:41:56\",\"last_login\":null,\"updated_at\":\"2025-06-09 18:41:56\"}',NULL,25,'2025-10-14 14:51:09'),
+(20,'motos','SHGTR3712','INSERT',NULL,'{\"placa\":\"SHGTR3712\",\"idestado\":\"1\",\"idmarca\":\"2\",\"modelo\":\"2025TFD\",\"a\\u00f1o\":\"2025\",\"Motor\":\"120\",\"creado_por\":\"25\",\"fecha_creacion\":\"2025-10-14 20:52:53\",\"activo\":1,\"chasis\":null,\"idcliente\":null,\"Sucursal\":null,\"color\":null,\"fecha_entrega\":null,\"fecha_renovacion\":null,\"Envio\":null,\"taller\":null,\"iddepartamento\":null,\"idagencia\":null,\"renta_sinIva\":null,\"renta_conIva\":null,\"naf\":null}',25,'2025-10-14 14:52:53'),
+(21,'motos','B65241','UPDATE','{\"placa\":\"B65241\",\"idestado\":\"3\",\"idcliente\":\"3\",\"chasis\":null,\"Motor\":\"1234\",\"Sucursal\":null,\"idmarca\":\"3\",\"a\\u00f1o\":\"2012\",\"modelo\":\"B54231\",\"color\":null,\"fecha_entrega\":\"2025-09-08\",\"fecha_renovacion\":\"2025-09-10\",\"Envio\":null,\"taller\":null,\"iddepartamento\":null,\"idagencia\":null,\"renta_sinIva\":\"150.00\",\"renta_conIva\":\"180.00\",\"naf\":null,\"creado_por\":\"3\",\"modificado_por\":\"25\"}','{\"idcliente\":null,\"idestado\":1,\"fecha_entrega\":null,\"fecha_renovacion\":null,\"renta_sinIva\":0,\"renta_conIva\":0,\"modificado_por\":\"25\"}',25,'2025-10-14 14:54:12'),
+(22,'rental_history','1','INSERT',NULL,'{\"placa\":\"B65241\",\"idcliente\":\"3\",\"fecha_entrega\":\"2025-09-08\",\"fecha_renovacion\":\"2025-09-10\",\"renta_sinIva\":\"150.00\",\"renta_conIva\":\"180.00\",\"naf\":null,\"finalizado_por\":\"25\",\"idmarca\":\"3\",\"modelo\":\"B54231\",\"a\\u00f1o\":\"2012\",\"idagencia\":null}',25,'2025-10-14 14:54:12');
 /*!40000 ALTER TABLE `activity_log` ENABLE KEYS */;
 UNLOCK TABLES;
 commit;
@@ -327,14 +347,96 @@ LOCK TABLES `motos` WRITE;
 /*!40000 ALTER TABLE `motos` DISABLE KEYS */;
 set autocommit=0;
 INSERT INTO `motos` VALUES
-('B65241',3,3,NULL,'1234',NULL,3,2012,'B54231',NULL,'2025-09-08','2025-09-10',NULL,NULL,NULL,NULL,150.00,175.00,NULL,3,3),
+('B65241',1,NULL,NULL,'1234',NULL,3,2012,'B54231',NULL,NULL,NULL,NULL,NULL,NULL,NULL,0.00,0.00,NULL,3,25),
 ('BHTER12',3,NULL,'Sport','8761',NULL,1,2020,'KJUY56','Negro','2025-06-10','2025-06-10','DHL','MotorSport',NULL,5,NULL,NULL,NULL,3,NULL),
 ('H63452',3,NULL,NULL,'12',NULL,2,2024,'YHR324',NULL,NULL,NULL,NULL,NULL,NULL,4,NULL,NULL,NULL,3,NULL),
-('M56543',3,3,NULL,'25431',NULL,1,2012,'JHY432',NULL,'2025-09-25','2025-09-30',NULL,NULL,NULL,NULL,54.00,67.00,NULL,3,3),
-('M76453',4,NULL,NULL,'76',NULL,2,2023,'YRZ9845',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,3,NULL),
+('M56543',3,1,NULL,'25431',NULL,1,2012,'JHY432',NULL,'2025-10-14','2025-12-10',NULL,NULL,NULL,NULL,54.00,65.00,NULL,3,3),
+('M76453',1,NULL,NULL,'76',NULL,2,2023,'YRZ9845',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,3,NULL),
 ('MB5423',2,NULL,NULL,'1235',NULL,1,2025,'YHF12341',NULL,NULL,NULL,NULL,NULL,NULL,1,NULL,NULL,NULL,3,NULL),
+('SHGTR3712',1,NULL,NULL,'120',NULL,2,2025,'2025TFD',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,25,NULL),
 ('TRE6512',4,NULL,NULL,'420',NULL,3,2016,'HJHGA',NULL,NULL,NULL,NULL,NULL,NULL,4,NULL,NULL,NULL,3,NULL);
 /*!40000 ALTER TABLE `motos` ENABLE KEYS */;
+UNLOCK TABLES;
+commit;
+
+--
+-- Table structure for table `notifications`
+--
+
+DROP TABLE IF EXISTS `notifications`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8mb4 */;
+CREATE TABLE `notifications` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `user_id` int(11) NOT NULL,
+  `title` varchar(255) NOT NULL,
+  `message` text NOT NULL,
+  `type` enum('motorcycle','service','rental') NOT NULL,
+  `related_table` varchar(100) DEFAULT NULL,
+  `related_id` varchar(100) DEFAULT NULL,
+  `is_read` tinyint(1) DEFAULT 0,
+  `created_at` datetime DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  `deleted_at` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `user_id` (`user_id`),
+  KEY `is_read` (`is_read`),
+  KEY `type` (`type`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `notifications`
+--
+
+LOCK TABLES `notifications` WRITE;
+/*!40000 ALTER TABLE `notifications` DISABLE KEYS */;
+set autocommit=0;
+INSERT INTO `notifications` VALUES
+(1,25,'Nuevo Servicio Creado','Se ha creado un nuevo servicio para la motocicleta Desconocida. Estado: Desconocido. ID de Servicio: 4','service','servicios','4',0,'2025-10-14 20:52:53','2025-10-14 20:52:53',NULL),
+(2,25,'Servicio Modificado','Se han realizado cambios en el servicio de la motocicleta Desconocida. ID de Servicio: 1','service','servicios','1',0,'2025-10-14 20:52:53','2025-10-14 20:52:53',NULL),
+(3,25,'Cambio en Estado de Renta','La motocicleta B65241 ha sido rentada al cliente Ivan','rental','motos','B65241',0,'2025-10-14 20:52:53','2025-10-14 20:52:53',NULL),
+(4,25,'Cambio en Estado de Renta','La motocicleta B65241 ha sido rentada al cliente Jose','rental','motos','B65241',0,'2025-10-14 20:52:53','2025-10-14 20:52:53',NULL);
+/*!40000 ALTER TABLE `notifications` ENABLE KEYS */;
+UNLOCK TABLES;
+commit;
+
+--
+-- Table structure for table `rental_history`
+--
+
+DROP TABLE IF EXISTS `rental_history`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8mb4 */;
+CREATE TABLE `rental_history` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `placa` varchar(15) NOT NULL,
+  `idcliente` int(11) NOT NULL,
+  `fecha_entrega` date NOT NULL,
+  `fecha_renovacion` date DEFAULT NULL,
+  `renta_sinIva` decimal(10,2) DEFAULT NULL,
+  `renta_conIva` decimal(10,2) DEFAULT NULL,
+  `naf` varchar(20) DEFAULT NULL,
+  `fecha_finalizacion` datetime NOT NULL DEFAULT current_timestamp(),
+  `finalizado_por` int(11) DEFAULT NULL,
+  `idmarca` int(11) NOT NULL,
+  `modelo` varchar(50) NOT NULL,
+  `año` int(11) NOT NULL,
+  `idagencia` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `rental_history`
+--
+
+LOCK TABLES `rental_history` WRITE;
+/*!40000 ALTER TABLE `rental_history` DISABLE KEYS */;
+set autocommit=0;
+INSERT INTO `rental_history` VALUES
+(1,'B65241',3,'2025-09-08','2025-09-10',150.00,180.00,NULL,'2025-10-14 14:54:12',25,3,'B54231',2012,NULL);
+/*!40000 ALTER TABLE `rental_history` ENABLE KEYS */;
 UNLOCK TABLES;
 commit;
 
@@ -371,7 +473,7 @@ CREATE TABLE `servicios` (
   KEY `fk_servicios_motos` (`placa_motocicleta`),
   CONSTRAINT `fk_servicios_motos` FOREIGN KEY (`placa_motocicleta`) REFERENCES `motos` (`placa`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `fk_servicios_usuario` FOREIGN KEY (`creado_por`) REFERENCES `usuario` (`idUsuario`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -382,7 +484,6 @@ LOCK TABLES `servicios` WRITE;
 /*!40000 ALTER TABLE `servicios` DISABLE KEYS */;
 set autocommit=0;
 INSERT INTO `servicios` VALUES
-(1,'BHTER12','Mantenimiento Preventivo','Probando probando','pendiente','2025-08-28','2025-09-08',NULL,45.00,24.00,'DIPARVEL',NULL,'media',5423,NULL,3,3,'2025-08-28 02:46:55','2025-09-07 02:11:51',NULL),
 (3,'MB5423','Reparación','Se esta reparando','en_progreso','2025-09-07','2025-09-06','2025-09-10',123.00,NULL,'Jose Perez',NULL,'alta',13121,NULL,3,3,'2025-09-07 01:52:07','2025-09-07 01:52:36',NULL);
 /*!40000 ALTER TABLE `servicios` ENABLE KEYS */;
 UNLOCK TABLES;
@@ -408,7 +509,7 @@ CREATE TABLE `usuario` (
   `last_login` datetime DEFAULT NULL,
   `updated_at` datetime DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   PRIMARY KEY (`idUsuario`)
-) ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=28 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -424,13 +525,15 @@ INSERT INTO `usuario` VALUES
 (3,'Admin','admin','$2y$12$fuImYO/JaUzLbcarP0kNiuL4yv0V9MERdE73m25YUdlvQJekQWGb6','admin@example.com',1,'admin','123456789','2025-06-08 17:11:49',NULL,'2025-06-15 15:37:44'),
 (4,'Visualizador','visual','$2y$12$79xwB.LwTuKM1h/Pt/4beu.XyRf9XlfvGK1Re4EM8O/fwhGQfm5UO','visualizador@email.com',1,'Visualizador','00000000-0','2025-06-08 17:11:49',NULL,'2025-06-09 10:01:33'),
 (9,'asdasfaf','fasfasfasf','$2y$12$WRIVfwitvgl6.wXhIVieaOLOuA/0gvFMMhIFmBcGkkWqyZgaZDXUS','qweqweqweq@test.com',1,'Visualizador','63542711-1','2025-06-09 18:38:35',NULL,'2025-06-09 18:38:35'),
-(11,'eqw23423','2342342','$2y$12$MNQVpyGZZ/1VKrw3RuWJ4.xnC3SOyN5hxcVkMf8Gsecmpdu.1Qdo.','werwerw@test.com',1,'Operativo','12312314-5','2025-06-09 18:41:56',NULL,'2025-06-09 18:41:56'),
 (14,'wqsdqfq','dadqwdqq','$2y$12$l1dwcXHyE2UcZgQcwr14jurTvE5PGlReOKoJ5Ds5DkQdz8K4X6fci','lenfibweyb@gmail.com',0,'Jefatura','12345679-8','2025-06-09 18:55:45',NULL,'2025-06-10 03:11:08'),
 (20,'askjygd','asdjbaj','$2y$12$KYgegKWyFiYisuSFB4Kx0e0Nz3ET4ZCG4BtVfnxyrroCriNfmBuhe','kjyasygdjkua@test.com',1,'Operativo','33121312-1','2025-06-15 03:13:30',NULL,'2025-06-15 03:13:30'),
 (21,'TEST1','TEST','$2y$12$A54cJvhX9YofeDelSMu5VO5QdmM/Lec2OBwrinizmJqw4EeIvsSBq','dvqgwyq@test.com',1,'Administrador','14451142-1','2025-06-15 19:57:15',NULL,'2025-06-15 19:57:15'),
 (22,'PRUEBAFINAL','hjasg','$2y$12$hlCXXYFnE/xTCHLu3x8EluAiq9o73D/QO7dZpW/JV64XOiGYwMam2','kudwvgke@test.com',0,'Operativo','12673471-6','2025-06-15 20:06:29',NULL,'2025-06-15 20:06:29'),
 (23,'ARCH','arch','$2y$12$8s9w6n9xj25HKhpq72gQ1etfaQCM7caszJYdvYfpBvhafm8qoUJ4K','test@test.com',1,'Operativo','99237312-4','2025-06-15 21:12:37',NULL,'2025-06-15 21:12:37'),
-(24,'hjasvsdjJKHASV','VJHADV','$2y$12$/vW2eVyT/X2T8vus9plZaOZpnSVzAiRnaZ7IS3vbOf4IqBdSJI5pe','savahdga@test.com',0,'Visualizador','32626232-1','2025-06-16 20:47:45',NULL,'2025-06-16 20:47:45');
+(24,'hjasvsdjJKHASV','VJHADV','$2y$12$/vW2eVyT/X2T8vus9plZaOZpnSVzAiRnaZ7IS3vbOf4IqBdSJI5pe','savahdga@test.com',0,'Visualizador','32626232-1','2025-06-16 20:47:45',NULL,'2025-06-16 20:47:45'),
+(25,'Jefe','Jefatura','$2y$12$2qhqxfFwcuKXVVzJwdlivugtUlsYJLlaCCSyI5OeIAwqxhtv4.uV6','asgfdha@gmail.com',1,'Jefatura','15615615-7','2025-10-14 20:41:10',NULL,'2025-10-14 20:41:10'),
+(26,'Jonathan','JonathanL12','$2y$12$rfBSPTp21zyxy8uBjzImguzvqM52.qM.AZLV2DLt8qBFIYa2GF7QG','anything@test.com',1,'Operativo','49494894-7','2025-10-14 20:42:08',NULL,'2025-10-14 20:42:08'),
+(27,'Visu','Soporte','$2y$12$dwenrcDqb3HlkFVAkPke7ObKF/U0b.qH.GB898Q9quCaRuS.usMe6','test121@test.com',1,'Visualizador','44949421-4','2025-10-14 20:42:53',NULL,'2025-10-14 20:42:53');
 /*!40000 ALTER TABLE `usuario` ENABLE KEYS */;
 UNLOCK TABLES;
 commit;
@@ -448,4 +551,4 @@ commit;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*M!100616 SET NOTE_VERBOSITY=@OLD_NOTE_VERBOSITY */;
 
--- Dump completed on 2025-09-26 13:19:48
+-- Dump completed on 2025-10-15 15:52:35

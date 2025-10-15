@@ -146,11 +146,39 @@
             <h3 class="font-semibold text-gray-900">Motocicletas Disponibles</h3>
           </div>
           <p class="text-sm text-gray-600 mb-4">Reporte de motocicletas disponibles para alquiler</p>
-          <button onclick="generateReport('available-motorcycles')"
-            class="w-full bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition-colors flex items-center justify-center">
-            <i class="ri-file-pdf-line mr-2"></i>
-            Generar PDF
-          </button>
+
+          <!-- Period Selection -->
+          <div class="mb-4">
+            <label class="block text-xs font-medium text-gray-700 mb-2">Período:</label>
+            <div class="flex gap-2">
+              <label class="flex items-center">
+                <input type="radio" name="period-available" value="" class="mr-1" checked>
+                <span class="text-xs">Todo</span>
+              </label>
+              <label class="flex items-center">
+                <input type="radio" name="period-available" value="week" class="mr-1">
+                <span class="text-xs">Semanal</span>
+              </label>
+              <label class="flex items-center">
+                <input type="radio" name="period-available" value="month" class="mr-1">
+                <span class="text-xs">Mensual</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Action Buttons -->
+          <div class="flex gap-2">
+            <button onclick="previewReport('available-motorcycles')"
+              class="flex-1 bg-blue-600 text-white px-3 py-2 rounded hover:bg-blue-700 transition-colors text-xs flex items-center justify-center">
+              <i class="ri-eye-line mr-1"></i>
+              Vista Previa
+            </button>
+            <button onclick="generateReport('available-motorcycles')"
+              class="flex-1 bg-green-600 text-white px-3 py-2 rounded hover:bg-green-700 transition-colors text-xs flex items-center justify-center">
+              <i class="ri-file-pdf-line mr-1"></i>
+              PDF
+            </button>
+          </div>
         </div>
 
         <!-- Leased Motorcycles Report -->
@@ -162,11 +190,39 @@
             <h3 class="font-semibold text-gray-900">Motocicletas Alquiladas</h3>
           </div>
           <p class="text-sm text-gray-600 mb-4">Reporte de motocicletas actualmente alquiladas</p>
-          <button onclick="generateReport('leased-motorcycles')"
-            class="w-full bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 transition-colors flex items-center justify-center">
-            <i class="ri-file-pdf-line mr-2"></i>
-            Generar PDF
-          </button>
+
+          <!-- Period Selection -->
+          <div class="mb-4">
+            <label class="block text-xs font-medium text-gray-700 mb-2">Período:</label>
+            <div class="flex gap-2">
+              <label class="flex items-center">
+                <input type="radio" name="period-leased" value="" class="mr-1" checked>
+                <span class="text-xs">Todo</span>
+              </label>
+              <label class="flex items-center">
+                <input type="radio" name="period-leased" value="week" class="mr-1">
+                <span class="text-xs">Semanal</span>
+              </label>
+              <label class="flex items-center">
+                <input type="radio" name="period-leased" value="month" class="mr-1">
+                <span class="text-xs">Mensual</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Action Buttons -->
+          <div class="flex gap-2">
+            <button onclick="previewReport('leased-motorcycles')"
+              class="flex-1 bg-blue-600 text-white px-3 py-2 rounded hover:bg-blue-700 transition-colors text-xs flex items-center justify-center">
+              <i class="ri-eye-line mr-1"></i>
+              Vista Previa
+            </button>
+            <button onclick="generateReport('leased-motorcycles')"
+              class="flex-1 bg-red-600 text-white px-3 py-2 rounded hover:bg-red-700 transition-colors text-xs flex items-center justify-center">
+              <i class="ri-file-pdf-line mr-1"></i>
+              PDF
+            </button>
+          </div>
         </div>
 
         <!-- Active Services Report -->
@@ -178,11 +234,39 @@
             <h3 class="font-semibold text-gray-900">Servicios Activos</h3>
           </div>
           <p class="text-sm text-gray-600 mb-4">Reporte de servicios en proceso o pendientes</p>
-          <button onclick="generateReport('active-services')"
-            class="w-full bg-yellow-600 text-white px-4 py-2 rounded hover:bg-yellow-700 transition-colors flex items-center justify-center">
-            <i class="ri-file-pdf-line mr-2"></i>
-            Generar PDF
-          </button>
+
+          <!-- Period Selection -->
+          <div class="mb-4">
+            <label class="block text-xs font-medium text-gray-700 mb-2">Período:</label>
+            <div class="flex gap-2">
+              <label class="flex items-center">
+                <input type="radio" name="period-active-services" value="" class="mr-1" checked>
+                <span class="text-xs">Todo</span>
+              </label>
+              <label class="flex items-center">
+                <input type="radio" name="period-active-services" value="week" class="mr-1">
+                <span class="text-xs">Semanal</span>
+              </label>
+              <label class="flex items-center">
+                <input type="radio" name="period-active-services" value="month" class="mr-1">
+                <span class="text-xs">Mensual</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Action Buttons -->
+          <div class="flex gap-2">
+            <button onclick="previewReport('active-services')"
+              class="flex-1 bg-blue-600 text-white px-3 py-2 rounded hover:bg-blue-700 transition-colors text-xs flex items-center justify-center">
+              <i class="ri-eye-line mr-1"></i>
+              Vista Previa
+            </button>
+            <button onclick="generateReport('active-services')"
+              class="flex-1 bg-yellow-600 text-white px-3 py-2 rounded hover:bg-yellow-700 transition-colors text-xs flex items-center justify-center">
+              <i class="ri-file-pdf-line mr-1"></i>
+              PDF
+            </button>
+          </div>
         </div>
 
         <!-- Historical Services Report -->
@@ -194,11 +278,39 @@
             <h3 class="font-semibold text-gray-900">Historial de Servicios</h3>
           </div>
           <p class="text-sm text-gray-600 mb-4">Historial completo de servicios realizados</p>
-          <button onclick="generateReport('historical-services')"
-            class="w-full bg-purple-600 text-white px-4 py-2 rounded hover:bg-purple-700 transition-colors flex items-center justify-center">
-            <i class="ri-file-pdf-line mr-2"></i>
-            Generar PDF
-          </button>
+
+          <!-- Period Selection -->
+          <div class="mb-4">
+            <label class="block text-xs font-medium text-gray-700 mb-2">Período:</label>
+            <div class="flex gap-2">
+              <label class="flex items-center">
+                <input type="radio" name="period-historical-services" value="" class="mr-1" checked>
+                <span class="text-xs">Todo</span>
+              </label>
+              <label class="flex items-center">
+                <input type="radio" name="period-historical-services" value="week" class="mr-1">
+                <span class="text-xs">Semanal</span>
+              </label>
+              <label class="flex items-center">
+                <input type="radio" name="period-historical-services" value="month" class="mr-1">
+                <span class="text-xs">Mensual</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Action Buttons -->
+          <div class="flex gap-2">
+            <button onclick="previewReport('historical-services')"
+              class="flex-1 bg-blue-600 text-white px-3 py-2 rounded hover:bg-blue-700 transition-colors text-xs flex items-center justify-center">
+              <i class="ri-eye-line mr-1"></i>
+              Vista Previa
+            </button>
+            <button onclick="generateReport('historical-services')"
+              class="flex-1 bg-purple-600 text-white px-3 py-2 rounded hover:bg-purple-700 transition-colors text-xs flex items-center justify-center">
+              <i class="ri-file-pdf-line mr-1"></i>
+              PDF
+            </button>
+          </div>
         </div>
 
         <!-- System Report -->
@@ -271,15 +383,49 @@
       });
     });
 
+    function getSelectedPeriod(containerSelector) {
+      const container = document.querySelector(containerSelector);
+      if (!container) return '';
+
+      const selectedRadio = container.querySelector('input[type="radio"]:checked');
+      return selectedRadio ? selectedRadio.value : '';
+    }
+
     function generateReport(type) {
       const loadingModal = document.getElementById('loadingModal');
       loadingModal.classList.remove('hidden');
 
-      // Simulate loading time and redirect to PDF generation
+      let url = `/reportes/${type}`;
+      const period = getSelectedPeriod(`[name^="period-${type === 'available-motorcycles' ? 'available' : type === 'leased-motorcycles' ? 'leased' : type === 'active-services' ? 'active-services' : type === 'historical-services' ? 'historical-services' : ''}"]`);
+
+      if (period) {
+        url += `/${period}`;
+      }
+
       setTimeout(() => {
-        window.location.href = `/reportes/${type}`;
+        window.location.href = url;
         loadingModal.classList.add('hidden');
       }, 1000);
+    }
+
+    function previewReport(type) {
+      let url = `/reportes/preview/${type}`;
+      const periodMap = {
+        'available-motorcycles': 'available',
+        'leased-motorcycles': 'leased',
+        'active-services': 'active-services',
+        'historical-services': 'historical-services'
+      };
+      const periodSelector = periodMap[type];
+
+      if (periodSelector) {
+        const period = getSelectedPeriod(`[name="period-${periodSelector}"]`);
+        if (period) {
+          url += `/${period}`;
+        }
+      }
+
+      window.location.href = url;
     }
   </script>
 

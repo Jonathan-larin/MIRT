@@ -204,13 +204,13 @@
           </button>
         </div>
 
-        <form id="rentalForm">
+          <form id="rentalForm">
           <input type="hidden" id="rentalId" name="placa">
 
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-            <div>
+            <div id="motocicletaField" style="display: none;">
               <label for="modalMotocicleta" class="block text-sm font-medium text-gray-700 mb-1">Motocicleta</label>
-              <select id="modalMotocicleta" name="motocicleta" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary" required>
+              <select id="modalMotocicleta" name="motocicleta" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary">
                 <option value="">Seleccionar motocicleta</option>
                 <?php if (!empty($motos_disponibles)): ?>
                   <?php foreach ($motos_disponibles as $moto): ?>
@@ -355,6 +355,10 @@
       document.getElementById('rentalModal').classList.add('hidden');
       document.getElementById('rentalForm').reset();
       document.getElementById('modalMotocicleta').value = '';
+      const motocicletaField = document.getElementById('motocicletaField');
+      if (motocicletaField) {
+        motocicletaField.style.display = 'none';
+      }
       editingPlaca = null;
     }
 
@@ -365,6 +369,11 @@
         document.getElementById('modalMotocicleta').value = motorcycle.placa;
         document.getElementById('modalPlaca').value = motorcycle.placa;
         document.getElementById('rentalId').value = motorcycle.placa;
+        // Show motorcycle field for renting from available motorcycles
+        const motocicletaField = document.getElementById('motocicletaField');
+        if (motocicletaField) {
+          motocicletaField.style.display = 'block';
+        }
         openModal('Nueva Renta');
       }
     }
@@ -464,6 +473,11 @@
       editingPlaca = null;
       document.getElementById('rentalForm').reset();
       document.getElementById('rentalId').value = '';
+      // Show motorcycle field for new rentals
+      const motocicletaField = document.getElementById('motocicletaField');
+      if (motocicletaField) {
+        motocicletaField.style.display = 'block';
+      }
       openModal('Nueva Renta');
     });
 

@@ -352,7 +352,7 @@
 
         <div class="flex justify-end gap-3 pt-4 mt-6 border-t">
           <button id="viewServicesBtn" class="px-6 py-2 bg-gray-200 text-primary rounded-md hover:text-white hover:bg-secondary focus:outline-none focus:ring-2 focus:ring-blue-500">
-            <i class="ri-tools-line mr-2"></i>Ver Servicios
+            <i class="ri-tools-line mr-2"></i>Ver Historial
           </button>
           <button id="editFromDetailModalBtn" class="px-6 py-2 bg-gray-200 text-primary rounded-md hover:text-white hover:bg-secondary focus:outline-none focus:ring-2 focus:ring-blue-500">
             Editar
@@ -517,7 +517,7 @@
     <div id="servicesModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50 hidden flex justify-center items-center">
       <div class="relative bg-white rounded-lg shadow-xl p-6 w-11/12 md:w-4/5 lg:w-3/4 xl:w-2/3 max-h-[90vh] overflow-y-auto">
         <div class="flex justify-between items-center border-b pb-4 mb-4">
-          <h3 class="text-2xl font-semibold text-gray-800">Historial de Servicios</h3>
+          <h3 class="text-2xl font-semibold text-gray-800">Historial</h3>
           <button id="closeServicesModalXBtn" class="text-gray-400 hover:text-gray-600">
             <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
@@ -549,6 +549,10 @@
               <button id="completedServicesTab" class="whitespace-nowrap py-2 px-1 border-b-2 font-medium text-sm border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300">
                 Servicios Completados
                 <span id="completedServicesBadge" class="ml-2 py-0.5 px-2 rounded-full text-xs bg-green-100 text-green-800">0</span>
+              </button>
+              <button id="rentalHistoryTab" class="whitespace-nowrap py-2 px-1 border-b-2 font-medium text-sm border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300">
+                Historial de Rentas
+                <span id="rentalHistoryBadge" class="ml-2 py-0.5 px-2 rounded-full text-xs bg-purple-100 text-purple-800">0</span>
               </button>
             </nav>
           </div>
@@ -585,6 +589,23 @@
             </div>
           </div>
         </div>
+
+        
+          <!-- Rental History Section -->
+          <div id="rentalHistorySection" class="services-section hidden">
+            <div class="bg-purple-50 border border-purple-200 rounded-lg p-4">
+              <div class="flex items-center mb-3">
+                <i class="ri-car-line text-purple-600 mr-2"></i>
+                <h4 class="text-lg font-medium text-purple-900">Historial de Rentas</h4>
+              </div>
+              <div id="rentalHistoryList" class="space-y-3">
+                <div class="text-center text-gray-500 py-4">
+                  <i class="ri-loader-4-line animate-spin text-xl"></i>
+                  <p class="mt-2">Cargando historial de rentas...</p>
+                </div>
+              </div>
+            </div>
+          </div>
 
         <div class="flex justify-end gap-3 pt-4 mt-6 border-t">
           <button id="closeServicesModalBtn" class="px-6 py-2 bg-primary text-white rounded-md hover:text-white hover:bg-secondary focus:outline-none focus:ring-2 focus:ring-gray-400">
@@ -1038,6 +1059,10 @@
         showCompletedServices();
       });
 
+      rentalHistoryTab?.addEventListener('click', () => {
+        showRentalHistory();
+      });
+
       // Load Services Function
       async function loadServicesForMotorcycle(placa) {
         try {
@@ -1066,18 +1091,23 @@
         const totalCount = document.getElementById('totalServicesCount');
         const activeBadge = document.getElementById('activeServicesBadge');
         const completedBadge = document.getElementById('completedServicesBadge');
+        const rentalBadge = document.getElementById('rentalHistoryBadge');
 
         // Update header info
         motorcycleInfo.textContent = `${data.motocicleta?.marca || 'N/A'} ${data.motocicleta?.modelo || 'N/A'} (${data.motocicleta?.placa || 'N/A'})`;
         totalCount.textContent = (data.total_completed + data.total_active) || 0;
         activeBadge.textContent = data.total_active || 0;
         completedBadge.textContent = data.total_completed || 0;
+        rentalBadge.textContent = data.total_rentas || 0;
 
         // Display active services
         displayActiveServices(data.active || []);
 
         // Display completed services
         displayCompletedServices(data.completed || []);
+
+        // Display rental history
+        displayRentalHistory(data.rentas || []);
 
         // Show active services by default
         showActiveServices();
@@ -1163,23 +1193,82 @@
         container.innerHTML = html;
       }
 
+      // Display Rental History
+      function displayRentalHistory(rentas) {
+        const container = document.getElementById('rentalHistoryList');
+
+        if (!rentas || rentas.length === 0) {
+          container.innerHTML = '<div class="text-center text-gray-500 py-4"><i class="ri-car-line text-2xl mb-2"></i><p>No hay historial de rentas</p></div>';
+          return;
+        }
+
+        let html = '';
+        rentas.forEach(renta => {
+          const entregaDate = new Date(renta.fecha_entrega).toLocaleDateString('es-ES');
+          const renovacionDate = renta.fecha_renovacion ? new Date(renta.fecha_renovacion).toLocaleDateString('es-ES') : 'N/A';
+          const cliente = renta.nombre_cliente || 'Cliente no especificado';
+
+          html += `
+            <div class="bg-white border border-purple-200 rounded-lg p-4 shadow-sm">
+              <div class="flex items-start">
+                <div class="flex-1">
+                  <div class="flex items-center mb-2">
+                    <i class="ri-car-line text-purple-600 mr-2"></i>
+                    <h5 class="font-medium text-gray-900">Renta - ${renta.nombre_marca} ${renta.modelo}</h5>
+                    <span class="ml-2 px-2 py-1 text-xs bg-purple-100 text-purple-800 rounded-full">${renta.nombre_estado || 'Renta'}</span>
+                  </div>
+                  <div class="grid grid-cols-1 md:grid-cols-2 gap-2 text-sm text-gray-600">
+                    <p><span class="font-medium">Cliente:</span> ${cliente}</p>
+                    <p><span class="font-medium">Fecha Entrega:</span> ${entregaDate}</p>
+                    <p><span class="font-medium">Fecha Renovación:</span> ${renovacionDate}</p>
+                    <p><span class="font-medium">Renta sin IVA:</span> $${renta.renta_sinIva ? parseFloat(renta.renta_sinIva).toFixed(2) : '0.00'}</p>
+                    <p><span class="font-medium">Renta con IVA:</span> $${renta.renta_conIva ? parseFloat(renta.renta_conIva).toFixed(2) : '0.00'}</p>
+                    <p><span class="font-medium">Agencia:</span> ${renta.nombre_agencia || 'N/A'}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          `;
+        });
+
+        container.innerHTML = html;
+      }
+
       // Tab switching functions
       function showActiveServices() {
         document.getElementById('activeServicesSection').classList.remove('hidden');
         document.getElementById('completedServicesSection').classList.add('hidden');
+        document.getElementById('rentalHistorySection').classList.add('hidden');
         activeServicesTab.classList.add('border-primary', 'text-primary');
         activeServicesTab.classList.remove('border-transparent', 'text-gray-500');
         completedServicesTab.classList.remove('border-primary', 'text-primary');
         completedServicesTab.classList.add('border-transparent', 'text-gray-500');
+        rentalHistoryTab.classList.remove('border-primary', 'text-primary');
+        rentalHistoryTab.classList.add('border-transparent', 'text-gray-500');
       }
 
       function showCompletedServices() {
         document.getElementById('activeServicesSection').classList.add('hidden');
         document.getElementById('completedServicesSection').classList.remove('hidden');
+        document.getElementById('rentalHistorySection').classList.add('hidden');
         completedServicesTab.classList.add('border-primary', 'text-primary');
         completedServicesTab.classList.remove('border-transparent', 'text-gray-500');
         activeServicesTab.classList.remove('border-primary', 'text-primary');
         activeServicesTab.classList.add('border-transparent', 'text-gray-500');
+        rentalHistoryTab.classList.remove('border-primary', 'text-primary');
+        rentalHistoryTab.classList.add('border-transparent', 'text-gray-500');
+      }
+
+      function showRentalHistory() {
+        document.getElementById('activeServicesSection').classList.add('hidden');
+        document.getElementById('completedServicesSection').classList.add('hidden');
+        document.getElementById('rentalHistorySection').classList.remove('hidden');
+        rentalHistoryTab.classList.add('border-primary', 'text-primary');
+        rentalHistoryTab.classList.remove('border-transparent', 'text-gray-500');
+        activeServicesTab.classList.remove('border-primary', 'text-primary');
+        activeServicesTab.classList.add('border-transparent', 'text-gray-500');
+        completedServicesTab.classList.remove('border-primary', 'text-primary');
+        completedServicesTab.classList.add('border-transparent', 'text-gray-500');
       }
 
     });

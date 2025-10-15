@@ -27,7 +27,7 @@ function initializeNotifications() {
 }
 
 function updateNotificationCount() {
-  // Fetch both lease and service notifications
+  // Fetch both lease and service notifications, plus activity notifications
   Promise.all([
     fetch('/rentas/expiring-count', {
       headers: {
@@ -38,6 +38,11 @@ function updateNotificationCount() {
       headers: {
         'X-Requested-With': 'XMLHttpRequest',
       }
+    }),
+    fetch('/notifications/count', {
+      headers: {
+        'X-Requested-With': 'XMLHttpRequest',
+      }
     })
   ])
   .then(responses => Promise.all(responses.map(r => r.json())))
@@ -45,7 +50,8 @@ function updateNotificationCount() {
     const badge = document.getElementById('notificationBadge');
     const leaseCount = (data[0] && typeof data[0].count === 'number') ? data[0].count : 0;
     const serviceCount = (data[1] && typeof data[1].count === 'number') ? data[1].count : 0;
-    const totalCount = leaseCount + serviceCount;
+    const activityCount = (data[2] && typeof data[2].count === 'number') ? data[2].count : 0;
+    const totalCount = leaseCount + serviceCount + activityCount;
 
     if (badge) {
       if (totalCount > 0) {
@@ -100,7 +106,7 @@ function loadNotificationList() {
   // Show loading
   notificationList.innerHTML = '<div class="text-center py-4 text-gray-500 text-sm"><i class="ri-loader-4-line animate-spin text-xl"></i><p>Cargando...</p></div>';
 
-  // Fetch both lease and service notifications
+  // Fetch lease, service, and activity notifications
   Promise.all([
     fetch('/rentas/expiring-leases', {
       headers: {
@@ -111,13 +117,19 @@ function loadNotificationList() {
       headers: {
         'X-Requested-With': 'XMLHttpRequest',
       }
+    }),
+    fetch('/notifications/list', {
+      headers: {
+        'X-Requested-With': 'XMLHttpRequest',
+      }
     })
   ])
   .then(responses => Promise.all(responses.map(r => r.json())))
   .then(data => {
     const leaseNotifications = Array.isArray(data[0]) ? data[0] : [];
     const serviceNotifications = Array.isArray(data[1]) ? data[1] : [];
-    const allNotifications = [...leaseNotifications, ...serviceNotifications];
+    const activityNotifications = Array.isArray(data[2]) ? data[2] : [];
+    const allNotifications = [...leaseNotifications, ...serviceNotifications, ...activityNotifications];
 
     if (allNotifications && allNotifications.length > 0) {
       renderNotificationList(allNotifications);
@@ -137,8 +149,12 @@ function renderNotificationList(notifications) {
 
   let html = '';
 
-  // Sort notifications by date (earliest first)
-  notifications.sort((a, b) => {
+  // Separate activity notifications from other notifications
+  const activityNotifications = notifications.filter(n => n.type && (n.type === 'motorcycle' || n.type === 'service' || n.type === 'rental'));
+  const otherNotifications = notifications.filter(n => !n.type || (n.type !== 'motorcycle' && n.type !== 'service' && n.type !== 'rental'));
+
+  // Sort other notifications by date (earliest first)
+  otherNotifications.sort((a, b) => {
     let dateA, dateB;
 
     if (a.fecha_renovacion) { // Lease notification
@@ -164,78 +180,151 @@ function renderNotificationList(notifications) {
     return dateA - dateB;
   });
 
-  notifications.forEach(notification => {
-    let targetDate, dateLabel, linkUrl, typeLabel, clientOrUser;
+  // Sort activity notifications by creation date (newest first)
+  activityNotifications.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
 
-    if (notification.fecha_renovacion) {
-      // Lease notification
-      targetDate = new Date(notification.fecha_renovacion);
-      dateLabel = 'Vence';
-      linkUrl = '/rentas';
-      typeLabel = 'Renta';
-      clientOrUser = `Cliente: ${notification.nombre_cliente}`;
-    } else {
-      // Service notification
-      if (notification.fecha_inicio && !notification.fecha_completado) {
-        targetDate = new Date(notification.fecha_inicio);
-        dateLabel = 'Inicia';
-        typeLabel = 'Servicio programado';
-      } else if (notification.fecha_completado) {
-        targetDate = new Date(notification.fecha_completado);
-        dateLabel = 'Finaliza';
-        typeLabel = 'Servicio por completar';
-      } else {
-        targetDate = new Date(notification.fecha_solicitud);
-        dateLabel = 'Solicitado';
-        typeLabel = 'Servicio solicitado';
+  // Combine notifications: activity first, then others
+  const sortedNotifications = [...activityNotifications, ...otherNotifications];
+
+  sortedNotifications.forEach(notification => {
+    // Check if this is an activity notification
+    if (notification.type && (notification.type === 'motorcycle' || notification.type === 'service' || notification.type === 'rental')) {
+      // Activity notification
+      let linkUrl = '#';
+      if (notification.type === 'service') {
+        linkUrl = '/servicios';
+      } else if (notification.type === 'motorcycle' || notification.type === 'rental') {
+        linkUrl = '/motocicletas';
       }
-      linkUrl = '/servicios';
-      clientOrUser = `Técnico: Pendiente`;
-    }
 
-    const today = new Date();
-    const daysDiff = Math.ceil((targetDate - today) / (1000 * 60 * 60 * 24));
+      let iconClass = 'ri-information-line text-blue-600';
 
-    let urgencyClass = 'text-yellow-600';
-    let urgencyIcon = 'ri-time-line';
+      if (notification.title.includes('Nuevo') || notification.title.includes('Agregada') || notification.title.includes('Creado')) {
+        iconClass = 'ri-add-circle-line text-green-600';
+      } else if (notification.title.includes('Modificada') || notification.title.includes('Actualizada')) {
+        iconClass = 'ri-edit-line text-yellow-600';
+      } else if (notification.title.includes('Eliminada')) {
+        iconClass = 'ri-delete-bin-line text-red-600';
+      }
 
-    if (daysDiff <= 1) {
-      urgencyClass = 'text-red-600';
-      urgencyIcon = 'ri-alarm-warning-line';
-    } else if (daysDiff <= 3) {
-      urgencyClass = 'text-orange-600';
-      urgencyIcon = 'ri-alert-line';
-    }
-
-    html += `
-      <div class="p-3 border-b border-gray-100 hover:bg-gray-50 cursor-pointer" onclick="window.location.href='${linkUrl}'">
-        <div class="flex items-start space-x-3">
-          <div class="flex-shrink-0">
-            <i class="${urgencyIcon} ${urgencyClass} text-lg"></i>
-          </div>
-          <div class="flex-1 min-w-0">
-            <p class="text-sm font-medium text-gray-900 truncate">
-              ${notification.nombre_marca} ${notification.modelo}
-            </p>
-            <p class="text-xs text-gray-500">
-              Placa: ${notification.placa_motocicleta || notification.placa}
-            </p>
-            <p class="text-xs text-gray-500">
-              ${typeLabel}: ${notification.tipo_servicio || 'Renta'}
-            </p>
-            <p class="text-xs text-gray-500">
-              ${clientOrUser}
-            </p>
-            <p class="text-xs ${urgencyClass} font-medium">
-              ${dateLabel}: ${targetDate.toLocaleDateString('es-ES')} (${daysDiff} día${daysDiff !== 1 ? 's' : ''})
-            </p>
+      html += `
+        <div class="p-3 border-b border-gray-100 hover:bg-gray-50 cursor-pointer ${notification.is_read ? 'opacity-75' : ''}" onclick="markAsRead(${notification.id}, '${linkUrl}')">
+          <div class="flex items-start space-x-3">
+            <div class="flex-shrink-0">
+              <i class="${iconClass} text-lg"></i>
+            </div>
+            <div class="flex-1 min-w-0">
+              <p class="text-sm font-medium text-gray-900">
+                ${notification.title}
+              </p>
+              <p class="text-xs text-gray-600 mt-1">
+                ${notification.message}
+              </p>
+              <p class="text-xs text-gray-500 mt-1">
+                ${notification.relative_time}
+              </p>
+            </div>
+            ${!notification.is_read ? '<div class="flex-shrink-0"><div class="w-2 h-2 bg-blue-600 rounded-full"></div></div>' : ''}
           </div>
         </div>
-      </div>
-    `;
+      `;
+    } else {
+      // Lease or service notification (existing logic)
+      let targetDate, dateLabel, linkUrl, typeLabel, clientOrUser;
+
+      if (notification.fecha_renovacion) {
+        // Lease notification
+        targetDate = new Date(notification.fecha_renovacion);
+        dateLabel = 'Vence';
+        linkUrl = '/rentas';
+        typeLabel = 'Renta';
+        clientOrUser = `Cliente: ${notification.nombre_cliente}`;
+      } else {
+        // Service notification
+        if (notification.fecha_inicio && !notification.fecha_completado) {
+          targetDate = new Date(notification.fecha_inicio);
+          dateLabel = 'Inicia';
+          typeLabel = 'Servicio programado';
+        } else if (notification.fecha_completado) {
+          targetDate = new Date(notification.fecha_completado);
+          dateLabel = 'Finaliza';
+          typeLabel = 'Servicio por completar';
+        } else {
+          targetDate = new Date(notification.fecha_solicitud);
+          dateLabel = 'Solicitado';
+          typeLabel = 'Servicio solicitado';
+        }
+        linkUrl = '/servicios';
+        clientOrUser = `Técnico: Pendiente`;
+      }
+
+      const today = new Date();
+      const daysDiff = Math.ceil((targetDate - today) / (1000 * 60 * 60 * 24));
+
+      let urgencyClass = 'text-yellow-600';
+      let urgencyIcon = 'ri-time-line';
+
+      if (daysDiff <= 1) {
+        urgencyClass = 'text-red-600';
+        urgencyIcon = 'ri-alarm-warning-line';
+      } else if (daysDiff <= 3) {
+        urgencyClass = 'text-orange-600';
+        urgencyIcon = 'ri-alert-line';
+      }
+
+      html += `
+        <div class="p-3 border-b border-gray-100 hover:bg-gray-50 cursor-pointer" onclick="window.location.href='${linkUrl}'">
+          <div class="flex items-start space-x-3">
+            <div class="flex-shrink-0">
+              <i class="${urgencyIcon} ${urgencyClass} text-lg"></i>
+            </div>
+            <div class="flex-1 min-w-0">
+              <p class="text-sm font-medium text-gray-900 truncate">
+                ${notification.nombre_marca} ${notification.modelo}
+              </p>
+              <p class="text-xs text-gray-500">
+                Placa: ${notification.placa_motocicleta || notification.placa}
+              </p>
+              <p class="text-xs text-gray-500">
+                ${typeLabel}: ${notification.tipo_servicio || 'Renta'}
+              </p>
+              <p class="text-xs text-gray-500">
+                ${clientOrUser}
+              </p>
+              <p class="text-xs ${urgencyClass} font-medium">
+                ${dateLabel}: ${targetDate.toLocaleDateString('es-ES')} (${daysDiff} día${daysDiff !== 1 ? 's' : ''})
+              </p>
+            </div>
+          </div>
+        </div>
+      `;
+    }
   });
 
   notificationList.innerHTML = html;
+}
+
+// Function to mark notification as read and redirect
+function markAsRead(notificationId, redirectUrl) {
+  fetch(`/notifications/mark-read/${notificationId}`, {
+    method: 'POST',
+    headers: {
+      'X-Requested-With': 'XMLHttpRequest',
+    }
+  })
+  .then(response => response.json())
+  .then(data => {
+    if (data.success) {
+      window.location.href = redirectUrl;
+    } else {
+      console.error('Error marking notification as read');
+      window.location.href = redirectUrl;
+    }
+  })
+  .catch(error => {
+    console.error('Error:', error);
+    window.location.href = redirectUrl;
+  });
 }
 
 // Initialize notifications when DOM is loaded

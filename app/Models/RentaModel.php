@@ -48,11 +48,11 @@ class RentaModel extends Model
 
     protected $validationRules = [
         'placa' => 'required|max_length[15]',
-        'idcliente' => 'required|integer',
-        'fecha_entrega' => 'required|valid_date',
-        'fecha_renovacion' => 'required|valid_date',
-        'renta_sinIva' => 'required|decimal',
-        'renta_conIva' => 'required|decimal',
+        'idcliente' => 'permit_empty|integer',
+        'fecha_entrega' => 'permit_empty|valid_date',
+        'fecha_renovacion' => 'permit_empty|valid_date',
+        'renta_sinIva' => 'permit_empty|decimal',
+        'renta_conIva' => 'permit_empty|decimal',
         'modificado_por' => 'required|integer'
     ];
 
@@ -149,17 +149,50 @@ class RentaModel extends Model
      */
     public function endRental($placa, $modifiedBy)
     {
-        $data = [
-            'idcliente' => null,
-            'idestado' => 1, // Estado "Disponible"
-            'fecha_entrega' => null,
-            'fecha_renovacion' => null,
-            'renta_sinIva' => null,
-            'renta_conIva' => null,
-            'modificado_por' => $modifiedBy
-        ];
+        try {
+            // Get the current rental data before ending it (to store in history)
+            $currentRental = $this->find($placa);
 
-        return $this->update($placa, $data);
+            if (!$currentRental) {
+                throw new \Exception('Motosicleta no encontrada para finalizar renta.');
+            }
+
+            $data = [
+                'idcliente' => null,
+                'idestado' => 1, // Estado "Disponible"
+                'fecha_entrega' => null,
+                'fecha_renovacion' => null,
+                'renta_sinIva' => 0,
+                'renta_conIva' => 0,
+                'modificado_por' => $modifiedBy
+            ];
+
+            log_message('debug', 'Attempting to end rental for placa: ' . $placa);
+            log_message('debug', 'Data to update: ' . json_encode($data));
+
+            $result = $this->update($placa, $data);
+
+            if ($result) {
+                // Store the finished rental in history
+                $rentalHistoryModel = new \App\Models\RentalHistoryModel();
+                $historyResult = $rentalHistoryModel->storeFinishedRental($currentRental, $modifiedBy);
+
+                if (!$historyResult) {
+                    log_message('warning', 'Failed to store rental history for placa: ' . $placa);
+                    // Don't fail the operation, just log it
+                }
+
+                log_message('debug', 'Update result: success');
+            } else {
+                log_message('debug', 'Update result: failure');
+            }
+
+            return $result;
+        } catch (\Exception $e) {
+            log_message('error', 'End rental error: ' . $e->getMessage());
+            log_message('error', 'Error file: ' . $e->getFile() . ' Line: ' . $e->getLine());
+            throw $e;
+        }
     }
 
     /**

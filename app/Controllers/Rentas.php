@@ -186,7 +186,7 @@ class Rentas extends BaseController
             }
         } catch (\Exception $e) {
             log_message('error', 'Error finalizando renta: ' . $e->getMessage());
-            return $this->fail('Error interno del servidor.', 500);
+            return $this->fail('Error interno del servidor: ' . $e->getMessage(), 500);
         }
     }
 
@@ -227,7 +227,7 @@ class Rentas extends BaseController
             return $this->failUnauthorized('Acceso no autorizado.');
         }
 
-        $daysAhead = $this->request->getGet('days') ?? 7;
+        $daysAhead = $this->request->getGet('days') ?? 60;
         $count = $this->rentaModel->getExpiringLeasesCount((int)$daysAhead);
 
         return $this->respond(['count' => $count]);
@@ -242,7 +242,7 @@ class Rentas extends BaseController
             return $this->failUnauthorized('Acceso no autorizado.');
         }
 
-        $daysAhead = $this->request->getGet('days') ?? 7;
+        $daysAhead = $this->request->getGet('days') ?? 60;
         $expiringLeases = $this->rentaModel->getExpiringLeases((int)$daysAhead);
 
         return $this->respond($expiringLeases);
