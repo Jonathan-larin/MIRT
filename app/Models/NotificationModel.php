@@ -32,7 +32,7 @@ class NotificationModel extends Model
         'user_id' => 'required|integer',
         'title' => 'required|max_length[255]',
         'message' => 'required',
-        'type' => 'required|in_list[motorcycle,service,rental]',
+        'type' => 'required|in_list[motorcycle,service,rental,activity]',
     ];
     protected $validationMessages   = [];
     protected $skipValidation       = false;
@@ -55,55 +55,17 @@ class NotificationModel extends Model
     public function createNotificationForActivity($activityData)
     {
         $tableName = $activityData['table_name'];
-        $action = $activityData['action'];
+        $action = strtoupper($activityData['action']);
         $recordId = $activityData['record_id'];
         $userId = $activityData['user_id'];
 
-        // Define which activities should trigger notifications
-        $notifiableActivities = [
-            'motos' => [
-                'actions' => ['INSERT', 'UPDATE', 'DELETE'],
-                'type' => 'motorcycle'
-            ],
-            'servicios' => [
-                'actions' => ['INSERT', 'UPDATE'],
-                'type' => 'service'
-            ],
-            'motos' => [ // For rental changes (when motorcycle status changes to/from rented)
-                'actions' => ['UPDATE'],
-                'type' => 'rental',
-                'condition' => function($oldValues, $newValues) {
-                    // Check if idcliente or status changed (indicating rental start/end)
-                    $oldClient = $oldValues['idcliente'] ?? null;
-                    $newClient = $newValues['idcliente'] ?? null;
-                    return $oldClient !== $newClient;
-                }
-            ]
-        ];
-
-        if (!isset($notifiableActivities[$tableName])) {
-            return false;
-        }
-
-        $activityConfig = $notifiableActivities[$tableName];
-
-        if (!in_array($action, $activityConfig['actions'])) {
-            return false;
-        }
-
-        // Check conditional logic if provided
-        if (isset($activityConfig['condition'])) {
-            $oldValues = json_decode($activityData['old_values'] ?? '[]', true);
-            $newValues = json_decode($activityData['new_values'] ?? '[]', true);
-
-            if (!$activityConfig['condition']($oldValues, $newValues)) {
-                return false;
-            }
-        }
-
-        // Get users to notify (Operario and Jefatura roles)
+        // Get the user who made the change
         $usuarioModel = new UsuarioModel();
-        $targetUsers = $usuarioModel->whereIn('rol', ['Operario', 'Jefatura'])
+        $activityUser = $usuarioModel->find($userId);
+        $userName = $activityUser ? $activityUser['user'] : 'Usuario desconocido';
+
+        // Get users to notify (Administrador and Jefatura roles)
+        $targetUsers = $usuarioModel->whereIn('rol', ['Administrador', 'Jefatura'])
                                    ->where('estado', 1)
                                    ->findAll();
 
@@ -111,8 +73,15 @@ class NotificationModel extends Model
             return false;
         }
 
-        // Create notification message
-        $notificationData = $this->generateNotificationData($tableName, $action, $recordId, $activityConfig['type'], $newValues ?? []);
+        // Create notification message for all activities
+        $notificationData = [
+            'title' => $this->getActivityTitle($tableName, $action, $recordId),
+            'message' => $this->getActivityMessage($tableName, $action, $recordId, $userName),
+            'type' => 'activity',
+            'related_table' => $tableName,
+            'related_id' => $recordId,
+            'is_read' => false
+        ];
 
         $createdNotifications = 0;
         foreach ($targetUsers as $targetUser) {
@@ -127,6 +96,36 @@ class NotificationModel extends Model
         }
 
         return $createdNotifications > 0;
+    }
+
+    /**
+     * Get activity notification title
+     */
+    private function getActivityTitle($tableName, $action, $recordId)
+    {
+        // Format exactly like the activity log: "INSERT en motos (ID: HSYAAS)"
+        $tableNames = [
+            'motos' => 'motos',
+            'servicios' => 'servicios',
+            'usuario' => 'usuario',
+            'cliente' => 'cliente', // Note: cliente, not clientes in DB
+            'empresa' => 'empresa', // Note: empresa, not empresas in DB
+            'rentas' => 'rentas'
+        ];
+
+        $tableDisplayName = $tableNames[$tableName] ?? $tableName;
+        $actionDisplay = strtoupper($action);
+
+        return "{$actionDisplay} en {$tableDisplayName} (ID: {$recordId})";
+    }
+
+    /**
+     * Get activity notification message
+     */
+    private function getActivityMessage($tableName, $action, $recordId, $userName)
+    {
+        // Format exactly like the activity log: "28/10/2025 12:47 - Usuario: admin2"
+        return date('d/m/Y H:i') . " - Usuario: {$userName}";
     }
 
     /**

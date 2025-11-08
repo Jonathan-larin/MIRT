@@ -54,15 +54,17 @@
       <h1 class="text-2xl font-bold text-primary">Gestión de Motocicletas</h1>
       <div class="flex items-center space-x-2">
         <span class="text-sm text-gray-700 font-medium"><?= $current_date ?></span>
-        
-        <button id="addMotorcycleButton"
-          class="bg-primary text-white px-4 py-2 rounded-button hover:bg-secondary transition-all duration-200 flex items-center whitespace-nowrap !rounded-button">
-          <div class="w-4 h-4 flex items-center justify-center mr-1.5">
-            <i class="ri-add-line"></i>
-          </div>
-          Nueva Motocicleta
-        </button>
-      </div>      
+
+        <?php if (in_array($logged_in_user_role, ['Administrador', 'Jefatura'])): ?>
+          <button id="addMotorcycleButton"
+            class="bg-primary text-white px-4 py-2 rounded-button hover:bg-secondary transition-all duration-200 flex items-center whitespace-nowrap !rounded-button">
+            <div class="w-4 h-4 flex items-center justify-center mr-1.5">
+              <i class="ri-add-line"></i>
+            </div>
+            Nueva Motocicleta
+          </button>
+        <?php endif; ?>
+      </div>
     </div>
 
     
@@ -280,12 +282,14 @@
                     <button class="view-motorcycle text-primary hover:text-primary/80 mr-3" data-motorcycle-id="<?= esc($moto['placa']) ?>">
                       <i class="ri-eye-line"></i>
                     </button>
-                    <button class="edit-motorcycle text-primary hover:text-primary/80 mr-3" data-motorcycle-id="<?= esc($moto['placa']) ?>">
-                      <i class="ri-pencil-line"></i>
-                    </button>
-                    <button class="delete-motorcycle text-red-600 hover:text-red-800" data-motorcycle-id="<?= esc($moto['placa']) ?>">
-                      <i class="ri-delete-bin-line"></i>
-                    </button>
+                    <?php if (in_array($logged_in_user_role, ['Administrador', 'Jefatura'])): ?>
+                      <button class="edit-motorcycle text-primary hover:text-primary/80 mr-3" data-motorcycle-id="<?= esc($moto['placa']) ?>">
+                        <i class="ri-pencil-line"></i>
+                      </button>
+                      <button class="delete-motorcycle text-red-600 hover:text-red-800" data-motorcycle-id="<?= esc($moto['placa']) ?>">
+                        <i class="ri-delete-bin-line"></i>
+                      </button>
+                    <?php endif; ?>
                   </td>
                 </tr>
               <?php endforeach; ?>
@@ -351,12 +355,16 @@
         </div>
 
         <div class="flex justify-end gap-3 pt-4 mt-6 border-t">
-          <button id="viewServicesBtn" class="px-6 py-2 bg-gray-200 text-primary rounded-md hover:text-white hover:bg-secondary focus:outline-none focus:ring-2 focus:ring-blue-500">
-            <i class="ri-tools-line mr-2"></i>Ver Historial
-          </button>
-          <button id="editFromDetailModalBtn" class="px-6 py-2 bg-gray-200 text-primary rounded-md hover:text-white hover:bg-secondary focus:outline-none focus:ring-2 focus:ring-blue-500">
-            Editar
-          </button>
+          <?php if (in_array($logged_in_user_role, ['Administrador', 'Jefatura'])): ?>
+            <button id="viewServicesBtn" class="px-6 py-2 bg-gray-200 text-primary rounded-md hover:text-white hover:bg-secondary focus:outline-none focus:ring-2 focus:ring-blue-500">
+              <i class="ri-tools-line mr-2"></i>Ver Historial
+            </button>
+          <?php endif; ?>
+          <?php if (in_array($logged_in_user_role, ['Administrador', 'Jefatura'])): ?>
+            <button id="editFromDetailModalBtn" class="px-6 py-2 bg-gray-200 text-primary rounded-md hover:text-white hover:bg-secondary focus:outline-none focus:ring-2 focus:ring-blue-500">
+              Editar
+            </button>
+          <?php endif; ?>
           <button id="closeDetailModalBtn" class="px-6 py-2 bg-primary text-white rounded-md hover:text-white hover:bg-secondary focus:outline-none focus:ring-2 focus:ring-gray-400">
             Cerrar
           </button>

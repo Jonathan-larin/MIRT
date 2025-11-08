@@ -367,6 +367,7 @@
       const motorcycle = availableMotorcycles.find(m => m.placa === placa);
       if (motorcycle) {
         document.getElementById('modalMotocicleta').value = motorcycle.placa;
+        document.getElementById('modalMotocicleta').disabled = false;
         document.getElementById('modalPlaca').value = motorcycle.placa;
         document.getElementById('rentalId').value = motorcycle.placa;
         // Show motorcycle field for renting from available motorcycles
@@ -390,6 +391,7 @@
         .then(data => {
           if (data.placa) {
             document.getElementById('modalMotocicleta').value = data.placa;
+            document.getElementById('modalMotocicleta').disabled = true;
             document.getElementById('modalPlaca').value = data.placa;
             document.getElementById('rentalId').value = data.placa;
             document.getElementById('modalCliente').value = data.idcliente;
@@ -472,6 +474,7 @@
       }
       editingPlaca = null;
       document.getElementById('rentalForm').reset();
+      document.getElementById('modalMotocicleta').disabled = false;
       document.getElementById('rentalId').value = '';
       // Show motorcycle field for new rentals
       const motocicletaField = document.getElementById('motocicletaField');

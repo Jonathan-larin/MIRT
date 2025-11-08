@@ -49,9 +49,10 @@ class Motocicletas extends BaseController
 
         // Variables adicionales que la vista pueda necesitar
         $data['current_date'] = date('d/m/Y');
-        
+
         $data['logged_in_user_id'] = session()->get('idUsuario');
         $data['logged_in_username'] = session()->get('nombreUsuario');
+        $data['logged_in_user_role'] = session()->get('rol');
 
         // Cargar la vista principal de motocicletas
         return view('motocicletas/motocicletas', $data);

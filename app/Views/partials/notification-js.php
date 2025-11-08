@@ -149,12 +149,12 @@ function renderNotificationList(notifications) {
 
   let html = '';
 
-  // Separate activity notifications from other notifications
-  const activityNotifications = notifications.filter(n => n.type && (n.type === 'motorcycle' || n.type === 'service' || n.type === 'rental'));
-  const otherNotifications = notifications.filter(n => !n.type || (n.type !== 'motorcycle' && n.type !== 'service' && n.type !== 'rental'));
+  // Separate activity notifications from time-based notifications
+  const activityNotifications = notifications.filter(n => n.type && (n.type === 'motorcycle' || n.type === 'service' || n.type === 'rental' || n.type === 'activity'));
+  const timeBasedNotifications = notifications.filter(n => !n.type || (n.type !== 'motorcycle' && n.type !== 'service' && n.type !== 'rental' && n.type !== 'activity'));
 
-  // Sort other notifications by date (earliest first)
-  otherNotifications.sort((a, b) => {
+  // Sort time-based notifications by date (earliest first)
+  timeBasedNotifications.sort((a, b) => {
     let dateA, dateB;
 
     if (a.fecha_renovacion) { // Lease notification
@@ -183,13 +183,47 @@ function renderNotificationList(notifications) {
   // Sort activity notifications by creation date (newest first)
   activityNotifications.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
 
-  // Combine notifications: activity first, then others
-  const sortedNotifications = [...activityNotifications, ...otherNotifications];
+  // Combine notifications: time-based first, then activity
+  const sortedNotifications = [...timeBasedNotifications, ...activityNotifications];
 
   sortedNotifications.forEach(notification => {
-    // Check if this is an activity notification
-    if (notification.type && (notification.type === 'motorcycle' || notification.type === 'service' || notification.type === 'rental')) {
-      // Activity notification
+    // Check if this is an activity notification (our new format)
+    if (notification.type === 'activity') {
+      // Our new activity notifications
+      let linkUrl = '/activity-log';
+
+      let iconClass = 'ri-information-line text-blue-600';
+
+      if (notification.title.includes('Nuevo') || notification.title.includes('Agregada') || notification.title.includes('Creado')) {
+        iconClass = 'ri-add-circle-line text-green-600';
+      } else if (notification.title.includes('Modificada') || notification.title.includes('Actualizada')) {
+        iconClass = 'ri-edit-line text-yellow-600';
+      } else if (notification.title.includes('Eliminada')) {
+        iconClass = 'ri-delete-bin-line text-red-600';
+      }
+
+      html += `
+        <div class="p-3 border-b border-gray-100 hover:bg-gray-50 cursor-pointer" onclick="window.location.href='${linkUrl}'">
+          <div class="flex items-start space-x-3">
+            <div class="flex-shrink-0">
+              <i class="${iconClass} text-lg"></i>
+            </div>
+            <div class="flex-1 min-w-0">
+              <p class="text-sm font-medium text-gray-900">
+                ${notification.title}
+              </p>
+              <p class="text-xs text-gray-600 mt-1">
+                ${notification.message}
+              </p>
+              <p class="text-xs text-gray-500 mt-1">
+                ${notification.relative_time}
+              </p>
+            </div>
+          </div>
+        </div>
+      `;
+    } else if (notification.type && (notification.type === 'motorcycle' || notification.type === 'service' || notification.type === 'rental')) {
+      // Legacy activity notifications (old format)
       let linkUrl = '#';
       if (notification.type === 'service') {
         linkUrl = '/servicios';
@@ -208,7 +242,7 @@ function renderNotificationList(notifications) {
       }
 
       html += `
-        <div class="p-3 border-b border-gray-100 hover:bg-gray-50 cursor-pointer ${notification.is_read ? 'opacity-75' : ''}" onclick="markAsRead(${notification.id}, '${linkUrl}')">
+        <div class="p-3 border-b border-gray-100 hover:bg-gray-50 cursor-pointer" onclick="window.location.href='/activity-log'">
           <div class="flex items-start space-x-3">
             <div class="flex-shrink-0">
               <i class="${iconClass} text-lg"></i>
@@ -224,38 +258,56 @@ function renderNotificationList(notifications) {
                 ${notification.relative_time}
               </p>
             </div>
-            ${!notification.is_read ? '<div class="flex-shrink-0"><div class="w-2 h-2 bg-blue-600 rounded-full"></div></div>' : ''}
           </div>
         </div>
       `;
     } else {
-      // Lease or service notification (existing logic)
-      let targetDate, dateLabel, linkUrl, typeLabel, clientOrUser;
+      // Time-based notification (lease or service) - always try to render with fallbacks
+      let targetDate = new Date();
+      let dateLabel = 'Notificación';
+      let linkUrl = '/';
+      let typeLabel = 'Sistema';
+      let clientOrUser = '';
+      let titleText = 'Notificación del sistema';
+      let subtitleText = '';
 
-      if (notification.fecha_renovacion) {
+      if (notification.fecha_renovacion && !isNaN(new Date(notification.fecha_renovacion).getTime())) {
         // Lease notification
         targetDate = new Date(notification.fecha_renovacion);
         dateLabel = 'Vence';
         linkUrl = '/rentas';
         typeLabel = 'Renta';
-        clientOrUser = `Cliente: ${notification.nombre_cliente}`;
-      } else {
+        clientOrUser = `Cliente: ${notification.nombre_cliente || 'Desconocido'}`;
+        titleText = `${notification.nombre_marca || ''} ${notification.modelo || ''}`.trim() || `Placa: ${notification.placa || notification.placa_motocicleta || 'N/A'}`;
+        subtitleText = `Placa: ${notification.placa || notification.placa_motocicleta || 'N/A'}`;
+      } else if ((notification.fecha_inicio && !notification.fecha_completado && !isNaN(new Date(notification.fecha_inicio).getTime())) ||
+                 (notification.fecha_completado && !isNaN(new Date(notification.fecha_completado).getTime())) ||
+                 (notification.fecha_solicitud && !isNaN(new Date(notification.fecha_solicitud).getTime()))) {
         // Service notification
-        if (notification.fecha_inicio && !notification.fecha_completado) {
+        if (notification.fecha_inicio && !notification.fecha_completado && !isNaN(new Date(notification.fecha_inicio).getTime())) {
           targetDate = new Date(notification.fecha_inicio);
           dateLabel = 'Inicia';
           typeLabel = 'Servicio programado';
-        } else if (notification.fecha_completado) {
+        } else if (notification.fecha_completado && !isNaN(new Date(notification.fecha_completado).getTime())) {
           targetDate = new Date(notification.fecha_completado);
           dateLabel = 'Finaliza';
           typeLabel = 'Servicio por completar';
         } else {
-          targetDate = new Date(notification.fecha_solicitud);
+          targetDate = new Date(notification.fecha_solicitud || Date.now());
           dateLabel = 'Solicitado';
           typeLabel = 'Servicio solicitado';
         }
+
         linkUrl = '/servicios';
-        clientOrUser = `Técnico: Pendiente`;
+        clientOrUser = `Técnico: ${notification.tecnico_responsable || 'Pendiente'}`;
+        titleText = `${notification.nombre_marca || ''} ${notification.modelo || ''}`.trim() || notification.tipo_servicio || 'Servicio';
+        subtitleText = notification.placa_motocicleta || notification.placa ? `Placa: ${notification.placa_motocicleta || notification.placa}` : '';
+      } else {
+        // Generic notification with minimal data
+        linkUrl = '/';
+        titleText = 'Notificación del sistema';
+        typeLabel = 'Sistema';
+        clientOrUser = 'Información general';
       }
 
       const today = new Date();
@@ -280,13 +332,13 @@ function renderNotificationList(notifications) {
             </div>
             <div class="flex-1 min-w-0">
               <p class="text-sm font-medium text-gray-900 truncate">
-                ${notification.nombre_marca} ${notification.modelo}
+                ${titleText}
               </p>
               <p class="text-xs text-gray-500">
-                Placa: ${notification.placa_motocicleta || notification.placa}
+                ${subtitleText}
               </p>
               <p class="text-xs text-gray-500">
-                ${typeLabel}: ${notification.tipo_servicio || 'Renta'}
+                ${typeLabel}: ${notification.tipo_servicio || typeLabel}
               </p>
               <p class="text-xs text-gray-500">
                 ${clientOrUser}
@@ -304,28 +356,7 @@ function renderNotificationList(notifications) {
   notificationList.innerHTML = html;
 }
 
-// Function to mark notification as read and redirect
-function markAsRead(notificationId, redirectUrl) {
-  fetch(`/notifications/mark-read/${notificationId}`, {
-    method: 'POST',
-    headers: {
-      'X-Requested-With': 'XMLHttpRequest',
-    }
-  })
-  .then(response => response.json())
-  .then(data => {
-    if (data.success) {
-      window.location.href = redirectUrl;
-    } else {
-      console.error('Error marking notification as read');
-      window.location.href = redirectUrl;
-    }
-  })
-  .catch(error => {
-    console.error('Error:', error);
-    window.location.href = redirectUrl;
-  });
-}
+
 
 // Initialize notifications when DOM is loaded
 document.addEventListener('DOMContentLoaded', function() {

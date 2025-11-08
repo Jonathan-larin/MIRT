@@ -135,12 +135,11 @@ trait ActivityLoggable
     protected function createNotification($activityData)
     {
         try {
-            // Load NotificationService
-            $notificationService = new \App\Services\NotificationService();
-
             // Check if this activity should create a notification
             if ($this->shouldCreateNotification($activityData)) {
-                $notificationService->processActivityLogs();
+                // Load NotificationModel and create notification directly for this specific activity
+                $notificationModel = new \App\Models\NotificationModel();
+                $notificationModel->createNotificationForActivity($activityData);
             }
         } catch (\Exception $e) {
             // Log error but don't break the main operation
@@ -153,43 +152,7 @@ trait ActivityLoggable
      */
     protected function shouldCreateNotification($activity)
     {
-        $tableName = $activity['table_name'];
-        $action = $activity['action'];
-
-        // Define which activities should trigger notifications
-        $notifiableActivities = [
-            'motos' => [
-                'actions' => ['INSERT', 'UPDATE', 'DELETE'],
-                'conditions' => [
-                    'UPDATE' => function($activity) {
-                        // Only notify on rental changes for UPDATE
-                        $oldValues = json_decode($activity['old_values'] ?? '[]', true);
-                        $newValues = json_decode($activity['new_values'] ?? '[]', true);
-                        return isset($oldValues['idcliente']) && isset($newValues['idcliente']) &&
-                               $oldValues['idcliente'] !== $newValues['idcliente'];
-                    }
-                ]
-            ],
-            'servicios' => [
-                'actions' => ['INSERT', 'UPDATE']
-            ]
-        ];
-
-        if (!isset($notifiableActivities[$tableName])) {
-            return false;
-        }
-
-        $config = $notifiableActivities[$tableName];
-
-        if (!in_array($action, $config['actions'])) {
-            return false;
-        }
-
-        // Check conditions if specified
-        if (isset($config['conditions']) && isset($config['conditions'][$action])) {
-            return $config['conditions'][$action]($activity);
-        }
-
+        // All activities should create notifications
         return true;
     }
 }

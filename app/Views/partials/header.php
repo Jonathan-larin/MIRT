@@ -108,12 +108,12 @@
                 </button>
 
                 <!-- Notification Dropdown -->
-                <div id="notificationDropdown" class="absolute right-0 mt-2 w-80 bg-white rounded-lg shadow-lg border border-gray-200 opacity-0 invisible transition-all duration-200 z-50 max-h-96 overflow-y-auto" style="z-index: 9999;">
+                <div id="notificationDropdown" class="absolute right-0 mt-2 w-80 bg-white rounded-lg shadow-lg border border-gray-200 opacity-0 invisible transition-all duration-200 z-50 max-h-96 overflow-hidden" style="z-index: 9999;">
                     <div class="p-4 border-b border-gray-200">
                         <h3 class="text-sm font-semibold text-primary">Notificaciones</h3>
-                        <p class="text-xs text-gray-500">Rentas próximas a vencer y servicios próximos</p>
+                        <p class="text-xs text-gray-500">Actividades recientes del sistema</p>
                     </div>
-                    <div id="notificationList" class="p-2">
+                    <div id="notificationList" class="overflow-y-auto max-h-64 p-2">
                         <!-- Notifications will be loaded here -->
                         <div class="text-center py-4 text-gray-500 text-sm">
                             <i class="ri-notification-off-line text-2xl mb-2"></i>
@@ -121,8 +121,8 @@
                         </div>
                     </div>
                     <div class="p-3 border-t border-gray-200 text-center">
-                        <a href="/rentas" class="text-xs text-primary hover:text-secondary mr-4">Ver rentas</a>
-                        <a href="/servicios" class="text-xs text-primary hover:text-secondary">Ver servicios</a>
+                        <a href="/activity-log" class="text-xs text-primary hover:text-secondary mr-4">Ver registro de actividad</a>
+                        <a href="/rentas" class="text-xs text-primary hover:text-secondary">Ver rentas</a>
                     </div>
                 </div>
             </div>

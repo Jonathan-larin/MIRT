@@ -47,43 +47,7 @@ class NotificationService
      */
     private function shouldCreateNotification($activity)
     {
-        $tableName = $activity['table_name'];
-        $action = $activity['action'];
-
-        // Define which activities should trigger notifications
-        $notifiableActivities = [
-            'motos' => [
-                'actions' => ['INSERT', 'UPDATE', 'DELETE'],
-                'conditions' => [
-                    'UPDATE' => function($activity) {
-                        // Only notify on rental changes for UPDATE
-                        $oldValues = json_decode($activity['old_values'] ?? '[]', true);
-                        $newValues = json_decode($activity['new_values'] ?? '[]', true);
-                        return isset($oldValues['idcliente']) && isset($newValues['idcliente']) &&
-                               $oldValues['idcliente'] !== $newValues['idcliente'];
-                    }
-                ]
-            ],
-            'servicios' => [
-                'actions' => ['INSERT', 'UPDATE']
-            ]
-        ];
-
-        if (!isset($notifiableActivities[$tableName])) {
-            return false;
-        }
-
-        $config = $notifiableActivities[$tableName];
-
-        if (!in_array($action, $config['actions'])) {
-            return false;
-        }
-
-        // Check conditions if specified
-        if (isset($config['conditions']) && isset($config['conditions'][$action])) {
-            return $config['conditions'][$action]($activity);
-        }
-
+        // All activities should trigger notifications
         return true;
     }
 
@@ -124,11 +88,11 @@ class NotificationService
     }
 
     /**
-     * Get target users for notifications (Operario and Jefatura roles)
+     * Get target users for notifications (Administrador and Jefatura roles)
      */
     public function getTargetUsers()
     {
-        return $this->usuarioModel->whereIn('rol', ['Operario', 'Jefatura'])
+        return $this->usuarioModel->whereIn('rol', ['Administrador', 'Jefatura'])
                                  ->where('estado', 1)
                                  ->findAll();
     }

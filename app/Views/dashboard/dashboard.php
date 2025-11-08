@@ -54,6 +54,99 @@
   <?= $this->include('partials/header') ?>
 
     <main class="pt-24 pb-12 px-4 md:px-6 max-w-7xl mx-auto">
+        <!-- Flash Messages -->
+        <?php if (session()->getFlashdata('error')): ?>
+            <div class="mb-6 bg-red-50 border-l-4 border-red-400 p-4 rounded-md">
+                <div class="flex">
+                    <div class="flex-shrink-0">
+                        <i class="ri-error-warning-line text-red-400"></i>
+                    </div>
+                    <div class="ml-3">
+                        <p class="text-sm text-red-700">
+                            <?= session()->getFlashdata('error') ?>
+                        </p>
+                    </div>
+                    <div class="ml-auto pl-3">
+                        <div class="-mx-1.5 -my-1.5">
+                            <button type="button" class="inline-flex bg-red-50 rounded-md p-1.5 text-red-400 hover:bg-red-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-red-50 focus:ring-red-400" onclick="this.parentElement.parentElement.parentElement.parentElement.style.display='none'">
+                                <span class="sr-only">Dismiss</span>
+                                <i class="ri-close-line"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        <?php endif; ?>
+
+        <?php if (session()->getFlashdata('success')): ?>
+            <div class="mb-6 bg-green-50 border-l-4 border-green-400 p-4 rounded-md">
+                <div class="flex">
+                    <div class="flex-shrink-0">
+                        <i class="ri-check-circle-line text-green-400"></i>
+                    </div>
+                    <div class="ml-3">
+                        <p class="text-sm text-green-700">
+                            <?= session()->getFlashdata('success') ?>
+                        </p>
+                    </div>
+                    <div class="ml-auto pl-3">
+                        <div class="-mx-1.5 -my-1.5">
+                            <button type="button" class="inline-flex bg-green-50 rounded-md p-1.5 text-green-400 hover:bg-green-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-green-50 focus:ring-green-400" onclick="this.parentElement.parentElement.parentElement.parentElement.style.display='none'">
+                                <span class="sr-only">Dismiss</span>
+                                <i class="ri-close-line"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        <?php endif; ?>
+
+        <?php if (session()->getFlashdata('warning')): ?>
+            <div class="mb-6 bg-yellow-50 border-l-4 border-yellow-400 p-4 rounded-md">
+                <div class="flex">
+                    <div class="flex-shrink-0">
+                        <i class="ri-alert-line text-yellow-400"></i>
+                    </div>
+                    <div class="ml-3">
+                        <p class="text-sm text-yellow-700">
+                            <?= session()->getFlashdata('warning') ?>
+                        </p>
+                    </div>
+                    <div class="ml-auto pl-3">
+                        <div class="-mx-1.5 -my-1.5">
+                            <button type="button" class="inline-flex bg-yellow-50 rounded-md p-1.5 text-yellow-400 hover:bg-yellow-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-yellow-50 focus:ring-yellow-400" onclick="this.parentElement.parentElement.parentElement.parentElement.style.display='none'">
+                                <span class="sr-only">Dismiss</span>
+                                <i class="ri-close-line"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        <?php endif; ?>
+
+        <?php if (session()->getFlashdata('info')): ?>
+            <div class="mb-6 bg-blue-50 border-l-4 border-blue-400 p-4 rounded-md">
+                <div class="flex">
+                    <div class="flex-shrink-0">
+                        <i class="ri-information-line text-blue-400"></i>
+                    </div>
+                    <div class="ml-3">
+                        <p class="text-sm text-blue-700">
+                            <?= session()->getFlashdata('info') ?>
+                        </p>
+                    </div>
+                    <div class="ml-auto pl-3">
+                        <div class="-mx-1.5 -my-1.5">
+                            <button type="button" class="inline-flex bg-blue-50 rounded-md p-1.5 text-blue-400 hover:bg-blue-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-blue-50 focus:ring-blue-400" onclick="this.parentElement.parentElement.parentElement.parentElement.style.display='none'">
+                                <span class="sr-only">Dismiss</span>
+                                <i class="ri-close-line"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        <?php endif; ?>
+
         <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8">
             <h1 class="text-2xl md:text-3xl font-bold text-gray-900">Panel de Control</h1>
             <div class="flex items-center space-x-2">
